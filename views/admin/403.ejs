@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Access Denied | BizIdeas Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+  <style>
+    body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .error-card { background: #fff; border-radius: 16px; padding: 3rem 2.5rem; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,.08); border: 1px solid #e2e8f0; }
+    .error-icon { font-size: 4rem; margin-bottom: 1rem; }
+    .error-code { font-size: 5rem; font-weight: 900; color: #ef4444; line-height: 1; }
+    .error-title { font-size: 1.4rem; font-weight: 700; color: #1e293b; margin: .5rem 0 1rem; }
+    .error-msg { color: #64748b; font-size: .95rem; margin-bottom: 1.5rem; line-height: 1.6; }
+    .permission-badge { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: .3rem .8rem; border-radius: 20px; font-size: .8rem; font-weight: 600; display: inline-block; margin-bottom: 1.5rem; }
+    .btn-back { background: #6366f1; color: #fff; border: none; padding: .65rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-block; }
+    .btn-back:hover { background: #4f46e5; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="error-card">
+    <div class="error-icon">🚫</div>
+    <div class="error-code">403</div>
+    <div class="error-title">Access Denied</div>
+    <div class="permission-badge"><i class="bi bi-lock me-1"></i>Missing: <%= permission %></div>
+    <p class="error-msg"><%= message %></p>
+    <a href="/admin/dashboard" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Back to Dashboard</a>
+  </div>
+</body>
+</html>

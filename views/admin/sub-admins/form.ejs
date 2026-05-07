@@ -1,0 +1,143 @@
+<%- include('../partials/header') %>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-header"><%= subAdmin ? '✏️ Edit Sub-Admin' : '➕ Create Sub-Admin' %></div>
+      <div class="card-body">
+        <form action="/admin/sub-admins/<%= subAdmin ? subAdmin._id + '/edit' : 'create' %>" method="POST">
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Full Name *</label>
+              <input type="text" name="name" class="form-control" value="<%= subAdmin ? subAdmin.name : '' %>" required placeholder="e.g. Content Manager"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Email Address *</label>
+              <input type="email" name="email" class="form-control" value="<%= subAdmin ? subAdmin.email : '' %>"
+                <%= subAdmin ? 'readonly' : 'required' %> placeholder="manager@bizideas.com"/>
+              <% if (subAdmin) { %><div class="form-text">Email cannot be changed after creation.</div><% } %>
+            </div>
+
+            <% if (!subAdmin) { %>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Password *</label>
+              <input type="password" name="password" class="form-control" required placeholder="Min 6 characters" minlength="6"/>
+              <div class="form-text">Sub-admin will use this to log into the admin panel.</div>
+            </div>
+            <% } %>
+
+            <% if (subAdmin) { %>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Status</label>
+              <select name="isActive" class="form-select">
+                <option value="true" <%= subAdmin.isActive ? 'selected' : '' %>>✅ Active</option>
+                <option value="false" <%= !subAdmin.isActive ? 'selected' : '' %>>🔴 Deactivated</option>
+              </select>
+            </div>
+            <% } %>
+
+            <!-- Permissions -->
+            <div class="col-12">
+              <label class="form-label fw-semibold">Panel Permissions</label>
+              <p class="text-muted" style="font-size:.82rem">Check the sections this sub-admin should be able to access. Unchecked sections will show a 🔒 lock and a 403 error if clicked.</p>
+              <div class="row g-2">
+                <%
+                  const permLabels = {
+                    'dashboard': { icon: '📊', label: 'Dashboard', desc: 'View stats overview' },
+                    'ideas': { icon: '💡', label: 'Ideas', desc: 'Business, App & Startup ideas' },
+                    'case-studies': { icon: '📖', label: 'Case Studies', desc: 'Founder case studies' },
+                    'blogs': { icon: '✍️', label: 'Blogs', desc: 'Blog posts management' },
+                    'posts': { icon: '💬', label: 'Community Posts', desc: 'User-generated posts' },
+                    'services': { icon: '⚙️', label: 'Services', desc: 'Services offered' },
+                    'faqs': { icon: '❓', label: 'FAQs', desc: 'Frequently asked questions' },
+                    'testimonials': { icon: '⭐', label: 'Testimonials', desc: 'Customer testimonials' },
+                    'users': { icon: '👥', label: 'Users', desc: 'Registered users' },
+                    'contacts': { icon: '📨', label: 'Contacts', desc: 'Contact form messages' },
+                    'newsletter': { icon: '🔔', label: 'Newsletter', desc: 'Email subscribers' },
+                  };
+                  const currentPerms = subAdmin ? subAdmin.permissions : [];
+                %>
+                <% allPermissions.filter(p => p !== 'sub-admins').forEach(perm => { %>
+                <div class="col-md-6">
+                  <label class="d-flex align-items-start gap-2 p-2 rounded border cursor-pointer"
+                    style="cursor:pointer;background:<%=currentPerms.includes(perm)?'#eef2ff':'#f8fafc'%>;border-color:<%=currentPerms.includes(perm)?'#c7d2fe':'#e2e8f0'%>!important">
+                    <input type="checkbox" name="permissions" value="<%= perm %>"
+                      class="form-check-input mt-1 flex-shrink-0"
+                      <%= currentPerms.includes(perm) ? 'checked' : '' %>
+                      onchange="this.closest('label').style.background=this.checked?'#eef2ff':'#f8fafc';this.closest('label').style.borderColor=this.checked?'#c7d2fe':'#e2e8f0'"/>
+                    <div>
+                      <div style="font-size:.85rem;font-weight:600;color:#1e293b">
+                        <%= permLabels[perm]?.icon || '•' %> <%= permLabels[perm]?.label || perm %>
+                      </div>
+                      <div style="font-size:.75rem;color:#64748b"><%= permLabels[perm]?.desc || '' %></div>
+                    </div>
+                  </label>
+                </div>
+                <% }) %>
+              </div>
+            </div>
+
+            <div class="col-12 d-flex gap-2 mt-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-lg me-1"></i><%= subAdmin ? 'Update Sub-Admin' : 'Create Sub-Admin' %>
+              </button>
+              <a href="/admin/sub-admins" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reset Password (edit mode only) -->
+  <% if (subAdmin) { %>
+  <div class="col-lg-5">
+    <div class="card border-warning">
+      <div class="card-header bg-warning bg-opacity-10">🔐 Reset Password</div>
+      <div class="card-body">
+        <p class="text-muted small">Set a new password for this sub-admin. They will need to use it on next login.</p>
+        <form action="/admin/sub-admins/<%= subAdmin._id %>/reset-password" method="POST">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">New Password</label>
+            <input type="password" name="newPassword" class="form-control" placeholder="Min 6 characters" minlength="6" required/>
+          </div>
+          <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Reset this sub-admin\'s password?')">
+            <i class="bi bi-key me-1"></i>Reset Password
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header">ℹ️ Sub-Admin Info</div>
+      <div class="card-body">
+        <table class="table table-sm mb-0">
+          <tr><td class="text-muted">Created</td><td><%= new Date(subAdmin.createdAt).toLocaleDateString() %></td></tr>
+          <tr><td class="text-muted">Last Login</td><td><%= subAdmin.lastLogin ? new Date(subAdmin.lastLogin).toLocaleString() : 'Never' %></td></tr>
+          <tr><td class="text-muted">Permissions</td><td><strong><%= subAdmin.permissions.length %></strong> of <%= allPermissions.length - 1 %></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <% } %>
+
+  <% if (!subAdmin) { %>
+  <div class="col-lg-5">
+    <div class="card border-primary border-opacity-25">
+      <div class="card-header">💡 How Sub-Admins Work</div>
+      <div class="card-body" style="font-size:.85rem;color:#475569;line-height:1.7">
+        <ul class="ps-3 mb-0">
+          <li>Sub-admins login at <code>/admin/login</code> with their own credentials.</li>
+          <li>They can <strong>only see and access</strong> the sections you check above.</li>
+          <li>Any section they don't have access to will show a <strong>🔒 lock icon</strong> in sidebar — clicking it shows a <strong>403 Access Denied</strong> page.</li>
+          <li>You can revoke or add permissions anytime by editing the sub-admin.</li>
+          <li>Deactivating a sub-admin blocks their login immediately.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

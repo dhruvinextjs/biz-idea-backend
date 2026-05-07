@@ -1,0 +1,103 @@
+<%- include('../partials/header') %>
+
+<div class="card" style="max-width:800px">
+  <div class="card-header">
+    <%= idea ? '✏️ Edit Idea' : '➕ Create New Idea' %>
+  </div>
+  <div class="card-body">
+    <form action="/admin/ideas/<%= idea ? idea._id + '/edit' : 'create' %>" method="POST">
+
+      <input type="hidden" name="type" value="<%= idea ? idea.type : type %>"/>
+
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label fw-semibold">Title *</label>
+          <input type="text" name="title" class="form-control" value="<%= idea ? idea.title : '' %>" required placeholder="e.g. AI-powered fitness app with AR guidance"/>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Type</label>
+          <select name="type" class="form-select">
+            <option value="business" <%= (idea ? idea.type : type) === 'business' ? 'selected' : '' %>>Business Idea</option>
+            <option value="app" <%= (idea ? idea.type : type) === 'app' ? 'selected' : '' %>>App Idea</option>
+            <option value="startup" <%= (idea ? idea.type : type) === 'startup' ? 'selected' : '' %>>Startup Idea</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Category</label>
+          <select name="category" class="form-select">
+            <% ['AI & Tech','SaaS','E-Commerce','Local Business','Services','Other'].forEach(cat => { %>
+              <option value="<%= cat %>" <%= idea && idea.category === cat ? 'selected' : '' %>><%= cat %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-semibold">Short Description *</label>
+          <textarea name="description" class="form-control" rows="2" required placeholder="Brief one-line description of the idea"><%= idea ? idea.description : '' %></textarea>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-semibold">Full Description</label>
+          <textarea name="fullDescription" class="form-control" rows="5" placeholder="Detailed description, how it works, target market, etc."><%= idea ? idea.fullDescription : '' %></textarea>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Min Investment ($)</label>
+          <input type="number" name="investmentMin" class="form-control" value="<%= idea ? idea.investmentMin : 1000 %>" min="0"/>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Max Investment ($)</label>
+          <input type="number" name="investmentMax" class="form-control" value="<%= idea ? idea.investmentMax : 5000 %>" min="0"/>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Profit Margin (%)</label>
+          <input type="number" name="profitMargin" class="form-control" value="<%= idea ? idea.profitMargin : 50 %>" min="0" max="100"/>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Team Size</label>
+          <select name="teamSize" class="form-select">
+            <% ['Solo (1)','Small (2-5)','Medium (6-15)','Large (15+)'].forEach(s => { %>
+              <option value="<%= s %>" <%= idea && idea.teamSize === s ? 'selected' : '' %>><%= s %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Image URL</label>
+          <input type="text" name="image" class="form-control" value="<%= idea ? idea.image : '/images/startup-sketch.png' %>" placeholder="/images/startup-sketch.png"/>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-semibold">Tags (comma separated)</label>
+          <input type="text" name="tags" class="form-control" value="<%= idea && idea.tags ? idea.tags.join(', ') : '' %>" placeholder="AI, SaaS, mobile, fitness"/>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" name="isActive" id="isActive" value="true" <%= !idea || idea.isActive ? 'checked' : '' %>/>
+            <label class="form-check-label" for="isActive">Active (visible on site)</label>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" name="isFeatured" id="isFeatured" value="true" <%= idea && idea.isFeatured ? 'checked' : '' %>/>
+            <label class="form-check-label" for="isFeatured">⭐ Featured (show first)</label>
+          </div>
+        </div>
+
+        <div class="col-12 d-flex gap-2">
+          <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i><%= idea ? 'Update Idea' : 'Create Idea' %></button>
+          <a href="/admin/ideas?type=<%= idea ? idea.type : type %>" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

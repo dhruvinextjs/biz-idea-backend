@@ -1,0 +1,49 @@
+<%- include('../partials/header') %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <span class="text-muted">Total: <strong><%= subs.length %></strong> subscribers 
+    (<%= subs.filter(s => s.isActive).length %> active)</span>
+  <button class="btn btn-sm btn-outline-success" onclick="copyEmails()">
+    <i class="bi bi-clipboard me-1"></i>Copy All Emails
+  </button>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>#</th><th>Email</th><th>Status</th><th>Subscribed On</th><th>Actions</th></tr></thead>
+      <tbody>
+        <% if (subs.length === 0) { %>
+          <tr><td colspan="5" class="text-center text-muted py-4">No newsletter subscribers yet.</td></tr>
+        <% } %>
+        <% subs.forEach((s, i) => { %>
+        <tr>
+          <td class="text-muted"><%= i + 1 %></td>
+          <td><%= s.email %></td>
+          <td><span class="badge <%= s.isActive ? 'badge-active' : 'badge-inactive' %>"><%= s.isActive ? 'Active' : 'Unsubscribed' %></span></td>
+          <td><%= new Date(s.createdAt).toLocaleDateString() %></td>
+          <td>
+            <form action="/admin/newsletter/<%= s._id %>/delete" method="POST" style="display:inline">
+              <button class="btn btn-sm btn-outline-danger py-0 btn-delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Hidden email list for copy -->
+<textarea id="emailList" style="position:absolute;left:-9999px" readonly><%= subs.filter(s=>s.isActive).map(s=>s.email).join(', ') %></textarea>
+
+<script>
+function copyEmails() {
+  const el = document.getElementById('emailList');
+  el.select();
+  document.execCommand('copy');
+  alert('Emails copied to clipboard!');
+}
+</script>
+
+<%- include('../partials/footer') %>

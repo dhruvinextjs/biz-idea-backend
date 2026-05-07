@@ -1,0 +1,88 @@
+<%- include('../partials/header') %>
+
+<div class="d-flex gap-2 mb-3 flex-wrap">
+  <a href="/admin/contacts" class="btn btn-sm <%= currentStatus === '' ? 'btn-primary' : 'btn-outline-primary' %>">All</a>
+  <a href="/admin/contacts?status=new" class="btn btn-sm <%= currentStatus === 'new' ? 'btn-primary' : 'btn-outline-primary' %>">🔵 New</a>
+  <a href="/admin/contacts?status=read" class="btn btn-sm <%= currentStatus === 'read' ? 'btn-primary' : 'btn-outline-primary' %>">✅ Read</a>
+  <a href="/admin/contacts?status=replied" class="btn btn-sm <%= currentStatus === 'replied' ? 'btn-primary' : 'btn-outline-primary' %>">💬 Replied</a>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Country</th><th>Phone</th><th>Project</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody>
+        <% if (contacts.length === 0) { %>
+          <tr><td colspan="9" class="text-center text-muted py-4">No contact messages yet.</td></tr>
+        <% } %>
+        <% contacts.forEach((c, i) => { %>
+        <tr class="<%= c.status === 'new' ? 'table-info' : '' %>">
+          <td class="text-muted"><%= ((currentPage-1)*10) + i + 1 %></td>
+          <td><strong><%= c.name %></strong></td>
+          <td><a href="mailto:<%= c.email %>"><%= c.email %></a></td>
+          <td><%= c.country || '-' %></td>
+          <td><%= c.phone || '-' %></td>
+          <td>
+            <% if (c.projectRequirement) { %>
+              <span data-bs-toggle="tooltip" title="<%= c.projectRequirement %>">
+                <%= c.projectRequirement.substring(0, 30) %>...
+              </span>
+            <% } else { %> - <% } %>
+          </td>
+          <td>
+            <span class="badge <%= c.status === 'new' ? 'bg-primary' : c.status === 'replied' ? 'badge-active' : 'bg-secondary' %>">
+              <%= c.status %>
+            </span>
+          </td>
+          <td><small><%= new Date(c.createdAt).toLocaleDateString() %></small></td>
+          <td>
+            <button class="btn btn-xs btn-sm btn-outline-secondary py-0 me-1" data-bs-toggle="modal" data-bs-target="#status<%= c._id %>">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <form action="/admin/contacts/<%= c._id %>/delete" method="POST" style="display:inline">
+              <button class="btn btn-xs btn-sm btn-outline-danger py-0 btn-delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+
+        <!-- Status Modal -->
+        <div class="modal fade" id="status<%= c._id %>" tabindex="-1">
+          <div class="modal-dialog modal-sm"><div class="modal-content">
+            <div class="modal-header"><h6 class="modal-title">Update Status</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <form action="/admin/contacts/<%= c._id %>/status" method="POST">
+              <div class="modal-body">
+                <p class="text-muted small mb-2">From: <strong><%= c.name %></strong> (<%= c.email %>)</p>
+                <% if (c.projectRequirement) { %>
+                  <p class="small bg-light p-2 rounded mb-2"><%= c.projectRequirement %></p>
+                <% } %>
+                <select name="status" class="form-select">
+                  <option value="new" <%= c.status === 'new' ? 'selected' : '' %>>New</option>
+                  <option value="read" <%= c.status === 'read' ? 'selected' : '' %>>Read</option>
+                  <option value="replied" <%= c.status === 'replied' ? 'selected' : '' %>>Replied</option>
+                </select>
+              </div>
+              <div class="modal-footer py-2">
+                <button type="submit" class="btn btn-primary btn-sm">Update</button>
+              </div>
+            </form>
+          </div></div>
+        </div>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% if (totalPages > 1) { %>
+<nav class="mt-3"><ul class="pagination pagination-sm justify-content-center">
+  <% for(let i = 1; i <= totalPages; i++) { %><li class="page-item <%= currentPage===i?'active':'' %>"><a class="page-link" href="/admin/contacts?page=<%= i %>&status=<%= currentStatus %>"><%= i %></a></li><% } %>
+</ul></nav>
+<% } %>
+
+<script>
+  // Enable tooltips
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+  });
+</script>
+<%- include('../partials/footer') %>

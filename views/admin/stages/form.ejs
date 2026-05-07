@@ -1,0 +1,75 @@
+<%- include('../partials/header') %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h5 class="mb-1"><%= stage ? 'Edit Stage' : 'Add New Stage' %></h5>
+    <span class="text-muted small">Signup Step 2</span>
+  </div>
+  <a href="/admin/stages" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i>Back to Stages
+  </a>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="row justify-content-center">
+      <div class="col-lg-9 col-md-10">
+
+        <form action="<%= action %>" method="POST">
+          <div class="row g-4">
+
+            <!-- Stage Name -->
+            <div class="col-12">
+              <label class="form-label fw-semibold">Stage Name <span class="text-danger">*</span></label>
+              <input type="text" name="name" class="form-control" 
+                     value="<%= stage ? stage.name : '' %>" 
+                     placeholder="e.g. My business has paying customers, but doesn’t fully support me" 
+                     required>
+            </div>
+
+            <!-- Description -->
+            <div class="col-12">
+              <label class="form-label fw-semibold">Description (Optional)</label>
+              <textarea name="description" class="form-control" rows="3" 
+                        placeholder="Short description about this stage"><%= stage ? stage.description : '' %></textarea>
+            </div>
+
+            <!-- Order -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Display Order</label>
+              <input type="number" name="order" class="form-control" 
+                     value="<%= stage ? stage.order : '0' %>" 
+                     placeholder="0">
+              <div class="form-text">Lower number = Higher in list</div>
+            </div>
+
+            <!-- Active Status -->
+            <div class="col-md-6">
+              <div class="form-check form-switch mt-4">
+                <input class="form-check-input" type="checkbox" name="isActive" id="isActive" 
+                       <%= !stage || stage.isActive ? 'checked' : '' %>>
+                <label class="form-check-label fw-semibold" for="isActive">
+                  Active (Visible in Signup)
+                </label>
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="col-12 pt-4">
+              <button type="submit" class="btn btn-primary px-5">
+                <i class="bi bi-check-lg me-2"></i><%= stage ? 'Update Stage' : 'Create Stage' %>
+              </button>
+              <a href="/admin/stages" class="btn btn-outline-secondary ms-3">
+                Cancel
+              </a>
+            </div>
+
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

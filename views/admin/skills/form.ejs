@@ -1,0 +1,76 @@
+<%- include('../partials/header') %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h5 class="mb-1"><%= skill ? 'Edit Skill' : 'Add New Skill' %></h5>
+    <span class="text-muted small">Skills Management</span>
+  </div>
+  <a href="/admin/skills" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i>Back to Skills
+  </a>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+
+        <form action="<%= action %>" method="POST">
+          <div class="row g-4">
+            
+            <!-- Skill Name & Icon -->
+            <div class="col-md-8">
+              <label class="form-label fw-semibold">Skill Name <span class="text-danger">*</span></label>
+              <input type="text" name="name" class="form-control" 
+                     value="<%= skill ? skill.name : '' %>" 
+                     placeholder="e.g. Digital Marketing" required>
+            </div>
+            
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Icon (Emoji)</label>
+              <input type="text" name="icon" class="form-control text-center" 
+                     value="<%= skill ? skill.icon : '🚀' %>" 
+                     placeholder="💡" style="font-size: 1.4rem;">
+            </div>
+
+            <!-- Category & Order -->
+            <div class="col-md-8">
+              <label class="form-label fw-semibold">Category</label>
+              <input type="text" name="category" class="form-control" 
+                     value="<%= skill ? skill.category : 'General' %>" 
+                     placeholder="Tech, Business, Creative, Marketing etc.">
+              <div class="form-text">Suggestions: Tech, Business, Creative, Marketing, Design, Other</div>
+            </div>
+
+
+
+            <!-- Active Status -->
+            <div class="col-12">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" name="isActive" id="isActive" 
+                       <%= !skill || skill.isActive ? 'checked' : '' %>>
+                <label class="form-check-label fw-semibold" for="isActive">
+                  Active (Visible in Signup Step 4)
+                </label>
+              </div>
+            </div>
+
+            <!-- Submit Buttons -->
+            <div class="col-12 pt-3">
+              <button type="submit" class="btn btn-primary px-5">
+                <i class="bi bi-check-lg me-2"></i><%= skill ? 'Update Skill' : 'Create Skill' %>
+              </button>
+              <a href="/admin/skills" class="btn btn-outline-secondary ms-3">
+                Cancel
+              </a>
+            </div>
+
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

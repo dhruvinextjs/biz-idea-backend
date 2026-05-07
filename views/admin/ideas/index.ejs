@@ -1,0 +1,68 @@
+<%- include('../partials/header') %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <div class="btn-group" role="group">
+      <a href="/admin/ideas?type=business" class="btn btn-sm <%= type === 'business' ? 'btn-primary' : 'btn-outline-primary' %>">Business</a>
+      <a href="/admin/ideas?type=app" class="btn btn-sm <%= type === 'app' ? 'btn-primary' : 'btn-outline-primary' %>">App</a>
+      <a href="/admin/ideas?type=startup" class="btn btn-sm <%= type === 'startup' ? 'btn-primary' : 'btn-outline-primary' %>">Startup</a>
+    </div>
+  </div>
+  <a href="/admin/ideas/create?type=<%= type %>" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus-lg me-1"></i>Add <%= type.charAt(0).toUpperCase() + type.slice(1) %> Idea
+  </a>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>#</th><th>Title</th><th>Category</th><th>Investment</th><th>Margin</th><th>Featured</th><th>Status</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (ideas.length === 0) { %>
+          <tr><td colspan="8" class="text-center text-muted py-4">No ideas found. <a href="/admin/ideas/create?type=<%= type %>">Add one!</a></td></tr>
+        <% } %>
+        <% ideas.forEach((idea, i) => { %>
+        <tr>
+          <td class="text-muted"><%= ((currentPage-1)*10) + i + 1 %></td>
+          <td>
+            <strong><%= idea.title.substring(0,45) %><%= idea.title.length > 45 ? '...' : '' %></strong>
+            <br><small class="text-muted"><%= idea.teamSize %></small>
+          </td>
+          <td><span class="badge bg-light text-dark border"><%= idea.category %></span></td>
+          <td>$<%= idea.investmentMin.toLocaleString() %> - $<%= idea.investmentMax.toLocaleString() %></td>
+          <td><strong><%= idea.profitMargin %>%</strong></td>
+          <td>
+            <% if (idea.isFeatured) { %><span class="badge bg-warning text-dark">⭐ Yes</span><% } else { %><span class="text-muted">-</span><% } %>
+          </td>
+          <td><span class="badge <%= idea.isActive ? 'badge-active' : 'badge-inactive' %>"><%= idea.isActive ? 'Active' : 'Hidden' %></span></td>
+          <td>
+            <a href="/admin/ideas/<%= idea._id %>/edit" class="btn btn-sm btn-outline-secondary py-0 me-1"><i class="bi bi-pencil"></i></a>
+            <form action="/admin/ideas/<%= idea._id %>/delete?type=<%= type %>" method="POST" style="display:inline">
+              <button type="submit" class="btn btn-sm btn-outline-danger py-0 btn-delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Pagination -->
+<% if (totalPages > 1) { %>
+<nav class="mt-3">
+  <ul class="pagination pagination-sm justify-content-center">
+    <% for(let i = 1; i <= totalPages; i++) { %>
+      <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+        <a class="page-link" href="/admin/ideas?type=<%= type %>&page=<%= i %>"><%= i %></a>
+      </li>
+    <% } %>
+  </ul>
+</nav>
+<% } %>
+
+<%- include('../partials/footer') %>

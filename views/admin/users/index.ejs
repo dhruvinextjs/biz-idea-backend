@@ -1,0 +1,73 @@
+<%- include('../partials/header') %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <form class="d-flex gap-2" method="GET" action="/admin/users">
+    <input type="text" name="search" class="form-control form-control-sm" placeholder="Search name, email, username..." value="<%= search %>" style="width:260px"/>
+    <button class="btn btn-sm btn-primary">Search</button>
+    <% if(search) { %><a href="/admin/users" class="btn btn-sm btn-outline-secondary">Clear</a><% } %>
+  </form>
+  <span class="text-muted small">Page <%= currentPage %> of <%= totalPages %></span>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr><th>#</th><th>User</th><th>Email</th><th>Stage</th><th>Role</th><th>Interests</th><th>Status</th><th>Joined</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        <% if (users.length === 0) { %>
+          <tr><td colspan="9" class="text-center text-muted py-4">No users found.</td></tr>
+        <% } %>
+        <% users.forEach((u, i) => { %>
+        <tr>
+          <td class="text-muted"><%= ((currentPage-1)*10) + i + 1 %></td>
+          <td>
+            <a href="/admin/users/<%= u._id %>" class="text-decoration-none">
+              <strong class="text-dark"><%= u.name || u.username %></strong>
+            </a>
+            <br><small class="text-muted">@<%= u.username %></small>
+          </td>
+          <td><small><%= u.email %></small></td>
+          <td>
+            <% if (u.stage) { %>
+              <span style="font-size:.72rem;background:#eef2ff;color:#4338ca;padding:.15rem .4rem;border-radius:4px;border:1px solid #c7d2fe"><%= u.stage %></span>
+            <% } else { %><span class="text-muted">-</span><% } %>
+          </td>
+          <td>
+            <% if (u.selfRole) { %>
+              <span style="font-size:.72rem;background:#f0fdf4;color:#15803d;padding:.15rem .4rem;border-radius:4px;border:1px solid #bbf7d0"><%= u.selfRole %></span>
+            <% } else { %><span class="text-muted">-</span><% } %>
+          </td>
+          <td><small class="text-muted"><%= u.interests && u.interests.length > 0 ? u.interests.length + ' selected' : '-' %></small></td>
+          <td><span class="badge <%= u.isActive ? 'badge-active' : 'badge-inactive' %>"><%= u.isActive ? 'Active' : 'Inactive' %></span></td>
+          <td><small class="text-muted"><%= new Date(u.createdAt).toLocaleDateString() %></small></td>
+          <td>
+            <a href="/admin/users/<%= u._id %>" class="btn btn-sm btn-outline-primary py-0 me-1"><i class="bi bi-eye"></i></a>
+            <form action="/admin/users/<%= u._id %>/toggle" method="POST" style="display:inline">
+              <button class="btn btn-sm btn-outline-warning py-0 me-1" title="<%= u.isActive ? 'Deactivate' : 'Activate' %>">
+                <i class="bi bi-<%= u.isActive ? 'pause' : 'play' %>"></i>
+              </button>
+            </form>
+            <form action="/admin/users/<%= u._id %>/delete" method="POST" style="display:inline">
+              <button class="btn btn-sm btn-outline-danger py-0 btn-delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% if (totalPages > 1) { %>
+<nav class="mt-3"><ul class="pagination pagination-sm justify-content-center">
+  <% for(let i = 1; i <= totalPages; i++) { %>
+    <li class="page-item <%= currentPage===i?'active':'' %>">
+      <a class="page-link" href="/admin/users?page=<%= i %><%= search?'&search='+search:'' %>"><%= i %></a>
+    </li>
+  <% } %>
+</ul></nav>
+<% } %>
+
+<%- include('../partials/footer') %>

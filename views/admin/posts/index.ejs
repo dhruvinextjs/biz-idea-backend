@@ -1,0 +1,42 @@
+<%- include('../partials/header') %>
+
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>#</th><th>Title</th><th>Author</th><th>Upvotes</th><th>Comments</th><th>Pinned</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody>
+        <% if (posts.length === 0) { %>
+          <tr><td colspan="9" class="text-center text-muted py-4">No community posts yet.</td></tr>
+        <% } %>
+        <% posts.forEach((p, i) => { %>
+        <tr>
+          <td class="text-muted"><%= ((currentPage-1)*10) + i + 1 %></td>
+          <td><strong><%= p.title.substring(0,45) %><%= p.title.length > 45 ? '...' : '' %></strong></td>
+          <td><small>@<%= p.authorName %></small></td>
+          <td>👍 <%= p.upvotes %></td>
+          <td>💬 <%= p.commentCount %></td>
+          <td><% if (p.isPinned) { %><span class="badge bg-warning text-dark">📌 Yes</span><% } else { %>-<% } %></td>
+          <td><span class="badge <%= p.isActive ? 'badge-active' : 'badge-inactive' %>"><%= p.isActive ? 'Visible' : 'Hidden' %></span></td>
+          <td><%= new Date(p.createdAt).toLocaleDateString() %></td>
+          <td>
+            <form action="/admin/posts/<%= p._id %>/toggle" method="POST" style="display:inline">
+              <button class="btn btn-sm btn-outline-warning py-0 me-1"><%= p.isActive ? 'Hide' : 'Show' %></button>
+            </form>
+            <form action="/admin/posts/<%= p._id %>/delete" method="POST" style="display:inline">
+              <button class="btn btn-sm btn-outline-danger py-0 btn-delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% if (totalPages > 1) { %>
+<nav class="mt-3"><ul class="pagination pagination-sm justify-content-center">
+  <% for(let i = 1; i <= totalPages; i++) { %><li class="page-item <%= currentPage===i?'active':'' %>"><a class="page-link" href="/admin/posts?page=<%= i %>"><%= i %></a></li><% } %>
+</ul></nav>
+<% } %>
+
+<%- include('../partials/footer') %>

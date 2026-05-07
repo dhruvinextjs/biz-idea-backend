@@ -1,0 +1,73 @@
+<%- include('../partials/header') %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h5 class="mb-1">Stages Management</h5>
+    <span class="text-muted small">
+      Total: <strong><%= stages ? stages.length : 0 %></strong> stages 
+      <span class="mx-2">•</span> 
+      Shown in Signup Step 2
+    </span>
+  </div>
+  <a href="/admin/stages/create" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus-lg me-1"></i>Add New Stage
+  </a>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th width="50">Order</th>
+            <th>Stage Name</th>
+            <th>Description</th>
+            <th width="100">Status</th>
+            <th width="140">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if(!stages || stages.length === 0){ %>
+            <tr>
+              <td colspan="5" class="text-center text-muted py-5">
+                No stages found yet.<br>
+                <a href="/admin/stages/create" class="text-primary">Add your first stage →</a>
+              </td>
+            </tr>
+          <% } else { %>
+            <% stages.forEach(stage => { %>
+            <tr>
+              <td><strong><%= stage.order || 0 %></strong></td>
+              <td><span class="fw-semibold"><%= stage.name %></span></td>
+              <td>
+                <small class="text-muted"><%= stage.description || '<em>No description</em>' %></small>
+              </td>
+              <td>
+                <% if(stage.isActive){ %>
+                  <span class="badge bg-success">Active</span>
+                <% } else { %>
+                  <span class="badge bg-secondary">Inactive</span>
+                <% } %>
+              </td>
+              <td>
+                <a href="/admin/stages/edit/<%= stage._id %>" class="btn btn-sm btn-outline-secondary me-1">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <form action="/admin/stages/delete/<%= stage._id %>" method="POST" class="d-inline" 
+                      onsubmit="return confirm('Are you sure you want to delete this stage?')">
+                  <button class="btn btn-sm btn-outline-danger">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

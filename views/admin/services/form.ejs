@@ -1,0 +1,51 @@
+<%- include('../partials/header') %>
+
+<div class="card" style="max-width:700px">
+  <div class="card-header"><%= service ? '✏️ Edit Service' : '➕ Add Service' %></div>
+  <div class="card-body">
+    <form action="/admin/services/<%= service ? service._id + '/edit' : 'create' %>" method="POST">
+      <div class="row g-3">
+        <div class="col-md-2">
+          <label class="form-label fw-semibold">Icon</label>
+          <input type="text" name="icon" class="form-control" value="<%= service ? service.icon : '💼' %>" placeholder="💼"/>
+        </div>
+        <div class="col-md-10">
+          <label class="form-label fw-semibold">Title *</label>
+          <input type="text" name="title" class="form-control" value="<%= service ? service.title : '' %>" required/>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Short Description *</label>
+          <textarea name="description" class="form-control" rows="2" required><%= service ? service.description : '' %></textarea>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Full Description</label>
+          <textarea name="fullDescription" class="form-control" rows="4"><%= service ? service.fullDescription : '' %></textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Price</label>
+          <input type="text" name="price" class="form-control" value="<%= service ? service.price : 'Contact Us' %>" placeholder="$499 / Contact Us"/>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Order</label>
+          <input type="number" name="order" class="form-control" value="<%= service ? service.order : 0 %>" min="0"/>
+        </div>
+        <div class="col-md-3">
+          <div class="form-check form-switch mt-4">
+            <input class="form-check-input" type="checkbox" name="isActive" value="true" <%= !service || service.isActive ? 'checked' : '' %>/>
+            <label class="form-check-label">Active</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Image URL</label>
+          <input type="text" name="image" class="form-control" value="<%= service ? service.image : '/images/service1.png' %>"/>
+        </div>
+        <div class="col-12 d-flex gap-2">
+          <button type="submit" class="btn btn-primary"><%= service ? 'Update' : 'Create' %> Service</button>
+          <a href="/admin/services" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

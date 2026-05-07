@@ -1,0 +1,73 @@
+<%- include('../partials/header') %>
+
+<div class="card" style="max-width:800px">
+  <div class="card-header"><%= study ? '✏️ Edit Case Study' : '➕ Create Case Study' %></div>
+  <div class="card-body">
+    <form action="/admin/case-studies/<%= study ? study._id + '/edit' : 'create' %>" method="POST">
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label fw-semibold">Title *</label>
+          <input type="text" name="title" class="form-control" value="<%= study ? study.title : '' %>" required placeholder="e.g. Growing a GEO tool to mid-five-figure MRR"/>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Excerpt *</label>
+          <textarea name="excerpt" class="form-control" rows="2" required placeholder="Short summary shown in listing"><%= study ? study.excerpt : '' %></textarea>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Full Story Content</label>
+          <textarea name="content" class="form-control" rows="8" placeholder="Full case study content (supports HTML)"><%= study ? study.content : '' %></textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Founder Name *</label>
+          <input type="text" name="founderName" class="form-control" value="<%= study ? study.founderName : '' %>" required/>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Company Name *</label>
+          <input type="text" name="companyName" class="form-control" value="<%= study ? study.companyName : '' %>" required/>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Monthly Revenue (USD) *</label>
+          <input type="number" name="monthlyRevenue" class="form-control" value="<%= study ? study.monthlyRevenue : '' %>" required min="0"/>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Company Size (employees)</label>
+          <input type="number" name="companySize" class="form-control" value="<%= study ? study.companySize : 2 %>" min="1"/>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Industry</label>
+          <select name="industry" class="form-select">
+            <% ['Marketing','Advertising','Analytics','Real Estate','Automations','SaaS','E-Commerce','Other'].forEach(ind => { %>
+              <option value="<%= ind %>" <%= study && study.industry === ind ? 'selected' : '' %>><%= ind %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Cover Image URL</label>
+          <input type="text" name="image" class="form-control" value="<%= study ? study.image : '/images/startup-sketch.png' %>"/>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Founder Image URL</label>
+          <input type="text" name="founderImage" class="form-control" value="<%= study ? study.founderImage : '/images/person1.jpg' %>"/>
+        </div>
+        <div class="col-md-3">
+          <div class="form-check form-switch mt-4">
+            <input class="form-check-input" type="checkbox" name="isActive" value="true" <%= !study || study.isActive ? 'checked' : '' %>/>
+            <label class="form-check-label">Active</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-check form-switch mt-4">
+            <input class="form-check-input" type="checkbox" name="isFeatured" value="true" <%= study && study.isFeatured ? 'checked' : '' %>/>
+            <label class="form-check-label">⭐ Featured</label>
+          </div>
+        </div>
+        <div class="col-12 d-flex gap-2">
+          <button type="submit" class="btn btn-primary"><%= study ? 'Update' : 'Create' %> Case Study</button>
+          <a href="/admin/case-studies" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

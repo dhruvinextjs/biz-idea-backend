@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <span></span>
+  <a href="/admin/services/create" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>Add Service</a>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>Order</th><th>Title</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        <% if (services.length === 0) { %>
+          <tr><td colspan="5" class="text-center text-muted py-4">No services yet.</td></tr>
+        <% } %>
+        <% services.forEach(s => { %>
+        <tr>
+          <td><%= s.order %></td>
+          <td><strong><%= s.icon %> <%= s.title %></strong><br><small class="text-muted"><%= s.description.substring(0,60) %>...</small></td>
+          <td><span class="badge bg-success"><%= s.price %></span></td>
+          <td><span class="badge <%= s.isActive ? 'badge-active' : 'badge-inactive' %>"><%= s.isActive ? 'Active' : 'Hidden' %></span></td>
+          <td>
+            <a href="/admin/services/<%= s._id %>/edit" class="btn btn-sm btn-outline-secondary py-0 me-1"><i class="bi bi-pencil"></i></a>
+            <form action="/admin/services/<%= s._id %>/delete" method="POST" style="display:inline">
+              <button class="btn btn-sm btn-outline-danger py-0 btn-delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
