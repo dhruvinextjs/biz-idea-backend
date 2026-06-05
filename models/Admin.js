@@ -11,6 +11,7 @@ const ALL_PERMISSIONS = [
   'services',
   'faqs',
   'testimonials',
+  'privacy-policy',
   'users',
   'contacts',
   'newsletter',

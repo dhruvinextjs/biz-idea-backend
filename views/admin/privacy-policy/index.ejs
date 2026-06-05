@@ -1,0 +1,59 @@
+<%- include('../partials/header') %>
+
+<div class="card">
+  <div class="card-header">
+    Privacy Policy
+  </div>
+
+  <div class="card-body">
+    <form action="/admin/privacy-policy" method="POST">
+
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input
+          type="text"
+          name="title"
+          class="form-control"
+          value="<%= policy.title %>"
+        >
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Content</label>
+
+        <textarea
+          id="editor"
+          name="content"
+          class="form-control"
+          rows="15"
+        ><%= policy.content %></textarea>
+      </div>
+
+      <div class="form-check mb-3">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          name="isActive"
+          value="true"
+          <%= policy.isActive ? 'checked' : '' %>
+        >
+        <label class="form-check-label">
+          Active
+        </label>
+      </div>
+
+      <button class="btn btn-primary">
+        Save Privacy Policy
+      </button>
+
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+
+<script>
+  CKEDITOR.replace('editor');
+</script>
+
+<%- include('../partials/footer') %>

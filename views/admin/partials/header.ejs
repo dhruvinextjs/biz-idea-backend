@@ -336,6 +336,26 @@
             <% } %>
         </a>
 
+        <a href="/admin/privacy-policy"
+   class="nav-link <%= title==='Privacy Policy'?'active':'' %> <%= !hasAccess('privacy-policy')?'disabled-link':'' %>">
+  <i class="bi bi-shield-check"></i> Privacy Policy
+  <% if(!hasAccess('privacy-policy')){ %>
+    <i class="bi bi-lock permission-lock"></i>
+  <% } %>
+</a>
+
+<a href="/admin/terms-condition"
+   class="nav-link">
+  <i class="bi bi-file-earmark-text"></i>
+  Terms & Conditions
+</a>
+
+<a href="/admin/about"
+   class="nav-link">
+   <i class="bi bi-info-circle"></i>
+   About Page
+</a>
+
         <span class="nav-section">People</span>
         <a href="/admin/users"
           class="nav-link <%= title==='Users'?'active':'' %> <%= !hasAccess('users')?'disabled-link':'' %>">

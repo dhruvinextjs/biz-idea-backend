@@ -36,7 +36,7 @@
 // module.exports = router;
 
 const express = require('express');
-const router  = express.Router();
+const router = express.Router();
 const {
   checkUsername,
   getStages,
@@ -50,8 +50,15 @@ const {
   getMe,
   updateProfile,
   changePassword,
+  saveProfileInfo,
+  addSocialLink,
+  getSocialLinks,
+  deleteSocialLink,
+  editdesctiptionprofile,
+  editsocialLink,
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
+const upload = require("../middleware/upload")
 
 // ─────────────────────────────────────────────────────────
 //  STEP 1 — Username check + user creation
@@ -64,7 +71,7 @@ router.post('/check-username', checkUsername);
 //  GET options  → POST /signup/stages
 //  Save choice  → POST /signup/save-stage  [token required]
 // ─────────────────────────────────────────────────────────
-router.post('/signup/stages',     protect, getStages);
+router.post('/signup/stages', protect, getStages);
 router.post('/signup/save-stage', protect, saveStage);
 
 // ─────────────────────────────────────────────────────────
@@ -72,7 +79,7 @@ router.post('/signup/save-stage', protect, saveStage);
 //  GET options  → POST /signup/coding-levels
 //  Save choice  → POST /signup/save-coding-level  [token required]
 // ─────────────────────────────────────────────────────────
-router.post('/signup/coding-levels',     protect, getCodingLevels);
+router.post('/signup/coding-levels', protect, getCodingLevels);
 router.post('/signup/save-coding-level', protect, saveCodingLevel);
 
 // ─────────────────────────────────────────────────────────
@@ -80,13 +87,15 @@ router.post('/signup/save-coding-level', protect, saveCodingLevel);
 //  GET options  → POST /signup/business-interests
 //  Save choices → POST /signup/save-business-interests  [token required]
 // ─────────────────────────────────────────────────────────
-router.post('/signup/business-interests',     protect, getBusinessInterests);
+router.post('/signup/business-interests', protect, getBusinessInterests);
 router.post('/signup/save-business-interests', protect, saveBusinessInterests);
 
 // ─────────────────────────────────────────────────────────
 //  STEP 5 — No API (frontend collects birthdate/location/twitter)
 //  These fields are sent directly in Step 6 body
 // ─────────────────────────────────────────────────────────
+
+router.post('/signup/save-profile', protect, saveProfileInfo);
 
 // ─────────────────────────────────────────────────────────
 //  STEP 6 — Complete registration
@@ -103,8 +112,40 @@ router.post('/login', login);
 // ─────────────────────────────────────────────────────────
 //  PROFILE  [token required]
 // ─────────────────────────────────────────────────────────
-router.get ('/me',              protect, getMe);
-router.put ('/update-profile',  protect, updateProfile);
-router.put ('/change-password', protect, changePassword);
+router.get('/me', protect, getMe);
+router.put('/update-profile', protect, updateProfile);
+router.put('/change-password', protect, changePassword);
+
+
+router.post(
+  '/add-social-link',
+  protect,
+  addSocialLink
+);
+
+router.get(
+  '/get-social-links',
+  protect,
+  getSocialLinks
+);
+
+router.delete(
+  '/delete-social-link/:platform',
+  protect,
+  deleteSocialLink
+);
+
+router.put(
+  '/edit-social-link/:platform',
+  protect,
+  editsocialLink
+);
+
+router.post(
+  '/edit-description-profile',
+  protect,
+  upload.single('Profilephoto'),
+  editdesctiptionprofile
+);
 
 module.exports = router;

@@ -3,12 +3,55 @@
 <div class="card" style="max-width:700px">
   <div class="card-header"><%= service ? '✏️ Edit Service' : '➕ Add Service' %></div>
   <div class="card-body">
-    <form action="/admin/services/<%= service ? service._id + '/edit' : 'create' %>" method="POST">
+    <form
+  action="/admin/services/<%= service ? service._id + '/edit' : 'create' %>"
+  method="POST"
+  enctype="multipart/form-data"
+>
       <div class="row g-3">
-        <div class="col-md-2">
-          <label class="form-label fw-semibold">Icon</label>
-          <input type="text" name="icon" class="form-control" value="<%= service ? service.icon : '💼' %>" placeholder="💼"/>
-        </div>
+      <div class="col-12">
+  <label class="form-label fw-semibold">Service Image</label>
+
+  <input
+    type="file"
+    name="image"
+    class="form-control"
+    accept="image/*"
+  />
+
+  <% if(service && service.image) { %>
+    <div class="mt-2">
+      <img
+        src="<%= service.image %>"
+        width="120"
+        style="border-radius:8px"
+      />
+    </div>
+  <% } %>
+</div>
+
+<div class="col-12">
+  <label class="form-label fw-semibold">
+    Detail Page Image
+  </label>
+
+  <input
+    type="file"
+    name="detailImage"
+    class="form-control"
+    accept="image/*"
+  />
+
+  <% if(service && service.detailImage) { %>
+    <div class="mt-2">
+      <img
+        src="<%= service.detailImage %>"
+        width="120"
+        style="border-radius:8px"
+      />
+    </div>
+  <% } %>
+</div>
         <div class="col-md-10">
           <label class="form-label fw-semibold">Title *</label>
           <input type="text" name="title" class="form-control" value="<%= service ? service.title : '' %>" required/>
@@ -21,6 +64,38 @@
           <label class="form-label fw-semibold">Full Description</label>
           <textarea name="fullDescription" class="form-control" rows="4"><%= service ? service.fullDescription : '' %></textarea>
         </div>
+        <div class="col-12">
+  <h5 class="mt-3">What You Get</h5>
+</div>
+
+<% for(let i = 0; i < 6; i++) { %>
+
+<div class="col-md-6">
+  <label class="form-label fw-semibold">
+    Feature <%= i + 1 %> Title
+  </label>
+
+  <input
+    type="text"
+    name="featureTitle[]"
+    class="form-control"
+    value="<%= service?.features?.[i]?.title || '' %>"
+  />
+</div>
+
+<div class="col-md-6">
+  <label class="form-label fw-semibold">
+    Feature <%= i + 1 %> Description
+  </label>
+
+  <textarea
+    name="featureDescription[]"
+    class="form-control"
+    rows="2"
+  ><%= service?.features?.[i]?.description || '' %></textarea>
+</div>
+
+<% } %>
         <div class="col-md-6">
           <label class="form-label fw-semibold">Price</label>
           <input type="text" name="price" class="form-control" value="<%= service ? service.price : 'Contact Us' %>" placeholder="$499 / Contact Us"/>

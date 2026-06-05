@@ -6,6 +6,8 @@ const flash = require('connect-flash');
 const methodOverride = require('method-override');
 const path = require('path');
 require('dotenv').config();
+require("./utils/captchaCleanup");
+const globalSearchRoutes = require("./routes/globalSearchRoutes");
 
 const parseFormBooleans = require('./middleware/parseForm');
 const app = express();
@@ -23,6 +25,10 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(parseFormBooleans);
 
+
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")))
+
+
 // ─── Session (admin panel only) ──────────────────
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -37,6 +43,7 @@ const authRoutes = require('./routes/auth');
 const ideaRoutes = require('./routes/ideas');
 const { csRouter, postRouter, blogRouter, miscRouter } = require('./routes/other');
 const contactRoutes = require('./routes/contact');
+const aboutRoutes = require('./routes/about');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/ideas', ideaRoutes);
@@ -45,6 +52,14 @@ app.use('/api/posts', postRouter);
 app.use('/api/blogs', blogRouter);
 app.use('/api', miscRouter);
 app.use('/api', contactRoutes);
+app.use('/api/privacy-policy', require('./routes/privacyPolicy'));
+app.use(
+  '/api/terms-condition',
+  require('./routes/termsCondition')
+);
+app.use('/api/about', aboutRoutes);
+app.use("/api/bookmarks", require("./routes/bookmarkRoutes"));
+app.use("/api/global-search", globalSearchRoutes);
 
 // ─── Admin API Routes (JWT based) ────────────────
 const adminApiRoutes = require('./routes/admin/adminApi');

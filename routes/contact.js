@@ -1,9 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { submitContact, subscribe, unsubscribe } = require('../controllers/contactController');
+const { submitContact, subscribe, unsubscribe, getCaptcha } = require('../controllers/contactController');
 
 // Contact form
 router.post('/contact', submitContact);
+
+router.get(
+  "/captcha",
+  getCaptcha
+);
 
 // Newsletter
 router.post('/newsletter/subscribe', subscribe);

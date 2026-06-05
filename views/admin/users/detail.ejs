@@ -34,6 +34,34 @@
           <tr><td class="text-muted">Email</td><td><%= user.email %></td></tr>
           <tr><td class="text-muted">Bio</td><td><%= user.bio || '-' %></td></tr>
           <tr><td class="text-muted">Joined</td><td><%= new Date(user.createdAt).toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'}) %></td></tr>
+          <tr>
+  <td class="text-muted">Location</td>
+  <td><%= user.location || '-' %></td>
+</tr>
+
+<tr>
+  <td class="text-muted">Birth Date</td>
+  <td>
+    <%= user.birthdate
+      ? new Date(user.birthdate).toLocaleDateString('en-IN')
+      : '-' %>
+  </td>
+</tr>
+
+<tr>
+  <td class="text-muted">Twitter</td>
+  <td><%= user.twitterHandle || '-' %></td>
+</tr>
+
+<tr>
+  <td class="text-muted">Description</td>
+  <td><%= user.description || '-' %></td>
+</tr>
+
+<tr>
+  <td class="text-muted">Coding Level</td>
+  <td><%= user.codingLevel || '-' %></td>
+</tr>
         </table>
       </div>
     </div>
@@ -46,30 +74,37 @@
             <td class="text-muted" width="140">Stage</td>
             <td>
               <% if (user.stage) { %>
-                <span class="badge bg-primary bg-opacity-10 text-primary" style="border:1px solid #c7d2fe"><%= user.stage %></span>
+                <span class="badge bg-primary bg-opacity-10 text-primary" style="border:1px solid #c7d2fe"><%= user.stage?.name || user.stage?.title || '-' %></span>
               <% } else { %><span class="text-muted">-</span><% } %>
             </td>
           </tr>
-          <tr>
+          <!-- <tr>
             <td class="text-muted">Role</td>
             <td>
               <% if (user.selfRole) { %>
                 <span class="badge bg-success bg-opacity-10 text-success" style="border:1px solid #bbf7d0"><%= user.selfRole %></span>
               <% } else { %><span class="text-muted">-</span><% } %>
             </td>
-          </tr>
-          <tr>
-            <td class="text-muted">Interests</td>
-            <td>
-              <% if (user.interests && user.interests.length > 0) { %>
-                <div class="d-flex flex-wrap gap-1">
-                  <% user.interests.forEach(interest => { %>
-                    <span class="badge bg-warning bg-opacity-10 text-warning" style="border:1px solid #fde68a;font-size:.72rem"><%= interest %></span>
-                  <% }) %>
-                </div>
-              <% } else { %><span class="text-muted">-</span><% } %>
-            </td>
-          </tr>
+          </tr> -->
+        <tr>
+  <td class="text-muted">Business Interests</td>
+  <td>
+    <% if (user.businessInterests && user.businessInterests.length > 0) { %>
+      <div class="d-flex flex-wrap gap-1">
+        <% user.businessInterests.forEach(interest => { %>
+          <span
+            class="badge bg-warning bg-opacity-10 text-warning"
+            style="border:1px solid #fde68a;font-size:.72rem"
+          >
+            <%= interest %>
+          </span>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <span class="text-muted">-</span>
+    <% } %>
+  </td>
+</tr>
         </table>
       </div>
     </div>

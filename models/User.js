@@ -130,16 +130,6 @@ const CODING_LEVELS = [
   "Yes, and I'm intermediate or a professional",
 ];
 
-const BUSINESS_INTERESTS = [
-  'E-commerce / Online Store',
-  'SaaS / Software',
-  'Content / Media',
-  'Freelancing / Agency',
-  'Mobile App',
-  'AI / Tech Startup',
-  'Local / Service Business',
-  'Other',
-];
 
 const userSchema = new mongoose.Schema(
   {
@@ -170,13 +160,13 @@ const userSchema = new mongoose.Schema(
 
     // STEP 4 — Business Interests
     businessInterests: {
-      type: [{ type: String, enum: BUSINESS_INTERESTS }],
+      type: [String],
       default: [],
     },
 
     // STEP 5 — Profile info
-    birthdate:     { type: Date,   default: null },
-    location:      { type: String, trim: true, default: '' },
+    birthdate: { type: Date, default: null },
+    location: { type: String, trim: true, default: '' },
     twitterHandle: { type: String, trim: true, default: '' },
 
     // STEP 6 — Credentials
@@ -184,11 +174,13 @@ const userSchema = new mongoose.Schema(
 
     email: {
       type: String,
-      unique: true,
-      sparse: true,          // null values pe unique check skip hoga
       lowercase: true,
       trim: true,
       match: [/^\S+@\S+\.\S+$/, 'Invalid email'],
+      index: {
+        unique: true,
+        sparse: true,
+      },
     },
 
     password: {
@@ -199,15 +191,74 @@ const userSchema = new mongoose.Schema(
 
     // Profile extras
     avatar: { type: String, default: '/images/avatar.png' },
-    bio:    { type: String, default: '', maxlength: 300 },
+    bio: { type: String, default: '', maxlength: 300 },
 
     // Status
-    isActive:        { type: Boolean, default: true },
+    isActive: { type: Boolean, default: true },
     isEmailVerified: { type: Boolean, default: false },
 
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    twitterId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+
+    // Provider info
+    authProvider: {
+      type: String,
+      enum: ['local', 'google', 'twitter'],
+      default: 'local'
+    },
+    // User Model me add karo
+
+    socialLinks: [
+      {
+        platform: {
+          type: String,
+          enum: [
+            'email',
+            'linkedin',
+            'instagram',
+            'twitter',
+            'facebook',
+            'whatsapp',
+            'telegram',
+            'reddit',
+            'snapchat',
+            'twitch',
+            'youtube',
+            'tiktok',
+            'pinterest',
+            'dribbble',
+            'behance',
+            'discord',
+            'tumblr'
+          ],
+          required: true,
+        },
+
+        link: {
+          type: String,
+          required: true,
+          trim: true,
+        }
+      }
+    ],
+    description : {
+      type : String
+    },
+    Profilephoto : {
+      type : String
+    },
+
     // Activity
-    upvotedPosts:       [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
-    upvotedIdeas:       [{ type: mongoose.Schema.Types.ObjectId, ref: 'BusinessIdea' }],
+    upvotedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
+    upvotedIdeas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'BusinessIdea' }],
     upvotedCaseStudies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CaseStudy' }],
   },
   { timestamps: true }
@@ -225,7 +276,6 @@ userSchema.methods.comparePassword = async function (candidate) {
   return bcrypt.compare(candidate, this.password);
 };
 
-userSchema.statics.CODING_LEVELS      = CODING_LEVELS;
-userSchema.statics.BUSINESS_INTERESTS = BUSINESS_INTERESTS;
+userSchema.statics.CODING_LEVELS = CODING_LEVELS;
 
 module.exports = mongoose.model('User', userSchema);

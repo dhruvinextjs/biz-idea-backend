@@ -13,7 +13,7 @@
   <div class="card-body p-0">
     <table class="table table-hover mb-0">
       <thead>
-        <tr><th>#</th><th>User</th><th>Email</th><th>Stage</th><th>Role</th><th>Interests</th><th>Status</th><th>Joined</th><th>Actions</th></tr>
+        <tr><th>#</th><th>User</th><th>Email</th><th>Stage</th><th>Interests</th><th>Status</th><th>Joined</th><th>Actions</th></tr>
       </thead>
       <tbody>
         <% if (users.length === 0) { %>
@@ -31,15 +31,13 @@
           <td><small><%= u.email %></small></td>
           <td>
             <% if (u.stage) { %>
-              <span style="font-size:.72rem;background:#eef2ff;color:#4338ca;padding:.15rem .4rem;border-radius:4px;border:1px solid #c7d2fe"><%= u.stage %></span>
+              <span style="font-size:.72rem;background:#eef2ff;color:#4338ca;padding:.15rem .4rem;border-radius:4px;border:1px solid #c7d2fe"><%= u.stage?.name || u.stage?.title || '-' %></span>
             <% } else { %><span class="text-muted">-</span><% } %>
           </td>
-          <td>
-            <% if (u.selfRole) { %>
-              <span style="font-size:.72rem;background:#f0fdf4;color:#15803d;padding:.15rem .4rem;border-radius:4px;border:1px solid #bbf7d0"><%= u.selfRole %></span>
-            <% } else { %><span class="text-muted">-</span><% } %>
-          </td>
-          <td><small class="text-muted"><%= u.interests && u.interests.length > 0 ? u.interests.length + ' selected' : '-' %></small></td>
+        
+          <td><small class="text-muted"><%= u.businessInterests && u.businessInterests.length > 0
+? u.businessInterests.length + ' selected'
+: '-' %></small></td>
           <td><span class="badge <%= u.isActive ? 'badge-active' : 'badge-inactive' %>"><%= u.isActive ? 'Active' : 'Inactive' %></span></td>
           <td><small class="text-muted"><%= new Date(u.createdAt).toLocaleDateString() %></small></td>
           <td>

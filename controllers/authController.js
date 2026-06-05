@@ -700,7 +700,7 @@ exports.saveCodingLevel = asyncHandler(async (req, res) => {
 // ====================== STEP 4 — GET BUSINESS INTERESTS (Dynamic) ======================
 exports.getBusinessInterests = async (req, res) => {
   try {
-    const businessInterests = await BusinessInterest.find({ isActive: true })
+    const businessInterests = await Skill.find({ isActive: true })
       .sort({ name: 1 });
 
     res.json({
@@ -731,10 +731,20 @@ exports.getBusinessInterests = async (req, res) => {
 exports.saveBusinessInterests = asyncHandler(async (req, res) => {
   const { businessInterests } = req.body;
 
-  if (!Array.isArray(businessInterests))
-    return res.status(400).json({ success: false, message: 'businessInterests must be an array.' });
+  if (!Array.isArray(businessInterests)) {
+    return res.status(400).json({
+      success: false,
+      message: 'businessInterests must be an array.',
+    });
+  }
 
-  const valid = businessInterests.filter(i => User.BUSINESS_INTERESTS.includes(i));
+  // Check valid skills from DB
+  const skills = await Skill.find({
+    name: { $in: businessInterests },
+    isActive: true,
+  });
+
+  const valid = skills.map(skill => skill.name);
 
   const user = await User.findByIdAndUpdate(
     req.user.id,
@@ -743,18 +753,71 @@ exports.saveBusinessInterests = asyncHandler(async (req, res) => {
   );
 
   res.json({
-    success:           true,
-    message:           'Business interests saved successfully.',
+    success: true,
+    message: 'Business interests saved successfully.',
     businessInterests: user.businessInterests,
   });
 });
 
 // ══════════════════════════════════════════════════════════════════
-//  STEP 5 — No separate API
-//  Frontend collects: birthdate, location, twitterHandle
-//  These are sent in Step 6 (register) body
+//  STEP 5 — Save profile info
+//  POST /api/auth/signup/save-profile
+//  Body: {
+//    "birthdate": "2002-05-15",
+//    "location": "Ahmedabad",
+//    "twitterHandle": "helly_dev"
+//  }
+//  Auth: Bearer token
 // ══════════════════════════════════════════════════════════════════
 
+exports.saveProfileInfo = asyncHandler(async (req, res) => {
+  const { birthdate, location, twitterHandle } = req.body;
+
+  // Validation
+  if (!birthdate) {
+    return res.status(400).json({
+      success: false,
+      message: 'Birthdate is required.',
+    });
+  }
+
+  if (!location || !location.trim()) {
+    return res.status(400).json({
+      success: false,
+      message: 'Location is required.',
+    });
+  }
+
+  if (!twitterHandle || !twitterHandle.trim()) {
+    return res.status(400).json({
+      success: false,
+      message: 'Twitter handle is required.',
+    });
+  }
+
+  // Optional cleanup
+  const cleanTwitter = twitterHandle.replace('@', '').trim();
+
+  const user = await User.findByIdAndUpdate(
+    req.user.id,
+    {
+      birthdate: new Date(birthdate),
+      location: location.trim(),
+      twitterHandle: cleanTwitter,
+    },
+    { new: true }
+  );
+
+  res.json({
+    success: true,
+    message: 'Profile information saved successfully.',
+    data: {
+      birthdate: user.birthdate,
+      location: user.location,
+      twitterHandle: user.twitterHandle,
+    },
+  });
+});
 // ══════════════════════════════════════════════════════════════════
 //  STEP 6 — Complete registration (email + password + step5 fields)
 //  POST /api/auth/register
@@ -764,7 +827,7 @@ exports.saveBusinessInterests = asyncHandler(async (req, res) => {
 //  This COMPLETES the user record that was created in Step 1
 // ══════════════════════════════════════════════════════════════════
 exports.register = asyncHandler(async (req, res) => {
-  const { email, password, birthdate, location, twitterHandle } = req.body;
+  const { email, password } = req.body;
 
   if (!email || !password)
     return res.status(400).json({ success: false, message: 'Email and password are required.' });
@@ -786,27 +849,12 @@ exports.register = asyncHandler(async (req, res) => {
   if (emailExists)
     return res.status(400).json({ success: false, message: 'Email is already registered.' });
 
-  // Validate birthdate
-  let parsedBirthdate = null;
-  if (birthdate) {
-    parsedBirthdate = new Date(birthdate);
-    if (isNaN(parsedBirthdate.getTime()))
-      return res.status(400).json({ success: false, message: 'Invalid birthdate format. Use YYYY-MM-DD.' });
-    const age = Math.floor((Date.now() - parsedBirthdate) / (365.25 * 24 * 60 * 60 * 1000));
-    if (age < 13)
-      return res.status(400).json({ success: false, message: 'You must be at least 13 years old.' });
-  }
-
-  // Clean twitter handle
-  let cleanTwitter = (twitterHandle || '').trim();
-  if (cleanTwitter.startsWith('@')) cleanTwitter = cleanTwitter.slice(1);
+ 
 
   // Complete the user record
   user.email         = email.toLowerCase().trim();
   user.password      = password;         // pre-save hook will hash it
-  user.birthdate     = parsedBirthdate;
-  user.location      = (location || '').trim();
-  user.twitterHandle = cleanTwitter;
+  
 
   await user.save();
 
@@ -915,19 +963,263 @@ exports.updateProfile = asyncHandler(async (req, res) => {
 //  PUT /api/auth/change-password
 //  Auth: Bearer token (user)
 // ══════════════════════════════════════════════════════════════════
+// exports.changePassword = asyncHandler(async (req, res) => {
+//   const { currentPassword, newPassword } = req.body;
+
+//   if (!currentPassword || !newPassword)
+//     return res.status(400).json({ success: false, message: 'Both fields are required.' });
+//   if (newPassword.length < 6)
+//     return res.status(400).json({ success: false, message: 'New password must be at least 6 characters.' });
+
+//   const user = await User.findById(req.user.id).select('+password');
+//   if (!(await user.comparePassword(currentPassword)))
+//     return res.status(400).json({ success: false, message: 'Current password is incorrect.' });
+
+//   user.password = newPassword;
+//   await user.save();
+//   res.json({ success: true, message: 'Password changed successfully.' });
+// });
+
+
 exports.changePassword = asyncHandler(async (req, res) => {
-  const { currentPassword, newPassword } = req.body;
+  const { currentPassword, newPassword, confirmPassword } = req.body;
 
-  if (!currentPassword || !newPassword)
-    return res.status(400).json({ success: false, message: 'Both fields are required.' });
-  if (newPassword.length < 6)
-    return res.status(400).json({ success: false, message: 'New password must be at least 6 characters.' });
+  // Check required fields
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    return res.status(400).json({
+      success: false,
+      message: 'Current password, new password and confirm password are required.',
+    });
+  }
 
+  // Password length validation
+  if (newPassword.length < 6) {
+    return res.status(400).json({
+      success: false,
+      message: 'New password must be at least 6 characters.',
+    });
+  }
+
+  // New & confirm password match check
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({
+      success: false,
+      message: 'New password and confirm password do not match.',
+    });
+  }
+
+  // Get user with password
   const user = await User.findById(req.user.id).select('+password');
-  if (!(await user.comparePassword(currentPassword)))
-    return res.status(400).json({ success: false, message: 'Current password is incorrect.' });
 
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: 'User not found.',
+    });
+  }
+
+  // Check current password
+  const isMatch = await user.comparePassword(currentPassword);
+
+  if (!isMatch) {
+    return res.status(400).json({
+      success: false,
+      message: 'Current password is incorrect.',
+    });
+  }
+
+  // Prevent same password
+  if (currentPassword === newPassword) {
+    return res.status(400).json({
+      success: false,
+      message: 'New password must be different from current password.',
+    });
+  }
+
+  // Update password
   user.password = newPassword;
+
   await user.save();
-  res.json({ success: true, message: 'Password changed successfully.' });
+
+  res.json({
+    success: true,
+    message: 'Password changed successfully.',
+  });
+});
+
+
+
+// ADD / UPDATE SOCIAL LINK
+exports.addSocialLink = asyncHandler(async (req, res) => {
+
+    const { platform, link } = req.body;
+
+    if (!platform || !link) {
+        return res.status(400).json({
+            success: false,
+            message: 'Platform and link are required.'
+        });
+    }
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: 'User not found.'
+        });
+    }
+
+    // check existing platform
+    const existingLink = user.socialLinks.find(
+        item => item.platform === platform
+    );
+
+    // update existing
+    if (existingLink) {
+
+        existingLink.link = link;
+
+    } else {
+
+        // add new
+        user.socialLinks.push({
+            platform,
+            link
+        });
+    }
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'Social link saved successfully.',
+        data: user.socialLinks
+    });
+});
+
+
+
+// GET SOCIAL LINKS
+exports.getSocialLinks = asyncHandler(async (req, res) => {
+
+    const user = await User.findById(req.user.id)
+        .select('socialLinks');
+
+    res.status(200).json({
+        success: true,
+        data: user.socialLinks || []
+    });
+});
+
+
+
+// DELETE SOCIAL LINK
+exports.deleteSocialLink = asyncHandler(async (req, res) => {
+
+    const { platform } = req.params;
+
+    const user = await User.findById(req.user.id);
+
+    user.socialLinks = user.socialLinks.filter(
+        item => item.platform !== platform
+    );
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'Social link deleted successfully.',
+        data: user.socialLinks
+    });
+});
+
+exports.editsocialLink = asyncHandler(async (req, res) => {
+
+    const { platform } = req.params;
+    const { link } = req.body;
+
+    if (!link) {
+        return res.status(400).json({
+            success: false,
+            message: 'Link is required.'
+        });
+    }
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: 'User not found.'
+        });
+    }
+
+    // find social link
+    const socialLink = user.socialLinks.find(
+        item => item.platform === platform
+    );
+
+    if (!socialLink) {
+        return res.status(404).json({
+            success: false,
+            message: 'Social link not found.'
+        });
+    }
+
+    // update link
+    socialLink.link = link;
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'Social link updated successfully.',
+        data: user.socialLinks
+    });
+
+});
+
+
+exports.editdesctiptionprofile = asyncHandler(async (req, res) => {
+  const { name, description } = req.body;
+
+  // Find logged in user
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: 'User not found',
+    });
+  }
+
+  // Update name
+  if (name) {
+    user.name = name.trim();
+  }
+
+  // Update description
+  if (description) {
+    user.description = description.trim();
+  }
+
+  // Update profile photo
+  // multer upload field name = Profilephoto
+  if (req.file) {
+    user.Profilephoto = `/uploads/profile/${req.file.filename}`;
+  }
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Profile updated successfully',
+    data: {
+      _id: user._id,
+      name: user.name,
+      description: user.description,
+      Profilephoto: user.Profilephoto,
+    },
+  });
 });

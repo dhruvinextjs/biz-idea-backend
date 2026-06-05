@@ -40,4 +40,8 @@ miscRouter.get('/testimonials', getTestimonials);
 miscRouter.get('/tools', getTools);
 miscRouter.get('/search', globalSearch);
 
-module.exports = { csRouter, postRouter, blogRouter, miscRouter };
+const privacyPolicyController = require('../controllers/privacyPolicyController');
+router.get('/', privacyPolicyController.getPrivacyPolicy);
+
+
+module.exports = { csRouter, postRouter, blogRouter, miscRouter,router };

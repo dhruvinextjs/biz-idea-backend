@@ -1,0 +1,222 @@
+<%- include('../partials/header') %>
+
+<div class="card">
+  <div class="card-header">
+    About Page
+  </div>
+
+  <div class="card-body">
+
+    <form action="/admin/about" method="POST" enctype="multipart/form-data">
+
+      <h5 class="mb-3">Hero Section</h5>
+
+      <div class="mb-3">
+        <label>Heading Line 1</label>
+        <input
+          type="text"
+          name="headingLine1"
+          class="form-control"
+          value="<%= about ? about.headingLine1 : '' %>"
+        >
+      </div>
+
+      <div class="mb-3">
+        <label>Heading Line 2</label>
+        <input
+          type="text"
+          name="headingLine2"
+          class="form-control"
+          value="<%= about ? about.headingLine2 : '' %>"
+        >
+      </div>
+
+      <div class="mb-3">
+        <label>Heading Line 3</label>
+        <input
+          type="text"
+          name="headingLine3"
+          class="form-control"
+          value="<%= about ? about.headingLine3 : '' %>"
+        >
+      </div>
+
+      <div class="mb-3">
+        <label>Description 1</label>
+        <textarea
+          name="description1"
+          class="form-control"
+          rows="4"
+        ><%= about ? about.description1 : '' %></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label>Description 2</label>
+        <textarea
+          name="description2"
+          class="form-control"
+          rows="4"
+        ><%= about ? about.description2 : '' %></textarea>
+      </div>
+
+      <hr>
+
+      <h5 class="mb-3">Founder Section</h5>
+
+      <div class="mb-3">
+        <label>Founder Image</label>
+
+        <% if(about && about.founderImage){ %>
+          <div class="mb-2">
+            <img
+              src="<%= about.founderImage %>"
+              width="120"
+              class="img-thumbnail"
+            >
+          </div>
+        <% } %>
+
+        <input
+          type="file"
+          name="founderImage"
+          class="form-control"
+        >
+      </div>
+
+      <div class="mb-3">
+        <label>Founder Name</label>
+        <input
+          type="text"
+          name="founderName"
+          class="form-control"
+          value="<%= about ? about.founderName : '' %>"
+        >
+      </div>
+
+      <div class="mb-3">
+        <label>Story Title</label>
+        <input
+          type="text"
+          name="storyTitle"
+          class="form-control"
+          value="<%= about ? about.storyTitle : '' %>"
+        >
+      </div>
+
+      <div class="mb-3">
+        <label>Story Content</label>
+
+        <textarea
+          id="editor"
+          name="storyContent"
+          class="form-control"
+          rows="10"
+        ><%= about ? about.storyContent : '' %></textarea>
+      </div>
+
+      <hr>
+
+      <h5 class="mb-3">Mission Section</h5>
+
+      <div class="mb-3">
+        <label>Mission Title</label>
+        <input
+          type="text"
+          name="missionTitle"
+          class="form-control"
+          value="<%= about ? about.missionTitle : '' %>"
+        >
+      </div>
+
+      <div class="mb-3">
+        <label>Mission Description</label>
+        <textarea
+          name="missionDescription"
+          class="form-control"
+          rows="4"
+        ><%= about ? about.missionDescription : '' %></textarea>
+      </div>
+
+      <hr>
+
+      <h5 class="mb-3">Vision Section</h5>
+
+      <div class="mb-3">
+        <label>Vision Title</label>
+        <input
+          type="text"
+          name="visionTitle"
+          class="form-control"
+          value="<%= about ? about.visionTitle : '' %>"
+        >
+      </div>
+
+      <div class="mb-3">
+        <label>Vision Description</label>
+        <textarea
+          name="visionDescription"
+          class="form-control"
+          rows="4"
+        ><%= about ? about.visionDescription : '' %></textarea>
+      </div>
+
+      <hr>
+
+      <h5 class="mb-3">Statistics</h5>
+
+      <div class="mb-3">
+        <label>Business Ideas</label>
+        <input
+          type="text"
+          name="businessIdeas"
+          class="form-control"
+          value="<%= about ? about.businessIdeas : '' %>"
+        >
+      </div>
+
+      <div class="mb-3">
+        <label>Startup Ideas</label>
+        <input
+          type="text"
+          name="startupIdeas"
+          class="form-control"
+          value="<%= about ? about.startupIdeas : '' %>"
+        >
+      </div>
+
+      <div class="mb-3">
+        <label>Community Members</label>
+        <input
+          type="text"
+          name="communityMembers"
+          class="form-control"
+          value="<%= about ? about.communityMembers : '' %>"
+        >
+      </div>
+
+      <div class="mb-3">
+        <label>Projects Launched</label>
+        <input
+          type="text"
+          name="projectsLaunched"
+          class="form-control"
+          value="<%= about ? about.projectsLaunched : '' %>"
+        >
+      </div>
+
+      <button class="btn btn-primary">
+        Save About Page
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+
+<script>
+  CKEDITOR.replace('editor');
+</script>
+
+<%- include('../partials/footer') %>
