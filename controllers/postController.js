@@ -194,8 +194,3 @@ exports.addComment = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get homepage posts (recent)
-// @route   GET /api/posts/recent
-exports.getRecentPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find({ isActive: true }).sort({ isPinned: -1, createdAt: -1 }).limit(8).select('-comments');
-  res.json({ success: true, data: posts });
-});
