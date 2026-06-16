@@ -89,3 +89,88 @@ exports.getFeaturedIdeas = asyncHandler(async (req, res) => {
     data: { businessIdeas, appIdeas, startupIdeas }
   });
 });
+
+
+exports.toggleIdeaLike = async (req, res) => {
+  try {
+    const idea = await BusinessIdea.findById(req.params.id);
+
+    if (!idea) {
+      return res.status(404).json({
+        success: false,
+        message: "Idea not found",
+      });
+    }
+
+    const userId = req.user._id;
+
+    const alreadyLiked = idea.likes.includes(userId);
+
+    if (alreadyLiked) {
+      idea.likes = idea.likes.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+    } else {
+      idea.likes.push(userId);
+    }
+
+    await idea.save();
+
+    res.status(200).json({
+      success: true,
+      liked: !alreadyLiked,
+      totalLikes: idea.likes.length,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.toggleIdeaDislike = async (req, res) => {
+  try {
+    const idea = await BusinessIdea.findById(req.params.id);
+
+    if (!idea) {
+      return res.status(404).json({
+        success: false,
+        message: "Idea not found",
+      });
+    }
+
+    const userId = req.user._id;
+
+    const alreadyDisliked = idea.dislikes.some(
+      (id) => id.toString() === userId.toString()
+    );
+
+    if (alreadyDisliked) {
+      idea.dislikes = idea.dislikes.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+    } else {
+      // remove like first
+      idea.likes = idea.likes.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+
+      idea.dislikes.push(userId);
+    }
+
+    await idea.save();
+
+    res.json({
+      success: true,
+      disliked: !alreadyDisliked,
+      totalLikes: idea.likes.length,
+      totalDislikes: idea.dislikes.length,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

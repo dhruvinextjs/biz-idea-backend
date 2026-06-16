@@ -59,6 +59,7 @@ app.use(
 );
 app.use('/api/about', aboutRoutes);
 app.use("/api/bookmarks", require("./routes/bookmarkRoutes"));
+app.use("/api/comments", require("./routes/commentRoutes"));
 app.use("/api/global-search", globalSearchRoutes);
 
 // ─── Admin API Routes (JWT based) ────────────────

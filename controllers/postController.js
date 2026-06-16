@@ -79,6 +79,7 @@
 
 const Post = require('../models/Post');
 const { asyncHandler } = require('../middleware/auth');
+const slugify = require('slugify');
 
 // @desc    Get all approved posts (community feed)
 // @route   GET /api/posts
@@ -149,6 +150,7 @@ exports.createPost = asyncHandler(async (req, res) => {
 
   const post = await Post.create({
     title,
+     slug: slugify(title, { lower: true, strict: true }),
     content,
     image: image || null,                    // ← Image support
     tags: tags || [],

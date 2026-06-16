@@ -5,6 +5,7 @@ const router = express.Router();
 const csRouter = express.Router();
 const { getCaseStudies, getCaseStudy, upvoteCaseStudy, getFeaturedCaseStudies } = require('../controllers/caseStudyController');
 const { protect } = require('../middleware/auth');
+const { toggleIdeaLike } = require('../controllers/ideaController');
 
 csRouter.get('/featured', getFeaturedCaseStudies);
 csRouter.get('/', getCaseStudies);
@@ -23,10 +24,21 @@ postRouter.post('/:id/comments', protect, addComment);
 
 // Blogs
 const blogRouter = express.Router();
-const { getBlogs, getBlog, getFeaturedBlogs } = require('../controllers/blogController');
+
+const {
+  getBlogs,
+  getBlog,
+  getFeaturedBlogs,
+  toggleBlogLike,
+  toggleBlogDislike
+} = require('../controllers/blogController');
+
 blogRouter.get('/featured', getFeaturedBlogs);
 blogRouter.get('/', getBlogs);
 blogRouter.get('/:id', getBlog);
+
+blogRouter.post('/:id/like', protect, toggleBlogLike);
+blogRouter.post('/:id/dislike', protect, toggleBlogDislike);
 
 // Misc
 const miscRouter = express.Router();
@@ -41,6 +53,7 @@ miscRouter.get('/tools', getTools);
 miscRouter.get('/search', globalSearch);
 
 const privacyPolicyController = require('../controllers/privacyPolicyController');
+
 router.get('/', privacyPolicyController.getPrivacyPolicy);
 
 

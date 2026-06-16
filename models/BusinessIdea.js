@@ -22,6 +22,18 @@ const businessIdeaSchema = new mongoose.Schema({
   upvotedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   isActive: { type: Boolean, default: true },
   isFeatured: { type: Boolean, default: false },
+  likes: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+],
+dislikes: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+],
 }, { timestamps: true });
 
 businessIdeaSchema.pre('save', function (next) {

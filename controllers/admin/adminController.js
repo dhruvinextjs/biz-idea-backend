@@ -776,6 +776,47 @@ exports.deletePost = async (req, res) => {
   res.redirect("/admin/posts");
 };
 
+exports.getPendingPosts = async (req, res) => {
+  try {
+    const posts = await Post.find({
+      status: "pending",
+      isActive: true
+    })
+      .populate("userId", "name email")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: posts.length,
+      posts
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+exports.postsPage = async (req, res) => {
+  try {
+    const posts = await Post.find({
+      status: "pending"
+    })
+      .populate("userId", "name email")
+      .sort({ createdAt: -1 });
+
+    res.render("admin/posts", {
+      title: "Community Posts",
+      posts,
+      adminMeta: req.adminMeta
+    });
+  } catch (err) {
+    console.log(err);
+    res.redirect("/admin/dashboard");
+  }
+};
+
 // ========== CONTACTS ==========
 exports.getContacts = async (req, res) => {
   const page = parseInt(req.query.page) || 1;

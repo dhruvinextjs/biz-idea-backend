@@ -16,16 +16,45 @@
           <td>👍 <%= p.upvotes %></td>
           <td>💬 <%= p.commentCount %></td>
           <td><% if (p.isPinned) { %><span class="badge bg-warning text-dark">📌 Yes</span><% } else { %>-<% } %></td>
-          <td><span class="badge <%= p.isActive ? 'badge-active' : 'badge-inactive' %>"><%= p.isActive ? 'Visible' : 'Hidden' %></span></td>
+       <td>
+  <% if (p.status === 'pending') { %>
+    <span class="badge bg-warning text-dark">Pending</span>
+  <% } else if (p.status === 'approved') { %>
+    <span class="badge bg-success">Approved</span>
+  <% } else if (p.status === 'rejected') { %>
+    <span class="badge bg-danger">Rejected</span>
+  <% } %>
+</td>
           <td><%= new Date(p.createdAt).toLocaleDateString() %></td>
-          <td>
-            <form action="/admin/posts/<%= p._id %>/toggle" method="POST" style="display:inline">
-              <button class="btn btn-sm btn-outline-warning py-0 me-1"><%= p.isActive ? 'Hide' : 'Show' %></button>
-            </form>
-            <form action="/admin/posts/<%= p._id %>/delete" method="POST" style="display:inline">
-              <button class="btn btn-sm btn-outline-danger py-0 btn-delete"><i class="bi bi-trash"></i></button>
-            </form>
-          </td>
+         <td>
+  <% if (p.status === 'pending') { %>
+
+    <form action="/admin/posts/<%= p._id %>/approve" method="POST" style="display:inline">
+      <button class="btn btn-sm btn-success py-0 me-1">
+        Approve
+      </button>
+    </form>
+
+    <form action="/admin/posts/<%= p._id %>/reject" method="POST" style="display:inline">
+      <button class="btn btn-sm btn-danger py-0 me-1">
+        Reject
+      </button>
+    </form>
+
+  <% } %>
+
+  <form action="/admin/posts/<%= p._id %>/toggle" method="POST" style="display:inline">
+    <button class="btn btn-sm btn-outline-warning py-0 me-1">
+      <%= p.isActive ? 'Hide' : 'Show' %>
+    </button>
+  </form>
+
+  <form action="/admin/posts/<%= p._id %>/delete" method="POST" style="display:inline">
+    <button class="btn btn-sm btn-outline-danger py-0 btn-delete">
+      <i class="bi bi-trash"></i>
+    </button>
+  </form>
+</td>
         </tr>
         <% }) %>
       </tbody>

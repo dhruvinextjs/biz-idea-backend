@@ -31,3 +31,89 @@ exports.getFeaturedBlogs = asyncHandler(async (req, res) => {
   const blogs = await Blog.find({ isActive: true }).sort({ isFeatured: -1, publishedAt: -1 }).limit(4).select('-content');
   res.json({ success: true, data: blogs });
 });
+
+exports.toggleBlogLike = async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
+
+    const userId = req.user._id;
+
+    const alreadyLiked = blog.likes.some(
+  (id) => id.toString() === userId.toString()
+);
+
+    if (alreadyLiked) {
+      blog.likes = blog.likes.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+    } else {
+      blog.likes.push(userId);
+    }
+
+    await blog.save();
+
+    res.status(200).json({
+      success: true,
+      liked: !alreadyLiked,
+      totalLikes: blog.likes.length,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+exports.toggleBlogDislike = async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
+
+    const userId = req.user._id;
+
+    const alreadyDisliked = blog.dislikes.some(
+      (id) => id.toString() === userId.toString()
+    );
+
+    if (alreadyDisliked) {
+      blog.dislikes = blog.dislikes.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+    } else {
+      blog.likes = blog.likes.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+
+      blog.dislikes.push(userId);
+    }
+
+    await blog.save();
+
+    res.status(200).json({
+      success: true,
+      disliked: !alreadyDisliked,
+      totalLikes: blog.likes.length,
+      totalDislikes: blog.dislikes.length,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

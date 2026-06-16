@@ -16,6 +16,18 @@ const blogSchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true },
   isFeatured: { type: Boolean, default: false },
   publishedAt: { type: Date, default: Date.now },
+  likes: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+],
+dislikes: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+],
 }, { timestamps: true });
 
 blogSchema.pre('save', function (next) {

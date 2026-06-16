@@ -90,8 +90,6 @@ router.post(
   panelPermission('services'),
   admin.postCreateService
 );
-
-router.post('/services/create', panelPermission('services'), admin.postCreateService);
 router.get('/services/:id/edit', panelPermission('services'), admin.getEditService);
 router.post(
   '/services/:id/edit',
@@ -191,6 +189,8 @@ router.post('/posts/:id/approve', panelPermission('posts'), admin.approvePost);
 router.post('/posts/:id/reject', panelPermission('posts'), admin.rejectPost);
 router.post('/posts/:id/toggle', panelPermission('posts'), admin.togglePostStatus);
 router.post('/posts/:id/delete', panelPermission('posts'), admin.deletePost);
+router.get('/posts/pending', admin.getPendingPosts);
+router.get("/posts", admin.postsPage);
 
 // Contacts — permission: 'contacts'
 router.get('/contacts', panelPermission('contacts'), admin.getContacts);

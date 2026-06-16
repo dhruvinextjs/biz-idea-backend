@@ -49,30 +49,29 @@ exports.getBookmarks = async (req, res) => {
 
   const data = [];
 
-  for (const item of bookmarks) {
-    console.log("ITEM:", item);
-
-  for (const item of bookmarks) {
+ for (const item of bookmarks) {
   let content = null;
 
-  if (item.itemType === "idea") {
-    content = await BusinessIdea.findById(item.itemId);
-    console.log("IDEA FOUND:", content);
-  }
+    console.log("TYPE:", item.itemType);
+  console.log("ID:", item.itemId);
 
-  if (item.itemType === "blog") {
-    content = await Blog.findById(item.itemId);
-    console.log("BLOG FOUND:", content);
-  }
+
+if (item.itemType === "idea") {
+  content = await BusinessIdea.findById(item.itemId);
+  console.log("IDEA FOUND:", content);
+}
+
+if (item.itemType === "blog") {
+  content = await Blog.findById(item.itemId);
+  console.log("BLOG FOUND:", content);
+}
 
   if (item.itemType === "post") {
     content = await Post.findById(item.itemId);
-    console.log("POST FOUND:", content);
   }
 
   if (item.itemType === "case-study") {
     content = await CaseStudy.findById(item.itemId);
-    console.log("CASE STUDY FOUND:", content);
   }
 
   if (content) {
@@ -83,8 +82,6 @@ exports.getBookmarks = async (req, res) => {
     });
   }
 }
-  }
-
   res.json({
     success: true,
     count: data.length,
