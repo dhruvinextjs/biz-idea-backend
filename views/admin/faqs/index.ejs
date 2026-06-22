@@ -2,35 +2,73 @@
 
 <div class="row g-3">
   <!-- Add FAQ Form -->
-  <div class="col-md-5">
-    <div class="card">
+<div class="d-flex justify-content-end mb-3">
+  <a href="/admin/faqs/create" class="btn btn-primary">
+    <i class="bi bi-plus-lg"></i> Add FAQ
+  </a>
+</div>
+
+<div class="col-12">
+  <div class="collapse" id="faqForm">
+    <div class="card mb-3">
       <div class="card-header">➕ Add New FAQ</div>
       <div class="card-body">
         <form action="/admin/faqs/create" method="POST">
+
           <div class="mb-3">
             <label class="form-label fw-semibold">Question *</label>
-            <input type="text" name="question" class="form-control" required placeholder="Why should I use this?"/>
+            <input
+              type="text"
+              name="question"
+              class="form-control"
+              required
+            />
           </div>
+
           <div class="mb-3">
             <label class="form-label fw-semibold">Answer *</label>
-            <textarea name="answer" class="form-control" rows="4" required placeholder="Because it saves hours..."></textarea>
+            <textarea
+              name="answer"
+              class="form-control"
+              rows="4"
+              required
+            ></textarea>
           </div>
+
           <div class="mb-3">
             <label class="form-label fw-semibold">Order</label>
-            <input type="number" name="order" class="form-control" value="<%= faqs.length %>" min="0"/>
+            <input
+              type="number"
+              name="order"
+              class="form-control"
+              value="<%= faqs.length %>"
+              min="0"
+            />
           </div>
+
           <div class="form-check form-switch mb-3">
-            <input class="form-check-input" type="checkbox" name="isActive" value="true" checked/>
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="isActive"
+              value="true"
+              checked
+            />
             <label class="form-check-label">Active</label>
           </div>
-          <button type="submit" class="btn btn-primary w-100">Add FAQ</button>
+
+          <button type="submit" class="btn btn-primary">
+            Add FAQ
+          </button>
+
         </form>
       </div>
     </div>
   </div>
+</div>
 
   <!-- FAQ List -->
-  <div class="col-md-7">
+  <div class="col-md-12">
     <div class="card">
       <div class="card-header">📋 All FAQs (<%= faqs.length %>)</div>
       <div class="card-body p-0">

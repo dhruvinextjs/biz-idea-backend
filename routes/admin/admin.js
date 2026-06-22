@@ -106,11 +106,17 @@ router.post('/services/:id/delete', panelPermission('services'), admin.deleteSer
 
 // FAQs — permission: 'faqs'
 router.get('/faqs', panelPermission('faqs'), admin.getFAQs);
+router.get('/faqs/create', panelPermission('faqs'), admin.getCreateFaq);
 router.post('/faqs/create', panelPermission('faqs'), admin.postCreateFAQ);
 router.post('/faqs/:id/edit', panelPermission('faqs'), admin.postEditFAQ);
 router.post('/faqs/:id/delete', panelPermission('faqs'), admin.deleteFAQ);
 
 // Testimonials — permission: 'testimonials'
+router.get(
+  "/testimonials/create",
+  panelPermission("testimonials"),
+  admin.getCreateTestimonial
+);
 router.get('/testimonials', panelPermission('testimonials'), admin.getTestimonials);
 // router.post('/testimonials/create', panelPermission('testimonials'), admin.postCreateTestimonial);
 router.post(
