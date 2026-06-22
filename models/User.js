@@ -249,11 +249,16 @@ const userSchema = new mongoose.Schema(
         }
       }
     ],
-    description : {
-      type : String
+    description: {
+      type: String
     },
-    Profilephoto : {
-      type : String
+    Profilephoto: {
+      type: String
+    },
+
+    emailNotifications: {
+      newBusinessIdeas: { type: Boolean, default: false },  // default off
+      marketingEmails: { type: Boolean, default: false }, // default OFF
     },
 
     // Activity

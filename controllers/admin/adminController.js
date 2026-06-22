@@ -10,6 +10,8 @@ const User = require("../../models/User");
 const Admin = require("../../models/Admin");
 const { Contact, Newsletter } = require("../../models/Contact");
 const AboutPage = require('../../models/AboutPage');
+const sendIdeaNotification = require('../../utils/sendIdeaNotification');
+
 
 // ========== PANEL AUTH ==========
 exports.getLogin = (req, res) => {
@@ -125,16 +127,34 @@ exports.getCreateIdea = (req, res) => {
     error: req.flash("error"),
   });
 };
+// exports.postCreateIdea = async (req, res) => {
+//   try {
+//     await BusinessIdea.create(req.body);
+//     req.flash("success", "Idea created.");
+//     res.redirect(`/admin/ideas?type=${req.body.type || "business"}`);
+//   } catch (e) {
+//     req.flash("error", e.message);
+//     res.redirect("/admin/ideas/create?type=" + (req.body.type || "business"));
+//   }
+// };
+
 exports.postCreateIdea = async (req, res) => {
   try {
-    await BusinessIdea.create(req.body);
-    req.flash("success", "Idea created.");
-    res.redirect(`/admin/ideas?type=${req.body.type || "business"}`);
+    const idea = await BusinessIdea.create(req.body);
+ 
+    // ✅ Idea create hone ke baad notification bhejo (async, non-blocking)
+    sendIdeaNotification(idea).catch(err =>
+      console.error('Notification error:', err.message)
+    );
+ 
+    req.flash('success', 'Idea created.');
+    res.redirect(`/admin/ideas?type=${req.body.type || 'business'}`);
   } catch (e) {
-    req.flash("error", e.message);
-    res.redirect("/admin/ideas/create?type=" + (req.body.type || "business"));
+    req.flash('error', e.message);
+    res.redirect('/admin/ideas/create?type=' + (req.body.type || 'business'));
   }
 };
+
 exports.getEditIdea = async (req, res) => {
   const idea = await BusinessIdea.findById(req.params.id);
   if (!idea) {
