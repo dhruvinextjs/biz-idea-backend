@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 
 // Case Studies
 const csRouter = express.Router();
@@ -12,15 +14,34 @@ csRouter.get('/', getCaseStudies);
 csRouter.get('/:id', getCaseStudy);
 csRouter.post('/:id/upvote', protect, upvoteCaseStudy);
 
+const postStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads/posts');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const postUpload = multer({
+  storage: postStorage
+});
+
 // Posts
 const postRouter = express.Router();
-const { getPosts, getPost, createPost, upvotePost, addComment, getRecentPosts } = require('../controllers/postController');
+const { getPosts, getPost, createPost, upvotePost, addComment, getRecentPosts,deletePost } = require('../controllers/postController');
 postRouter.get('/recent', getRecentPosts);
 postRouter.get('/', getPosts);
 postRouter.get('/:id', getPost);
-postRouter.post('/', protect, createPost);
+postRouter.post(
+  '/',
+  protect,
+  postUpload.single('image'),
+  createPost
+);
 postRouter.post('/:id/upvote', protect, upvotePost);
 postRouter.post('/:id/comments', protect, addComment);
+postRouter.delete('/:id', protect, deletePost);
 
 // Blogs
 const blogRouter = express.Router();

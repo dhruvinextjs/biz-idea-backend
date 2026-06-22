@@ -11,6 +11,35 @@ const businessIdeaSchema = new mongoose.Schema({
     enum: ['AI & Tech', 'SaaS', 'E-Commerce', 'Local Business', 'Services', 'Other'],
     default: 'Other'
   },
+  platform: {
+  type: String,
+  enum: [
+    "iOS & Android",
+    "Mac/PC Desktop",
+    "Web App",
+    "Wearable OS"
+  ]
+},
+
+costToBuild: {
+  type: String,
+  enum: [
+    "$0 - $2K",
+    "$2K - $5K",
+    "$5K - $20K",
+    "$20K+"
+  ]
+},
+
+monetization: {
+  type: String,
+  enum: [
+    "Free",
+    "Paid",
+    "In-App Purchase",
+    "Ads"
+  ]
+},
   type: { type: String, enum: ['business', 'app', 'startup'], default: 'business' },
   investmentMin: { type: Number, default: 1000 },
   investmentMax: { type: Number, default: 5000 },

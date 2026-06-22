@@ -8,14 +8,31 @@ const buildFilter = (query, type) => {
   if (query.investment) {
     const ranges = { '$0 - $2K': [0, 2000], '$2K - $5K': [2000, 5000], '$5K - $20K': [5000, 20000], '$20K+': [20000, Infinity] };
     const range = ranges[query.investment];
-    if (range) {
-      filter.investmentMin = { $gte: range[0] };
-      if (range[1] !== Infinity) filter.investmentMax = { $lte: range[1] };
-    }
+  if (range) {
+  if (range[1] === Infinity) {
+    filter.investmentMax = { $gte: range[0] };
+  } else {
+    filter.$and = [
+      { investmentMin: { $lte: range[1] } },
+      { investmentMax: { $gte: range[0] } }
+    ];
+  }
+}
   }
 
   if (query.industry) filter.category = query.industry;
   if (query.teamSize) filter.teamSize = query.teamSize;
+  if (query.platform) {
+  filter.platform = query.platform;
+}
+
+if (query.costToBuild) {
+  filter.costToBuild = query.costToBuild;
+}
+
+if (query.monetization) {
+  filter.monetization = query.monetization;
+}
 
   if (query.profitMargin) {
     const margins = { '0-20%': [0, 20], '21-50%': [21, 50], '51-80%': [51, 80], '80%+': [80, 100] };
@@ -31,14 +48,18 @@ const buildFilter = (query, type) => {
 // @desc    Get all ideas (business/app/startup)
 // @route   GET /api/ideas?type=business&page=1&limit=9
 exports.getIdeas = asyncHandler(async (req, res) => {
+    console.log("QUERY =>", req.query);
+
   const type = req.query.type || 'business';
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 9;
   const skip = (page - 1) * limit;
 
   const filter = buildFilter(req.query, type);
+  console.log("FILTER =>", filter);
   const total = await BusinessIdea.countDocuments(filter);
   const ideas = await BusinessIdea.find(filter).sort({ isFeatured: -1, createdAt: -1 }).skip(skip).limit(limit);
+  console.log("TOTAL IDEAS =>", ideas.length);
 
   res.json({
     success: true,

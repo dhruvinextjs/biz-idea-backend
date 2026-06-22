@@ -15,7 +15,7 @@ const commentSchema = new mongoose.Schema(
 
     itemType: {
       type: String,
-      enum: ["idea", "blog", "case-study"],
+      enum: ["idea", "blog", "case-study","post"],
       required: true,
     },
 
@@ -24,6 +24,43 @@ const commentSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
+
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
+     replies: {
+  type: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+
+      text: {
+        type: String,
+        required: true,
+      },
+
+      likes: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
+}
   },
   {
     timestamps: true,
