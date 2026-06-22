@@ -1,49 +1,17 @@
 <%- include('../partials/header') %>
 
 <div class="row g-3">
-  <div class="col-md-4">
-    <div class="card">
-      <div class="card-header">➕ Add Testimonial</div>
-      <div class="card-body">
-        <form action="/admin/testimonials/create" method="POST" enctype="multipart/form-data">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Name *</label>
-            <input type="text" name="name" class="form-control" required placeholder="Aarav"/>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Role / Company</label>
-            <input type="text" name="role" class="form-control" placeholder="Bootstrapped Founder"/>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Content *</label>
-            <textarea name="content" class="form-control" rows="3" required placeholder="This is the kind of resource I wish I had..."></textarea>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Image URL</label>
-            <input
-  type="file"
-  name="image"
-  class="form-control"
-  accept="image/*"
-/>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Rating (1-5)</label>
-            <input type="number" name="rating" class="form-control" value="5" min="1" max="5"/>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Order</label>
-            <input type="number" name="order" class="form-control" value="<%= testimonials.length %>"/>
-          </div>
-          <button type="submit" class="btn btn-primary w-100">Add Testimonial</button>
-        </form>
-      </div>
-    </div>
-  </div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+  <h4>⭐ All Testimonials (<%= testimonials.length %>)</h4>
+
+  <a href="/admin/testimonials/create" class="btn btn-primary">
+    ➕ Add Testimonial
+  </a>
+</div>
 
   <div class="col-md-8">
     <div class="card">
-      <div class="card-header">⭐ All Testimonials (<%= testimonials.length %>)</div>
+      
       <div class="card-body p-0">
         <% if (testimonials.length === 0) { %><div class="text-center text-muted py-4">No testimonials yet.</div><% } %>
         <% testimonials.forEach(t => { %>

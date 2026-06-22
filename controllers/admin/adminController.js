@@ -411,6 +411,14 @@ exports.deleteService = async (req, res) => {
 };
 
 // ========== FAQs ==========
+exports.getCreateFaq = (req, res) => {
+  res.render('admin/faqs/create', {
+    title: 'Add FAQ',
+    error: req.flash('error'),
+    success: req.flash('success')
+  });
+};
+
 exports.getFAQs = async (req, res) => {
   const faqs = await FAQ.find().sort({ order: 1 });
   res.render("admin/faqs/index", {
@@ -437,6 +445,14 @@ exports.deleteFAQ = async (req, res) => {
 };
 
 // ========== TESTIMONIALS ==========
+exports.getCreateTestimonial = (req, res) => {
+  res.render("admin/testimonials/create", {
+    title: "Add Testimonial",
+    error: req.flash("error"),
+    success: req.flash("success"),
+  });
+};
+
 exports.getTestimonials = async (req, res) => {
   const testimonials = await Testimonial.find().sort({ order: 1 });
   res.render("admin/testimonials/index", {
