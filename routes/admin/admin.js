@@ -44,6 +44,19 @@ const aboutUpload = multer({
 });
 
 
+const ideaStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/uploads/ideas");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const ideaUpload = multer({
+  storage: ideaStorage,
+});
+
 
 // ── Public ──────────────────────────────────────────
 router.get('/login', admin.getLogin);
@@ -68,9 +81,9 @@ router.get('/dashboard', panelPermission('dashboard'), admin.getDashboard);
 // Ideas — permission: 'ideas'
 router.get('/ideas', panelPermission('ideas'), admin.getIdeas);
 router.get('/ideas/create', panelPermission('ideas'), admin.getCreateIdea);
-router.post('/ideas/create', panelPermission('ideas'), admin.postCreateIdea);
+router.post('/ideas/create', panelPermission('ideas'),ideaUpload.single('image'), admin.postCreateIdea);
 router.get('/ideas/:id/edit', panelPermission('ideas'), admin.getEditIdea);
-router.post('/ideas/:id/edit', panelPermission('ideas'), admin.postEditIdea);
+router.post('/ideas/:id/edit', panelPermission('ideas'),ideaUpload.single('image'), admin.postEditIdea);
 router.post('/ideas/:id/delete', panelPermission('ideas'), admin.deleteIdea);
 router.get(
   '/ideas/:id/view',
@@ -105,6 +118,7 @@ router.post(
   panelPermission('services'),
   admin.postCreateService
 );
+router.get('/services/create', panelPermission('services'), admin.getCreateService);
 router.get('/services/:id/edit', panelPermission('services'), admin.getEditService);
 router.post(
   '/services/:id/edit',
