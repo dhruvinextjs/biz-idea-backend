@@ -1128,12 +1128,37 @@ exports.getCreateIdea = (req, res) => {
   res.render("admin/ideas/form", { title: "Create Idea", idea: null, type });
 };
 
+// exports.postCreateIdea = async (req, res) => {
+//   try {
+//     const idea = await BusinessIdea.create(req.body);
+//     sendIdeaNotification(idea).catch(err => console.error('Notification error:', err.message));
+//     req.flash('success', 'Idea created.');
+//     res.redirect(`/admin/ideas?type=${req.body.type || 'business'}`);
+//   } catch (e) {
+//     req.flash('error', e.message);
+//     res.redirect('/admin/ideas/create?type=' + (req.body.type || 'business'));
+//   }
+// };
+
 exports.postCreateIdea = async (req, res) => {
   try {
-    const idea = await BusinessIdea.create(req.body);
-    sendIdeaNotification(idea).catch(err => console.error('Notification error:', err.message));
+
+    const data = {
+      ...req.body
+    };
+
+    if (req.file) {
+      data.image = `/uploads/ideas/${req.file.filename}`;
+    }
+
+    const idea = await BusinessIdea.create(data);
+
+    sendIdeaNotification(idea)
+      .catch(err => console.error('Notification error:', err.message));
+
     req.flash('success', 'Idea created.');
     res.redirect(`/admin/ideas?type=${req.body.type || 'business'}`);
+
   } catch (e) {
     req.flash('error', e.message);
     res.redirect('/admin/ideas/create?type=' + (req.body.type || 'business'));
@@ -1146,13 +1171,35 @@ exports.getEditIdea = async (req, res) => {
   res.render("admin/ideas/form", { title: "Edit Idea", idea, type: idea.type });
 };
 
+// exports.postEditIdea = async (req, res) => {
+//   try {
+//     await BusinessIdea.findByIdAndUpdate(req.params.id, req.body);
+//     req.flash("success", "Idea updated.");
+//     res.redirect(`/admin/ideas?type=${req.body.type || "business"}`);
+//   } catch (e) {
+//     req.flash("error", e.message);
+//     res.redirect(`/admin/ideas/${req.params.id}/edit`);
+//   }
+// };
+
 exports.postEditIdea = async (req, res) => {
   try {
-    await BusinessIdea.findByIdAndUpdate(req.params.id, req.body);
-    req.flash("success", "Idea updated.");
-    res.redirect(`/admin/ideas?type=${req.body.type || "business"}`);
+
+    const data = {
+      ...req.body
+    };
+
+    if (req.file) {
+      data.image = `/uploads/ideas/${req.file.filename}`;
+    }
+
+    await BusinessIdea.findByIdAndUpdate(req.params.id, data);
+
+    req.flash('success', 'Idea updated.');
+    res.redirect(`/admin/ideas?type=${req.body.type || 'business'}`);
+
   } catch (e) {
-    req.flash("error", e.message);
+    req.flash('error', e.message);
     res.redirect(`/admin/ideas/${req.params.id}/edit`);
   }
 };
