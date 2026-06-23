@@ -289,19 +289,29 @@
               <%= idea.isActive ? 'Active' : 'Hidden' %>
             </span>
           </td>
-          <td>
-            <div class="d-flex gap-1">
-              <a href="/admin/ideas/<%= idea._id %>/edit" class="action-btn" title="Edit">
-                <i class="bi bi-pencil"></i>
-              </a>
-              <form action="/admin/ideas/<%= idea._id %>/delete?type=<%= type %>" method="POST"
-                onsubmit="return confirm('Delete this idea?')">
-                <button type="submit" class="action-btn danger" title="Delete">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </form>
-            </div>
-          </td>
+        <td>
+  <div class="d-flex gap-1">
+
+    <!-- View -->
+    <a href="/admin/ideas/<%= idea._id %>/view" class="action-btn" title="View">
+      <i class="bi bi-eye"></i>
+    </a>
+
+    <!-- Edit -->
+    <a href="/admin/ideas/<%= idea._id %>/edit" class="action-btn" title="Edit">
+      <i class="bi bi-pencil"></i>
+    </a>
+
+    <!-- Delete -->
+    <form action="/admin/ideas/<%= idea._id %>/delete?type=<%= type %>" method="POST"
+      onsubmit="return confirm('Delete this idea?')">
+      <button type="submit" class="action-btn danger" title="Delete">
+        <i class="bi bi-trash"></i>
+      </button>
+    </form>
+
+  </div>
+</td>
         </tr>
         <% }) %>
       </tbody>
