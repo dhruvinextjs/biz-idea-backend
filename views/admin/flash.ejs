@@ -1,0 +1,23 @@
+<%
+  // Safe flash read — sirf tab render karo jab actual message ho
+  const _success = typeof success !== 'undefined' && Array.isArray(success) ? success.filter(Boolean) : 
+                   typeof success === 'string' && success ? [success] : [];
+  const _error   = typeof error !== 'undefined' && Array.isArray(error) ? error.filter(Boolean) :
+                   typeof error === 'string' && error ? [error] : [];
+%>
+
+<% if (_success.length > 0) { %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    <%= _success[0] %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+<% } %>
+
+<% if (_error.length > 0) { %>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-circle-fill me-2"></i>
+    <%= _error[0] %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+<% } %>

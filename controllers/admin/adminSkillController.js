@@ -58,7 +58,7 @@ exports.panelCreateForm = (req, res) => {
 
 exports.panelCreate = async (req, res) => {
   try {
-    const data = { ...req.body, isActive: req.body.isActive === "on" };
+    const data = { ...req.body, isActive: req.body.isActive === "on" }; 
     await Skill.create(data);
     req.flash("success", "Skill created!");
     res.redirect("/admin/skills");

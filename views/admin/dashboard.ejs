@@ -1,84 +1,213 @@
 <%- include('./partials/header') %>
 
+<style>
+  .stat-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem 1rem;
+    text-align: center;
+    transition: box-shadow 0.2s;
+  }
+  .stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+  .stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.6rem;
+    font-size: 1.2rem;
+  }
+  .stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.25rem;
+  }
+  .section-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+  }
+  .section-card-header {
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .section-card-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #64748b;
+    margin: 0;
+  }
+  .table { margin: 0; }
+  .table thead th {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #94a3b8;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 0.65rem 1rem;
+    background: #fafafa;
+  }
+  .table tbody td {
+    font-size: 0.875rem;
+    color: #334155;
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f8fafc;
+  }
+  .table tbody tr:last-child td { border-bottom: none; }
+  .table tbody tr:hover td { background: #fafafa; }
+  .badge-active {
+    background: #dcfce7;
+    color: #16a34a;
+    font-weight: 600;
+    font-size: 0.7rem;
+    padding: 0.25em 0.65em;
+    border-radius: 20px;
+  }
+  .badge-inactive {
+    background: #fee2e2;
+    color: #dc2626;
+    font-weight: 600;
+    font-size: 0.7rem;
+    padding: 0.25em 0.65em;
+    border-radius: 20px;
+  }
+  .btn-view-all {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6366f1;
+    border: 1px solid #e0e7ff;
+    border-radius: 6px;
+    padding: 0.25rem 0.75rem;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .btn-view-all:hover { background: #6366f1; color: #fff; }
+  .btn-edit-sm {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 5px;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    background: #fff;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .btn-edit-sm:hover { border-color: #6366f1; color: #6366f1; }
+</style>
+
+<!-- Stats Row -->
 <div class="row g-3 mb-4">
   <div class="col-6 col-md-4 col-lg-2">
     <div class="stat-card">
-      <div class="stat-icon bg-primary bg-opacity-10 text-primary mb-2">👥</div>
+      <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+        <i class="bi bi-people-fill"></i>
+      </div>
       <div class="stat-value"><%= stats.totalUsers %></div>
       <div class="stat-label">Users</div>
     </div>
   </div>
   <div class="col-6 col-md-4 col-lg-2">
     <div class="stat-card">
-      <div class="stat-icon bg-warning bg-opacity-10 text-warning mb-2">💡</div>
+      <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+        <i class="bi bi-lightbulb-fill"></i>
+      </div>
       <div class="stat-value"><%= stats.totalIdeas %></div>
       <div class="stat-label">Ideas</div>
     </div>
   </div>
   <div class="col-6 col-md-4 col-lg-2">
     <div class="stat-card">
-      <div class="stat-icon bg-success bg-opacity-10 text-success mb-2">📖</div>
+      <div class="stat-icon bg-success bg-opacity-10 text-success">
+        <i class="bi bi-journal-richtext"></i>
+      </div>
       <div class="stat-value"><%= stats.totalCaseStudies %></div>
       <div class="stat-label">Case Studies</div>
     </div>
   </div>
   <div class="col-6 col-md-4 col-lg-2">
     <div class="stat-card">
-      <div class="stat-icon bg-info bg-opacity-10 text-info mb-2">✍️</div>
+      <div class="stat-icon bg-info bg-opacity-10 text-info">
+        <i class="bi bi-pen-fill"></i>
+      </div>
       <div class="stat-value"><%= stats.totalBlogs %></div>
       <div class="stat-label">Blogs</div>
     </div>
   </div>
   <div class="col-6 col-md-4 col-lg-2">
     <div class="stat-card">
-      <div class="stat-icon bg-danger bg-opacity-10 text-danger mb-2">📨</div>
+      <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+        <i class="bi bi-envelope-fill"></i>
+      </div>
       <div class="stat-value"><%= stats.newContacts %></div>
       <div class="stat-label">New Enquiries</div>
     </div>
   </div>
   <div class="col-6 col-md-4 col-lg-2">
     <div class="stat-card">
-      <div class="stat-icon bg-purple bg-opacity-10 mb-2" style="color:#8b5cf6">🔔</div>
-      <div class="stat-value"><%= stats.totalNewsletterSubs %></div>
+      <div class="stat-icon" style="background:#f3f0ff; color:#8b5cf6;">
+        <i class="bi bi-bell-fill"></i>
+      </div>
+      <div class="stat-value"><%= stats.newsletterSubs %></div>
       <div class="stat-label">Subscribers</div>
     </div>
   </div>
 </div>
 
 <div class="row g-3">
-  <!-- Quick Actions -->
-  <div class="col-md-4">
-    <div class="card h-100">
-      <div class="card-header">⚡ Quick Actions</div>
-      <div class="card-body d-grid gap-2">
-        <a href="/admin/ideas/create?type=business" class="btn btn-outline-primary btn-sm text-start"><i class="bi bi-plus-circle me-2"></i>Add Business Idea</a>
-        <a href="/admin/ideas/create?type=app" class="btn btn-outline-primary btn-sm text-start"><i class="bi bi-plus-circle me-2"></i>Add App Idea</a>
-        <a href="/admin/ideas/create?type=startup" class="btn btn-outline-primary btn-sm text-start"><i class="bi bi-plus-circle me-2"></i>Add Startup Idea</a>
-        <a href="/admin/case-studies/create" class="btn btn-outline-success btn-sm text-start"><i class="bi bi-plus-circle me-2"></i>Add Case Study</a>
-        <a href="/admin/blogs/create" class="btn btn-outline-info btn-sm text-start"><i class="bi bi-plus-circle me-2"></i>Add Blog Post</a>
-        <a href="/admin/services/create" class="btn btn-outline-secondary btn-sm text-start"><i class="bi bi-plus-circle me-2"></i>Add Service</a>
-      </div>
-    </div>
-  </div>
 
   <!-- Recent Users -->
-  <div class="col-md-8">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        👤 Recent Users
-        <a href="/admin/users" class="btn btn-sm btn-outline-primary">View All</a>
+  <div class="col-12">
+    <div class="section-card">
+      <div class="section-card-header">
+        <span class="section-card-title">Recent Users</span>
+        <a href="/admin/users" class="btn-view-all">View All</a>
       </div>
-      <div class="card-body p-0">
-        <table class="table table-hover mb-0">
-          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th></tr></thead>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Joined</th>
+            </tr>
+          </thead>
           <tbody>
             <% recentUsers.forEach(u => { %>
             <tr>
-              <td><strong><%= u.name %></strong><br><small class="text-muted">@<%= u.username %></small></td>
+              <td>
+                <strong><%= u.name %></strong>
+                <br><small class="text-muted">@<%= u.username %></small>
+              </td>
               <td><%= u.email %></td>
-              <td><span class="badge bg-<%= u.role === 'admin' ? 'danger' : 'secondary' %>"><%= u.role %></span></td>
-              <td><span class="badge <%= u.isActive ? 'badge-active' : 'badge-inactive' %>"><%= u.isActive ? 'Active' : 'Inactive' %></span></td>
-              <td><%= new Date(u.createdAt).toLocaleDateString() %></td>
+              
+              <td>
+                <span class="<%= u.isActive ? 'badge-active' : 'badge-inactive' %>">
+                  <%= u.isActive ? 'Active' : 'Inactive' %>
+                </span>
+              </td>
+              <td><%= new Date(u.createdAt).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }) %></td>
             </tr>
             <% }) %>
           </tbody>
@@ -89,25 +218,49 @@
 
   <!-- Recent Ideas -->
   <div class="col-12">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        💡 Recent Ideas
-        <a href="/admin/ideas" class="btn btn-sm btn-outline-primary">View All</a>
+    <div class="section-card">
+      <div class="section-card-header">
+        <span class="section-card-title">Recent Ideas</span>
+        <a href="/admin/ideas" class="btn-view-all">View All</a>
       </div>
-      <div class="card-body p-0">
-        <table class="table table-hover mb-0">
-          <thead><tr><th>Title</th><th>Type</th><th>Category</th><th>Investment</th><th>Margin</th><th>Status</th><th>Actions</th></tr></thead>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Type</th>
+              <th>Category</th>
+              <th>Investment</th>
+              <th>Margin</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
           <tbody>
             <% recentIdeas.forEach(idea => { %>
             <tr>
-              <td><strong><%= idea.title.substring(0,50) %><%= idea.title.length > 50 ? '...' : '' %></strong></td>
-              <td><span class="badge bg-primary"><%= idea.type %></span></td>
-              <td><%= idea.category %></td>
-              <td>$<%= idea.investmentMin.toLocaleString() %> - $<%= idea.investmentMax.toLocaleString() %></td>
-              <td><%= idea.profitMargin %>%</td>
-              <td><span class="badge <%= idea.isActive ? 'badge-active' : 'badge-inactive' %>"><%= idea.isActive ? 'Active' : 'Inactive' %></span></td>
               <td>
-                <a href="/admin/ideas/<%= idea._id %>/edit" class="btn btn-xs btn-outline-secondary btn-sm py-0">Edit</a>
+                <strong>
+                  <%= idea.title.substring(0,50) %><%= idea.title.length > 50 ? '…' : '' %>
+                </strong>
+              </td>
+              <td>
+                <span class="badge bg-primary" style="font-size:0.7rem; border-radius:20px;">
+                  <%= idea.type %>
+                </span>
+              </td>
+              <td><%= idea.category %></td>
+              <td style="white-space:nowrap;">
+                $<%= idea.investmentMin.toLocaleString() %> – $<%= idea.investmentMax.toLocaleString() %>
+              </td>
+              <td><%= idea.profitMargin %>%</td>
+              <td>
+                <span class="<%= idea.isActive ? 'badge-active' : 'badge-inactive' %>">
+                  <%= idea.isActive ? 'Active' : 'Inactive' %>
+                </span>
+              </td>
+              <td>
+                <a href="/admin/ideas/<%= idea._id %>/edit" class="btn-edit-sm">Edit</a>
               </td>
             </tr>
             <% }) %>
@@ -116,6 +269,7 @@
       </div>
     </div>
   </div>
+
 </div>
 
 <%- include('./partials/footer') %>

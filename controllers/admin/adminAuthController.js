@@ -37,7 +37,7 @@ exports.adminLogin = asyncHandler(async (req, res) => {
 });
 
 // ─────────────────────────────────────────────────────
-//  GET ALL SUB-ADMINS  (super admin only)
+//  GET ALL SUB-ADMINS  (super admin only
 //  GET /api/admin/sub-admins
 // ─────────────────────────────────────────────────────
 exports.getSubAdmins = asyncHandler(async (req, res) => {
@@ -118,3 +118,60 @@ exports.getPermissions = asyncHandler(async (req, res) => {
 exports.getAdminMe = asyncHandler(async (req, res) => {
   res.json({ success: true, admin: req.admin });
 });
+
+// ========== CHANGE PASSWORD ==========
+exports.getChangePassword = async (req, res) => {
+  const adminMeta = await Admin.findById(req.session.adminId);
+
+  res.render("admin/change_pass", {
+    title: "Change Password",
+    adminMeta,
+    error: req.flash("error"),
+    success: req.flash("success")
+  });
+};
+ 
+exports.postChangePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    const admin = await Admin.findById(req.session.adminId).select("+password");
+
+    if (!admin) {
+      req.flash("error", "Admin not found.");
+      return res.redirect("/admin/changepass");
+    }
+
+    const isMatch = await admin.comparePassword(currentPassword);
+    if (!isMatch) {
+      req.flash("error", "Current password is incorrect.");
+      return res.redirect("/admin/changepass");
+    }
+
+    if (newPassword.length < 6) {
+      req.flash("error", "Password must be at least 6 characters.");
+      return res.redirect("/admin/changepass");
+    }
+
+    if (newPassword !== confirmPassword) {
+      req.flash("error", "Confirm password does not match.");
+      return res.redirect("/admin/changepass");
+    }
+
+    admin.password = newPassword;
+    await admin.save();
+
+    // ✅ Flash set karo, PHIR session destroy karo
+    req.flash("success", "Password changed successfully.");
+    
+    req.session.destroy((err) => {
+      if (err) console.error("Session destroy error:", err);
+      // ✅ Query param se message pass karo — flash session pe depend karta tha jo ab destroy ho gaya
+      res.redirect("/admin/login?success=Password+changed+successfully.+Please+login+again.");
+    });
+
+  } catch (error) {
+    req.flash("error", error.message);
+    res.redirect("/admin/changepass");
+  }
+};

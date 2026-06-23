@@ -1,0 +1,21 @@
+<% Object.keys(messages).forEach(function(type) { %>
+
+    <% if (messages[type] && messages[type].length > 0) { %>
+
+        <div class="card-alert card <%= type %> alert-auto-close">
+            <div class="card-content white-text">
+                <% messages[type].forEach(function(message) { %>
+                    <%= message %>
+                <% }) %>
+            </div>
+
+            <button type="button"
+                    class="close white-text"
+                    data-dismiss="alert">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+
+    <% } %>
+
+<% }) %>

@@ -1,324 +1,323 @@
 <%- include('../partials/header') %>
 
 <style>
-.idea-header{
-    background:#090e2d;
-    border-radius:24px;
-    padding:28px;
-    color:#fff;
-    margin-bottom:24px;
-    position:relative;
-    overflow:hidden;
-}
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  .page-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+  }
+  .page-subtitle {
+    font-size: 0.825rem;
+    color: #94a3b8;
+    margin: 0.15rem 0 0;
+  }
+  .btn-add {
+    background: #6366f1;
+    border: none;
+    color: #fff;
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background 0.2s;
+  }
+  .btn-add:hover { background: #4f46e5; color: #fff; }
 
-.idea-header::before{
-    content:"";
-    position:absolute;
-    right:-40px;
-    top:-40px;
-    width:180px;
-    height:180px;
-    border-radius:50%;
-    background:rgba(253,115,6,.12);
-}
+  .type-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .type-tab {
+    padding: 0.45rem 1.1rem;
+    border-radius: 999px;
+    font-size: 0.825rem;
+    font-weight: 600;
+    border: 1.5px solid #e2e8f0;
+    color: #64748b;
+    text-decoration: none;
+    transition: all 0.2s;
+    background: #fff;
+  }
+  .type-tab:hover { border-color: #6366f1; color: #6366f1; }
+  .type-tab.active {
+    background: #6366f1;
+    border-color: #6366f1;
+    color: #fff;
+  }
 
-.idea-header::after{
-    content:"";
-    position:absolute;
-    left:-30px;
-    bottom:-30px;
-    width:120px;
-    height:120px;
-    border-radius:50%;
-    background:rgba(253,115,6,.08);
-}
+  .section-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .section-card-header {
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .section-card-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #64748b;
+    margin: 0;
+  }
+  .records-badge {
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2em 0.7em;
+    border-radius: 20px;
+  }
+  .table { margin: 0; }
+  .table thead th {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #94a3b8;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 0.65rem 1rem;
+    background: #fafafa;
+    white-space: nowrap;
+  }
+  .table tbody td {
+    font-size: 0.875rem;
+    color: #334155;
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f8fafc;
+  }
+  .table tbody tr:last-child td { border-bottom: none; }
+  .table tbody tr:hover td { background: #fafafa; }
 
-.idea-card{
-    border:none;
-    border-radius:24px;
-    overflow:hidden;
-    box-shadow:
-    0 10px 25px rgba(9,14,45,.06),
-    0 20px 60px rgba(9,14,45,.08);
-}
+  .idea-title-text { font-weight: 600; color: #1e293b; }
+  .idea-team { font-size: 0.75rem; color: #94a3b8; margin-top: 2px; }
 
-.idea-card .card-header{
-    background:#fff;
-    border-bottom:1px solid #eef2f7;
-}
+  .badge-cat {
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25em 0.7em;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+  }
+  .badge-type {
+    background: #ede9fe;
+    color: #6366f1;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.25em 0.7em;
+    border-radius: 20px;
+  }
+  .badge-featured {
+    background: #fef9c3;
+    color: #a16207;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25em 0.7em;
+    border-radius: 20px;
+  }
+  .badge-active {
+    background: #dcfce7;
+    color: #16a34a;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25em 0.7em;
+    border-radius: 20px;
+  }
+  .badge-inactive {
+    background: #f1f5f9;
+    color: #94a3b8;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25em 0.7em;
+    border-radius: 20px;
+  }
+  .action-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    color: #64748b;
+    text-decoration: none;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+  .action-btn:hover { border-color: #6366f1; color: #6366f1; }
+  .action-btn.danger:hover { border-color: #ef4444; color: #ef4444; }
 
-.type-btn{
-    border-radius:999px;
-    padding:.7rem 1.3rem;
-    font-weight:600;
-    transition:.3s;
-}
-
-.type-btn.btn-primary{
-    background:#fd7306;
-    border-color:#fd7306;
-}
-
-.type-btn.btn-primary:hover{
-    background:#e56400;
-    border-color:#e56400;
-}
-
-.btn-primary{
-    background:#fd7306;
-    border-color:#fd7306;
-}
-
-.btn-primary:hover{
-    background:#e56400;
-    border-color:#e56400;
-}
-
-.badge.bg-primary{
-    background:#090e2d !important;
-}
-
-.table thead th{
-    background:#f8f9fc;
-    color:#090e2d;
-    font-weight:700;
-    border:none;
-}
-
-.table tbody tr{
-    transition:.25s;
-}
-
-.table tbody tr:hover{
-    background:#fff8f3;
-}
-
-.action-btn{
-    width:38px;
-    height:38px;
-    border-radius:12px;
-}
-
-.action-btn.btn-outline-primary{
-    color:#090e2d;
-    border-color:#090e2d;
-}
-
-.action-btn.btn-outline-primary:hover{
-    background:#090e2d;
-    color:#fff;
-}
-
-.action-btn.btn-outline-danger:hover{
-    color:#fff;
-}
-
-.idea-title{
-    font-weight:700;
-    color:#090e2d;
-}
-
-.pagination .page-item.active .page-link{
-    background:#fd7306;
-    border-color:#fd7306;
-}
-
-.pagination .page-link{
-    color:#090e2d;
-}
-
-.stats-card{
-    border:none;
-    border-radius:20px;
-    padding:20px;
-    background:#fff;
-    box-shadow:0 8px 30px rgba(0,0,0,.05);
-}
-
-.stats-card h3{
-    color:#090e2d;
-    font-weight:800;
-}
-
-.stats-icon{
-    width:55px;
-    height:55px;
-    border-radius:14px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:rgba(253,115,6,.12);
-    color:#fd7306;
-    font-size:22px;
-}
-
-@media(max-width:768px){
-    .idea-header{
-        text-align:center;
-    }
-}
+  .pagination .page-link {
+    border-radius: 8px !important;
+    margin: 0 2px;
+    font-size: 0.825rem;
+    color: #475569;
+    border-color: #e2e8f0;
+  }
+  .pagination .page-item.active .page-link {
+    background: #6366f1;
+    border-color: #6366f1;
+    color: #fff;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #94a3b8;
+  }
+  .empty-state i { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; }
 </style>
 
-<div class="idea-header d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
-    <div>
-        <h3 class="fw-bold mb-1">
-            <i class="bi bi-lightbulb-fill me-2"></i>
-            Idea Management
-        </h3>
-        <p class="mb-0 opacity-75">
-            Manage all your business, app and startup ideas
-        </p>
-    </div>
+<%
+  const _success = Array.isArray(success) ? success.filter(Boolean) : (success ? [success] : []);
+  const _error   = Array.isArray(error)   ? error.filter(Boolean)   : (error   ? [error]   : []);
+%>
 
-<a href="/admin/ideas/create?type=<%= type %>" class="btn btn-light fw-semibold">
-    <i class="bi bi-plus-lg me-1"></i>
-    Add New Idea
-</a>
+<% if (_success.length > 0) { %>
+  <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2 mb-3" role="alert">
+    <i class="bi bi-check-circle-fill"></i> <%= _success[0] %>
+    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+  </div>
+<% } %>
+<% if (_error.length > 0) { %>
+  <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2 mb-3" role="alert">
+    <i class="bi bi-exclamation-circle-fill"></i> <%= _error[0] %>
+    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+  </div>
+<% } %>
 
-
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Idea Management</h1>
+    <p class="page-subtitle">Manage all business, app and startup ideas</p>
+  </div>
+  <a href="/admin/ideas/create?type=<%= type %>" class="btn-add">
+    <i class="bi bi-plus-lg"></i> Add New Idea
+  </a>
 </div>
 
-<div class="mb-4 d-flex flex-wrap gap-2">
-    <a href="/admin/ideas?type=business" class="btn type-btn <%= type === 'business' ? 'btn-primary' : 'btn-outline-primary' %>">
-         Business
-    </a>
-
-<a href="/admin/ideas?type=app" class="btn type-btn <%= type === 'app' ? 'btn-primary' : 'btn-outline-primary' %>">
-     App
-</a>
-
-<a href="/admin/ideas?type=startup" class="btn type-btn <%= type === 'startup' ? 'btn-primary' : 'btn-outline-primary' %>">
-     Startup
-</a>
-
-
+<div class="type-tabs">
+  <a href="/admin/ideas?type=business" class="type-tab <%= type === 'business' ? 'active' : '' %>">
+    Business
+  </a>
+  <a href="/admin/ideas?type=app" class="type-tab <%= type === 'app' ? 'active' : '' %>">
+    App
+  </a>
+  <a href="/admin/ideas?type=startup" class="type-tab <%= type === 'startup' ? 'active' : '' %>">
+    Startup
+  </a>
 </div>
 
-<div class="card idea-card">
-    <div class="card-header bg-white border-0 py-3">
-        <div class="d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-bold">Ideas List</h5>
-            <span class="badge bg-primary"><%= ideas.length %> Records</span>
-        </div>
-    </div>
+<div class="section-card">
+  <div class="section-card-header">
+    <span class="section-card-title">Ideas List</span>
+    <span class="records-badge"><%= ideas.length %> Records</span>
+  </div>
 
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Idea</th>
+          <th>Category</th>
+          <th>Investment</th>
+          <th>Margin</th>
+          <th>Featured</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (ideas.length === 0) { %>
+          <tr>
+            <td colspan="8">
+              <div class="empty-state">
+                <i class="bi bi-lightbulb"></i>
+                No ideas found. <a href="/admin/ideas/create?type=<%= type %>">Add one?</a>
+              </div>
+            </td>
+          </tr>
+        <% } %>
 
-<div class="table-responsive">
-    <table class="table idea-table table-hover mb-0">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Idea</th>
-                <th>Category</th>
-                <th>Investment</th>
-                <th>Margin</th>
-                <th>Featured</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <% if (ideas.length === 0) { %>
-                <tr>
-                    <td colspan="8" class="text-center py-5 text-muted">
-                        No ideas found.
-                    </td>
-                </tr>
+        <% ideas.forEach((idea, i) => { %>
+        <tr>
+          <td><%= ((currentPage - 1) * 10) + i + 1 %></td>
+          <td>
+            <div class="idea-title-text">
+              <%= idea.title.substring(0, 45) %><%= idea.title.length > 45 ? '…' : '' %>
+            </div>
+            <div class="idea-team"><%= idea.teamSize %></div>
+          </td>
+          <td><span class="badge-cat"><%= idea.category %></span></td>
+          <td style="white-space:nowrap;">
+            $<%= idea.investmentMin.toLocaleString() %> – $<%= idea.investmentMax.toLocaleString() %>
+          </td>
+          <td><strong><%= idea.profitMargin %>%</strong></td>
+          <td>
+            <% if (idea.isFeatured) { %>
+              <span class="badge-featured"><i class="bi bi-star-fill me-1"></i>Featured</span>
+            <% } else { %>
+              <span class="badge-inactive">No</span>
             <% } %>
-
-            <% ideas.forEach((idea, i) => { %>
-
-            <tr>
-                <td>
-                    <%= ((currentPage-1)*10)+i+1 %>
-                </td>
-
-                <td>
-                    <div class="idea-title">
-                        <%= idea.title.substring(0,45) %><%= idea.title.length > 45 ? '...' : '' %>
-
-                        <small class="text-muted">
-                            <%= idea.teamSize %>
-                        </small>
-                    </div>
-                </td>
-
-                <td>
-                    <span class="badge bg-light text-dark border">
-                        <%= idea.category %>
-                    </span>
-                </td>
-
-                <td>
-                    $<%= idea.investmentMin.toLocaleString() %> -
-                    $<%= idea.investmentMax.toLocaleString() %>
-                </td>
-
-                <td>
-                    <strong><%= idea.profitMargin %>%</strong>
-                </td>
-
-                <td>
-                    <% if (idea.isFeatured) { %>
-                        <span class="badge bg-warning text-dark">
-                             Featured
-                        </span>
-                    <% } else { %>
-                        <span class="badge bg-light text-secondary">
-                            No
-                        </span>
-                    <% } %>
-                </td>
-
-                <td>
-                    <span class="badge <%= idea.isActive ? 'bg-success' : 'bg-secondary' %>">
-                        <%= idea.isActive ? 'Active' : 'Hidden' %>
-                    </span>
-                </td>
-
-                <td>
-                    <div class="d-flex gap-2">
-
-                        <a href="/admin/ideas/<%= idea._id %>/edit"
-                           class="btn btn-outline-primary btn-sm action-btn">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-
-                        <form action="/admin/ideas/<%= idea._id %>/delete?type=<%= type %>" method="POST">
-
-                            <button type="submit"
-                                    class="btn btn-outline-danger btn-sm action-btn btn-delete">
-                                <i class="bi bi-trash"></i>
-                            </button>
-
-                        </form>
-
-                    </div>
-                </td>
-            </tr>
-
-            <% }) %>
-        </tbody>
+          </td>
+          <td>
+            <span class="<%= idea.isActive ? 'badge-active' : 'badge-inactive' %>">
+              <%= idea.isActive ? 'Active' : 'Hidden' %>
+            </span>
+          </td>
+          <td>
+            <div class="d-flex gap-1">
+              <a href="/admin/ideas/<%= idea._id %>/edit" class="action-btn" title="Edit">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <form action="/admin/ideas/<%= idea._id %>/delete?type=<%= type %>" method="POST"
+                onsubmit="return confirm('Delete this idea?')">
+                <button type="submit" class="action-btn danger" title="Delete">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
     </table>
-</div>
-
-
+  </div>
 </div>
 
 <% if (totalPages > 1) { %>
-
 <nav class="mt-4">
-    <ul class="pagination justify-content-center">
-        <% for(let i=1;i<=totalPages;i++){ %>
-            <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                <a class="page-link"
-                   href="/admin/ideas?type=<%= type %>&page=<%= i %>">
-                    <%= i %>
-                </a>
-            </li>
-        <% } %>
-    </ul>
+  <ul class="pagination justify-content-center">
+    <% for (let i = 1; i <= totalPages; i++) { %>
+      <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+        <a class="page-link" href="/admin/ideas?type=<%= type %>&page=<%= i %>"><%= i %></a>
+      </li>
+    <% } %>
+  </ul>
 </nav>
 <% } %>
 

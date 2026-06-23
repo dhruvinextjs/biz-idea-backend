@@ -1,0 +1,224 @@
+
+<%- include('./partials/header') %>
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Change Password</h4>
+                </div>
+
+                <div class="card-body">
+
+                    <form
+                        id="form"
+                        method="POST"
+                        action="/admin/changepass"
+                        onsubmit="return validate()">
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Current Password
+                            </label>
+
+                            <input
+                                type="password"
+                                class="form-control password"
+                                id="currentpass"
+                                name="currentPassword">
+
+                            <small class="text-danger">
+                                <div id="error1"></div>
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                New Password
+                            </label>
+
+                            <input
+                                type="password"
+                                class="form-control password"
+                                id="newpass"
+                                name="newPassword">
+
+                            <small class="text-danger">
+                                <div id="error2"></div>
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Confirm Password
+                            </label>
+
+                            <input
+                                type="password"
+                                class="form-control password"
+                                id="cfnewpass"
+                                name="confirmPassword">
+
+                            <small class="text-danger">
+                                <div id="error3"></div>
+                            </small>
+                        </div>
+
+                        <div class="form-check mb-3">
+
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                id="showPassword"
+                                onclick="togglePassword()">
+
+                            <label
+                                class="form-check-label"
+                                for="showPassword">
+
+                                Show Password
+
+                            </label>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="submitBtn">
+
+                            Submit
+
+                        </button>
+
+                        <a
+                            href="javascript:history.back()"
+                            class="btn btn-secondary">
+
+                            Cancel
+
+                        </a>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    const currentpass =
+        document.getElementById('currentpass');
+
+    const newpass =
+        document.getElementById('newpass');
+
+    const cfnewpass =
+        document.getElementById('cfnewpass');
+
+    function validate() {
+
+        let returnVal = true;
+
+        const passValue =
+            currentpass.value.trim();
+
+        const newpassValue =
+            newpass.value.trim();
+
+        const cfpassValue =
+            cfnewpass.value.trim();
+
+        if (passValue === '') {
+
+            document.getElementById('error1').innerText =
+                'Please enter current password.';
+
+            returnVal = false;
+
+        } else {
+
+            document.getElementById('error1').innerText = '';
+        }
+
+        if (newpassValue === '') {
+
+            document.getElementById('error2').innerText =
+                'Please enter new password.';
+
+            returnVal = false;
+
+        } else if (newpassValue.length < 6) {
+
+            document.getElementById('error2').innerText =
+                'Password must be at least 6 characters.';
+
+            returnVal = false;
+
+        } else if (newpassValue === passValue) {
+
+            document.getElementById('error2').innerText =
+                'New password cannot be same as current password.';
+
+            returnVal = false;
+
+        } else {
+
+            document.getElementById('error2').innerText = '';
+        }
+
+        if (cfpassValue === '') {
+
+            document.getElementById('error3').innerText =
+                'Please enter confirm password.';
+
+            returnVal = false;
+
+        } else if (cfpassValue !== newpassValue) {
+
+            document.getElementById('error3').innerText =
+                'Confirm password does not match.';
+
+            returnVal = false;
+
+        } else {
+
+            document.getElementById('error3').innerText = '';
+        }
+
+        if (returnVal) {
+
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('submitBtn').innerText = 'Submitting...';
+        }
+
+        return returnVal;
+    }
+
+    function togglePassword() {
+
+        const fields =
+            document.getElementsByClassName('password');
+
+        const type =
+            fields[0].type === 'password'
+                ? 'text'
+                : 'password';
+
+        for (let i = 0; i < fields.length; i++) {
+
+            fields[i].type = type;
+        }
+    }
+
+</script>
+
+<%- include('./partials/footer') %>
+

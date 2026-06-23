@@ -4,6 +4,7 @@ const admin = require('../../controllers/admin/adminController');
 const { adminSession, loadSessionAdmin, panelPermission } = require('../../middleware/auth');
 const multer = require('multer');
 const path = require("path");
+const { getChangePassword, postChangePassword } = require('../../controllers/admin/adminAuthController');
 
 const serviceStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -49,8 +50,15 @@ router.get('/login', admin.getLogin);
 router.post('/login', admin.postLogin);
 router.get('/logout', admin.logout);
 
+
+
 // ── All below require: session + load admin doc ─────
 router.use(adminSession, loadSessionAdmin);
+
+router
+    .route('/changepass')
+    .get(getChangePassword)
+    .post(postChangePassword);
 
 router.get('/', (req, res) => res.redirect('/admin/dashboard'));
 

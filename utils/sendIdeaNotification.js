@@ -51,7 +51,7 @@ const sendIdeaNotification = async (idea) => {
         <body>
           <div class="container">
             <div class="header">
-              <h1>🚀 TheBizIdeas</h1>
+              <h1>TheBizIdeas</h1>
             </div>
             <div class="body">
               <p>Hi <strong>${user.name || 'there'}</strong>,</p>
