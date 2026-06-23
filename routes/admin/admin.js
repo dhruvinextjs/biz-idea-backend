@@ -72,6 +72,11 @@ router.post('/ideas/create', panelPermission('ideas'), admin.postCreateIdea);
 router.get('/ideas/:id/edit', panelPermission('ideas'), admin.getEditIdea);
 router.post('/ideas/:id/edit', panelPermission('ideas'), admin.postEditIdea);
 router.post('/ideas/:id/delete', panelPermission('ideas'), admin.deleteIdea);
+router.get(
+  '/ideas/:id/view',
+  panelPermission('ideas'),
+  admin.viewIdea
+);
 
 // Case Studies — permission: 'case-studies'
 router.get('/case-studies', panelPermission('case-studies'), admin.getCaseStudies);

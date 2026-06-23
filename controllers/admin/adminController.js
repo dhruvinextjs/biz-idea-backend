@@ -1702,3 +1702,23 @@ exports.resetSubAdminPassword = async (req, res) => {
     res.redirect("/admin/sub-admins");
   }
 };
+
+exports.viewIdea = async (req, res) => {
+  try {
+    const idea = await BusinessIdea.findById(req.params.id);
+
+    if (!idea) {
+      req.flash('error', 'Idea not found');
+      return res.redirect('/admin/ideas');
+    }
+
+    res.render('admin/ideas/view', {
+      title: 'View Idea',
+      idea
+    });
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Something went wrong');
+    res.redirect('/admin/ideas');
+  }
+};
