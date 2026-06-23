@@ -112,17 +112,27 @@ app.set('views', path.join(__dirname, 'views'));
 
 // ─── Core Middleware ─────────────────────────────
 const allowedOrigins = [
-  "http://localhost:3000",
-  "https://biz-ideas-rouge.vercel.app"
+  'http://localhost:3000',
+    'http://localhost:5007',
+    'https://biz-idea-backend.onrender.com/',
+  'https://biz-ideas-rouge.vercel.app'
 ];
 
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
+  origin: function (origin, callback) {
+
+    console.log("REQUEST ORIGIN =>", origin);
+
+    // Allow requests with no origin
+    if (!origin) {
+      return callback(null, true);
     }
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
   },
   credentials: true
 }));
