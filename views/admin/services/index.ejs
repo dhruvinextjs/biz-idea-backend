@@ -1,51 +1,89 @@
 <%- include('../partials/header') %>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <span></span>
-  <a href="/admin/services/create" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>Add Service</a>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="mb-1 fw-bold"><i class="bi bi-briefcase me-2 text-primary"></i>Services</h4>
+    <p class="text-muted mb-0 small">Manage all services</p>
+  </div>
+  <a href="/admin/services/create" class="btn btn-primary">
+    <i class="bi bi-plus-lg me-1"></i> Add Service
+  </a>
 </div>
 
-<div class="card">
-  <div class="card-body p-0">
-    <table class="table table-hover mb-0">
-      <thead><tr><th>Order</th><th>Title</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
-      <tbody>
-        <% if (services.length === 0) { %>
-          <tr><td colspan="5" class="text-center text-muted py-4">No services yet.</td></tr>
-        <% } %>
-        <% services.forEach(s => { %>
-        <tr>
-          <td><%= s.order %></td>
-          <td>
-  <div class="d-flex align-items-center gap-2">
-    <img
-      src="<%= s.image %>"
-      width="40"
-      height="40"
-      style="object-fit:cover;border-radius:6px"
-    />
-
-    <div>
-      <strong><%= s.title %></strong>
-      <br>
-      <small class="text-muted">
-        <%= s.description.substring(0,60) %>...
-      </small>
-    </div>
+<div class="card shadow-sm border-0">
+  <div class="card-header bg-white py-3">
+    <span class="fw-semibold">All Services</span>
   </div>
-</td>
-          <td><span class="badge bg-success"><%= s.price %></span></td>
-          <td><span class="badge <%= s.isActive ? 'badge-active' : 'badge-inactive' %>"><%= s.isActive ? 'Active' : 'Hidden' %></span></td>
-          <td>
-            <a href="/admin/services/<%= s._id %>/edit" class="btn btn-sm btn-outline-secondary py-0 me-1"><i class="bi bi-pencil"></i></a>
-            <form action="/admin/services/<%= s._id %>/delete" method="POST" style="display:inline">
-              <button class="btn btn-sm btn-outline-danger py-0 btn-delete"><i class="bi bi-trash"></i></button>
-            </form>
-          </td>
-        </tr>
-        <% }) %>
-      </tbody>
-    </table>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-3">Order</th>
+            <th>Service</th>
+            <th>Price</th>
+            <th>Features</th>
+            <th>Status</th>
+            <th class="text-end pe-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (services.length === 0) { %>
+            <tr>
+              <td colspan="6" class="text-center text-muted py-5">
+                <i class="bi bi-inbox fs-2 d-block mb-2 opacity-50"></i>
+                No services yet. <a href="/admin/services/create">Add one!</a>
+              </td>
+            </tr>
+          <% } %>
+          <% services.forEach(s => { %>
+          <tr>
+            <td class="ps-3">
+              <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle"><%= s.order %></span>
+            </td>
+            <td>
+              <div class="d-flex align-items-center gap-3">
+                <% if (s.image) { %>
+                  <img src="<%= s.image %>" width="48" height="48" style="object-fit:cover;border-radius:8px;border:1px solid #e2e8f0" />
+                <% } else { %>
+                  <div class="d-flex align-items-center justify-content-center bg-primary-subtle rounded" style="width:48px;height:48px">
+                    <i class="bi bi-briefcase text-primary"></i>
+                  </div>
+                <% } %>
+                <div>
+                  <div class="fw-semibold"><%= s.title %></div>
+                  <small class="text-muted"><%= s.description.substring(0, 60) %><%= s.description.length > 60 ? '...' : '' %></small>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="badge bg-success-subtle text-success border border-success-subtle"><%= s.price %></span>
+            </td>
+            <td>
+              <span class="text-muted small"><%= s.features ? s.features.length : 0 %> features</span>
+            </td>
+            <td>
+              <% if (s.isActive) { %>
+                <span class="badge bg-success-subtle text-success border border-success-subtle">Active</span>
+              <% } else { %>
+                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Hidden</span>
+              <% } %>
+            </td>
+            <td class="text-end pe-3">
+              <a href="/admin/services/<%= s._id %>/edit" class="btn btn-sm btn-outline-primary me-1" title="Edit">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <form action="/admin/services/<%= s._id %>/delete" method="POST" style="display:inline">
+                <button class="btn btn-sm btn-outline-danger btn-delete" title="Delete">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 

@@ -1,331 +1,339 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('../partials/header') %>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="mb-1 fw-bold">
+      <i class="bi bi-lightbulb me-2 text-primary"></i>
+      <%= idea ? 'Edit Idea' : 'Create New Idea' %>
+    </h4>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/ideas?type=<%= idea ? idea.type : type %>">Ideas</a></li>
+        <li class="breadcrumb-item active"><%= idea ? 'Edit' : 'Create' %></li>
+      </ol>
+    </nav>
+  </div>
+  <a href="/admin/ideas?type=<%= idea ? idea.type : type %>" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> Back
+  </a>
+</div>
 
-<body
-  class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns">
+<form
+  action="/admin/ideas/<%= idea ? idea._id + '/edit' : 'create' %>"
+  method="POST"
+  enctype="multipart/form-data"
+  id="ideaForm"
+  onsubmit="return validateForm()">
 
-  <%- include('../partials/header') %>
+  <div class="row g-4">
 
-    <div id="main">
+    <!-- ─── LEFT COLUMN ─────────────────────────────── -->
+    <div class="col-12 col-lg-8">
 
-      <div class="row">
+      <!-- Basic Info -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-info-circle me-2 text-primary"></i>Basic Information</h6>
+        </div>
+        <div class="card-body">
 
-        <div id="breadcrumbs-wrapper">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              class="form-control"
+              value="<%= idea ? idea.title : '' %>"
+              placeholder="e.g. AI-powered fitness app with AR guidance"
+              required
+            />
+            <div id="titleError" class="text-danger small mt-1"></div>
+          </div>
 
-          <div class="container">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Short Description <span class="text-danger">*</span></label>
+            <textarea
+              name="description"
+              id="description"
+              class="form-control"
+              rows="2"
+              placeholder="Brief one-line description of the idea"
+              required
+            ><%= idea ? idea.description : '' %></textarea>
+            <div id="descError" class="text-danger small mt-1"></div>
+          </div>
 
-            <div class="row">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Full Description</label>
+            <textarea
+              name="fullDescription"
+              id="fullDescription"
+              class="form-control"
+              rows="5"
+              placeholder="Detailed description, how it works, target market, etc."
+            ><%= idea ? idea.fullDescription : '' %></textarea>
+          </div>
 
-              <div class="col s12 m6 l6">
-                <h5 class="breadcrumbs-title mt-0 mb-0">
-                  <span>
-                    <%= idea ? 'Edit Idea' : 'Create Idea' %>
-                  </span>
-                </h5>
-              </div>
-
-              <div class="col s12 m6 l6 right-align-md">
-                <ol class="breadcrumbs mb-0">
-
-                  <li class="breadcrumb-item">
-                    <a href="/admin">
-                      Home
-                    </a>
-                  </li>
-
-                  <li class="breadcrumb-item">
-                    <a href="/admin/ideas">
-                      Ideas
-                    </a>
-                  </li>
-
-                  <li class="breadcrumb-item active">
-                    <%= idea ? 'Edit Idea' : 'Create Idea' %>
-                  </li>
-
-                </ol>
-              </div>
-
-            </div>
-
+          <div class="mb-0">
+            <label class="form-label fw-semibold">Tags <span class="text-muted fw-normal">(comma separated)</span></label>
+            <input
+              type="text"
+              name="tags"
+              class="form-control"
+              value="<%= idea && idea.tags ? idea.tags.join(', ') : '' %>"
+              placeholder="AI, SaaS, mobile, fitness"
+            />
           </div>
 
         </div>
+      </div>
 
-        <div class="container">
+      <!-- Investment & Team -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-cash-stack me-2 text-success"></i>Investment & Team</h6>
+        </div>
+        <div class="card-body">
 
-          <div class="section">
-
-            <div class="row">
-
-              <div class="col s12">
-                <% if (success && success.length) { %>
-                  <div class="card-panel green white-text">
-                    <%= success[0] %>
-                  </div>
-                  <% } %>
-
-                    <% if (error && error.length) { %>
-                      <div class="card-panel red white-text">
-                        <%= error[0] %>
-                      </div>
-                      <% } %>
-              </div>
-
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-semibold">Min Investment ($)</label>
+              <input type="number" name="investmentMin" class="form-control" value="<%= idea ? idea.investmentMin : 1000 %>" min="0" />
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-semibold">Max Investment ($)</label>
+              <input type="number" name="investmentMax" class="form-control" value="<%= idea ? idea.investmentMax : 5000 %>" min="0" />
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-semibold">Profit Margin (%)</label>
+              <input type="number" name="profitMargin" class="form-control" value="<%= idea ? idea.profitMargin : 50 %>" min="0" max="100" />
             </div>
 
-            <form method="POST" id="form" enctype="multipart/form-data"
-              action="/admin/ideas/<%= idea ? idea._id + '/edit' : 'create' %>">
-
-              <div class="col s12">
-
-                <div class="card">
-
-                  <div class="card-content">
-
-                    <div class="row">
-
-                      <!-- Title -->
-
-                      <div class="input-field col m12 s12">
-
-                        <input id="title" name="title" type="text" value="<%= idea ? idea.title : '' %>" required>
-
-                        <label class="<%= idea ? 'active' : '' %>" for="title">
-                          Title
-                        </label>
-
-                      </div>
-
-                      <!-- Type -->
-
-                      <div class="input-field col m6 s12">
-
-                        <select id="type" name="type">
-
-                          <option value="business">
-                            Business Idea
-                          </option>
-
-                          <option value="app">
-                            App Idea
-                          </option>
-
-                          <option value="startup">
-                            Startup Idea
-                          </option>
-
-                        </select>
-
-                        <label>
-                          Idea Type
-                        </label>
-
-                      </div>
-
-                      <!-- Category -->
-
-                      <div class="input-field col m6 s12">
-
-                        <select name="category">
-
-                          <option value="AI & Tech">
-                            AI & Tech
-                          </option>
-
-                          <option value="SaaS">
-                            SaaS
-                          </option>
-
-                          <option value="E-Commerce">
-                            E-Commerce
-                          </option>
-
-                          <option value="Local Business">
-                            Local Business
-                          </option>
-
-                          <option value="Services">
-                            Services
-                          </option>
-
-                          <option value="Other">
-                            Other
-                          </option>
-
-                        </select>
-
-                        <label>
-                          Category
-                        </label>
-
-                      </div>
-
-                      <!-- Description -->
-
-                      <div class="input-field col s12">
-
-                        <textarea id="description" name="description"
-                          class="materialize-textarea"><%= idea ? idea.description : '' %></textarea>
-
-                        <label class="<%= idea ? 'active' : '' %>">
-                          Short Description
-                        </label>
-
-                      </div>
-
-                      <!-- Full Description -->
-
-                      <div class="input-field col s12">
-
-                        <textarea id="fullDescription" name="fullDescription"
-                          class="materialize-textarea"><%= idea ? idea.fullDescription : '' %></textarea>
-
-                        <label class="<%= idea ? 'active' : '' %>">
-                          Full Description
-                        </label>
-
-                      </div>
-
-                      <!-- Investment -->
-
-                      <div class="input-field col m4 s12">
-                        <input type="number" name="investmentMin">
-                        <label class="active">
-                          Min Investment
-                        </label>
-                      </div>
-
-                      <div class="input-field col m4 s12">
-                        <input type="number" name="investmentMax">
-                        <label class="active">
-                          Max Investment
-                        </label>
-                      </div>
-
-                      <div class="input-field col m4 s12">
-                        <input type="number" name="profitMargin">
-                        <label class="active">
-                          Profit Margin %
-                        </label>
-                      </div>
-
-                      <!-- Team Size -->
-
-                      <div class="input-field col m6 s12">
-
-                        <select name="teamSize">
-                          <option>Solo (1)</option>
-                          <option>Small (2-5)</option>
-                          <option>Medium (6-15)</option>
-                          <option>Large (15+)</option>
-                        </select>
-
-                        <label>
-                          Team Size
-                        </label>
-
-                      </div>
-
-                      <!-- Image Upload -->
-
-                      <div class="input-field col m6 s12">
-
-                        Idea Image
-
-                        <input type="file" name="image" class="dropify" accept="image/*" />
-
-                      </div>
-
-                      <!-- Tags -->
-
-                      <div class="input-field col s12">
-
-                        <input type="text" name="tags">
-
-                        <label>
-                          Tags
-                        </label>
-
-                      </div>
-
-                      <!-- Active -->
-
-                      <div class="col m6 s12">
-
-                        <p>
-
-                          <label>
-
-                            <input type="checkbox" name="isActive" checked>
-
-                            <span>
-                              Active
-                            </span>
-
-                          </label>
-
-                        </p>
-
-                      </div>
-
-                      <!-- Featured -->
-
-                      <div class="col m6 s12">
-
-                        <p>
-
-                          <label>
-
-                            <input type="checkbox" name="isFeatured">
-
-                            <span>
-                              Featured
-                            </span>
-
-                          </label>
-
-                        </p>
-
-                      </div>
-
-                      <!-- Buttons -->
-
-                      <div class="col s12">
-
-                        <button type="submit" class="btn purple">
-                          Save Idea
-                        </button>
-
-                        <a onclick="history.back()" class="btn red">
-                          Cancel
-                        </a>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            </form>
-
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Team Size</label>
+              <select name="teamSize" class="form-select">
+                <% ['Solo (1)','Small (2-5)','Medium (6-15)','Large (15+)'].forEach(s => { %>
+                  <option value="<%= s %>" <%= idea && idea.teamSize === s ? 'selected' : '' %>><%= s %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <!-- App-only fields -->
+            <div class="col-12 col-md-6" id="platformField" style="display:<%= (idea ? idea.type : type) === 'app' ? 'block' : 'none' %>">
+              <label class="form-label fw-semibold">Platform</label>
+              <select name="platform" class="form-select">
+                <option value="">Select Platform</option>
+                <% ['iOS & Android','Mac/PC Desktop','Web App','Wearable OS'].forEach(p => { %>
+                  <option value="<%= p %>" <%= idea && idea.platform === p ? 'selected' : '' %>><%= p %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="col-12 col-md-6" id="costField" style="display:<%= (idea ? idea.type : type) === 'app' ? 'block' : 'none' %>">
+              <label class="form-label fw-semibold">Cost to Build</label>
+              <select name="costToBuild" class="form-select">
+                <option value="">Select Cost</option>
+                <% ['$0 - $2K','$2K - $5K','$5K - $20K','$20K+'].forEach(c => { %>
+                  <option value="<%= c %>" <%= idea && idea.costToBuild === c ? 'selected' : '' %>><%= c %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="col-12 col-md-6" id="monetizationField" style="display:<%= (idea ? idea.type : type) === 'app' ? 'block' : 'none' %>">
+              <label class="form-label fw-semibold">Monetization</label>
+              <select name="monetization" class="form-select">
+                <option value="">Select Monetization</option>
+                <% ['Free','Paid','In-App Purchase','Ads'].forEach(m => { %>
+                  <option value="<%= m %>" <%= idea && idea.monetization === m ? 'selected' : '' %>><%= m %></option>
+                <% }) %>
+              </select>
+            </div>
           </div>
 
         </div>
-
       </div>
 
     </div>
-</body>
 
-</html>
+    <!-- ─── RIGHT COLUMN ────────────────────────────── -->
+    <div class="col-12 col-lg-4">
+
+      <!-- Classification -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-tags me-2 text-warning"></i>Classification</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Idea Type</label>
+            <select name="type" id="typeSelect" class="form-select">
+              <option value="business" <%= (idea ? idea.type : type) === 'business' ? 'selected' : '' %>>Business Idea</option>
+              <option value="app"      <%= (idea ? idea.type : type) === 'app'      ? 'selected' : '' %>>App Idea</option>
+              <option value="startup"  <%= (idea ? idea.type : type) === 'startup'  ? 'selected' : '' %>>Startup Idea</option>
+            </select>
+          </div>
+          <div class="mb-0">
+            <label class="form-label fw-semibold">Category</label>
+            <select name="category" class="form-select">
+              <% ['AI & Tech','SaaS','E-Commerce','Local Business','Services','Other'].forEach(cat => { %>
+                <option value="<%= cat %>" <%= idea && idea.category === cat ? 'selected' : '' %>><%= cat %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Upload -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-image me-2 text-info"></i>Idea Image</h6>
+        </div>
+        <div class="card-body">
+
+          <% if (idea && idea.image && !idea.image.startsWith('/images/')) { %>
+            <div class="text-center mb-3">
+              <img
+                src="<%= idea.image %>"
+                alt="Current Image"
+                class="img-thumbnail"
+                style="max-height:150px;max-width:100%;object-fit:cover;border-radius:8px"
+              />
+              <p class="text-muted small mt-1 mb-0">Current image</p>
+            </div>
+          <% } %>
+
+          <div id="imagePreviewBox" class="text-center mb-3" style="display:none">
+            <img id="imagePreview" src="" alt="Preview"
+              class="img-thumbnail"
+              style="max-height:150px;max-width:100%;object-fit:cover;border-radius:8px"
+            />
+            <p class="text-muted small mt-1 mb-0">New image preview</p>
+          </div>
+
+          <label class="form-label fw-semibold">Upload Image</label>
+          <input
+            type="file"
+            name="image"
+            id="imageFile"
+            class="form-control"
+            accept="image/png,image/jpeg,image/jpg,image/webp"
+          />
+          <div class="text-muted small mt-1">PNG, JPG, WEBP. Leave empty to keep existing.</div>
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-toggle-on me-2 text-secondary"></i>Status</h6>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <div class="fw-semibold">Active</div>
+              <small class="text-muted">Visible on site</small>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="isActive"
+                id="isActive"
+                value="true"
+                style="width:2.5em;height:1.4em"
+                <%= !idea || idea.isActive ? 'checked' : '' %>
+              />
+            </div>
+          </div>
+          <hr class="my-2">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold">Featured ⭐</div>
+              <small class="text-muted">Show at top</small>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="isFeatured"
+                id="isFeatured"
+                value="true"
+                style="width:2.5em;height:1.4em"
+                <%= idea && idea.isFeatured ? 'checked' : '' %>
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+          <i class="bi bi-<%= idea ? 'save' : 'plus-circle' %> me-2"></i>
+          <%= idea ? 'Update Idea' : 'Create Idea' %>
+        </button>
+        <a href="/admin/ideas?type=<%= idea ? idea.type : type %>" class="btn btn-outline-secondary">
+          <i class="bi bi-x-circle me-2"></i>Cancel
+        </a>
+      </div>
+
+    </div>
+  </div>
+</form>
+
+<script>
+  // Image preview
+  document.getElementById('imageFile').addEventListener('change', function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        document.getElementById('imagePreview').src = e.target.result;
+        document.getElementById('imagePreviewBox').style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Show/hide app-only fields
+  document.getElementById('typeSelect').addEventListener('change', function () {
+    const isApp = this.value === 'app';
+    ['platformField', 'costField', 'monetizationField'].forEach(id => {
+      document.getElementById(id).style.display = isApp ? 'block' : 'none';
+    });
+  });
+
+  // Form validation
+  function validateForm() {
+    let valid = true;
+
+    const title = document.getElementById('title').value.trim();
+    const desc  = document.getElementById('description').value.trim();
+
+    if (!title) {
+      document.getElementById('titleError').innerText = 'Title is required.';
+      valid = false;
+    } else {
+      document.getElementById('titleError').innerText = '';
+    }
+
+    if (!desc) {
+      document.getElementById('descError').innerText = 'Short description is required.';
+      valid = false;
+    } else {
+      document.getElementById('descError').innerText = '';
+    }
+
+    if (valid) {
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+    }
+
+    return valid;
+  }
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,220 +1,156 @@
 <%- include('../partials/header') %>
 
-<div class="card">
-  <div class="card-header">
-    About Page
-  </div>
-
-  <div class="card-body">
-
-    <form action="/admin/about" method="POST" enctype="multipart/form-data">
-
-      <h5 class="mb-3">Hero Section</h5>
-
-      <div class="mb-3">
-        <label>Heading Line 1</label>
-        <input
-          type="text"
-          name="headingLine1"
-          class="form-control"
-          value="<%= about ? about.headingLine1 : '' %>"
-        >
-      </div>
-
-      <div class="mb-3">
-        <label>Heading Line 2</label>
-        <input
-          type="text"
-          name="headingLine2"
-          class="form-control"
-          value="<%= about ? about.headingLine2 : '' %>"
-        >
-      </div>
-
-      <div class="mb-3">
-        <label>Heading Line 3</label>
-        <input
-          type="text"
-          name="headingLine3"
-          class="form-control"
-          value="<%= about ? about.headingLine3 : '' %>"
-        >
-      </div>
-
-      <div class="mb-3">
-        <label>Description 1</label>
-        <textarea
-          name="description1"
-          class="form-control"
-          rows="4"
-        ><%= about ? about.description1 : '' %></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label>Description 2</label>
-        <textarea
-          name="description2"
-          class="form-control"
-          rows="4"
-        ><%= about ? about.description2 : '' %></textarea>
-      </div>
-
-      <hr>
-
-      <h5 class="mb-3">Founder Section</h5>
-
-      <div class="mb-3">
-        <label>Founder Image</label>
-
-        <% if(about && about.founderImage){ %>
-          <div class="mb-2">
-            <img
-              src="<%= about.founderImage %>"
-              width="120"
-              class="img-thumbnail"
-            >
-          </div>
-        <% } %>
-
-        <input
-          type="file"
-          name="founderImage"
-          class="form-control"
-        >
-      </div>
-
-      <div class="mb-3">
-        <label>Founder Name</label>
-        <input
-          type="text"
-          name="founderName"
-          class="form-control"
-          value="<%= about ? about.founderName : '' %>"
-        >
-      </div>
-
-      <div class="mb-3">
-        <label>Story Title</label>
-        <input
-          type="text"
-          name="storyTitle"
-          class="form-control"
-          value="<%= about ? about.storyTitle : '' %>"
-        >
-      </div>
-
-      <div class="mb-3">
-        <label>Story Content</label>
-
-        <textarea
-          id="editor"
-          name="storyContent"
-          class="form-control"
-          rows="10"
-        ><%= about ? about.storyContent : '' %></textarea>
-      </div>
-
-      <hr>
-
-      <h5 class="mb-3">Mission Section</h5>
-
-      <div class="mb-3">
-        <label>Mission Title</label>
-        <input
-          type="text"
-          name="missionTitle"
-          class="form-control"
-          value="<%= about ? about.missionTitle : '' %>"
-        >
-      </div>
-
-      <div class="mb-3">
-        <label>Mission Description</label>
-        <textarea
-          name="missionDescription"
-          class="form-control"
-          rows="4"
-        ><%= about ? about.missionDescription : '' %></textarea>
-      </div>
-
-      <hr>
-
-      <h5 class="mb-3">Vision Section</h5>
-
-      <div class="mb-3">
-        <label>Vision Title</label>
-        <input
-          type="text"
-          name="visionTitle"
-          class="form-control"
-          value="<%= about ? about.visionTitle : '' %>"
-        >
-      </div>
-
-      <div class="mb-3">
-        <label>Vision Description</label>
-        <textarea
-          name="visionDescription"
-          class="form-control"
-          rows="4"
-        ><%= about ? about.visionDescription : '' %></textarea>
-      </div>
-
-      <hr>
-
-      <h5 class="mb-3">Statistics</h5>
-
-      <div class="mb-3">
-        <label>Business Ideas</label>
-        <input
-          type="text"
-          name="businessIdeas"
-          class="form-control"
-          value="<%= about ? about.businessIdeas : '' %>"
-        >
-      </div>
-
-      <div class="mb-3">
-        <label>Startup Ideas</label>
-        <input
-          type="text"
-          name="startupIdeas"
-          class="form-control"
-          value="<%= about ? about.startupIdeas : '' %>"
-        >
-      </div>
-
-      <div class="mb-3">
-        <label>Community Members</label>
-        <input
-          type="text"
-          name="communityMembers"
-          class="form-control"
-          value="<%= about ? about.communityMembers : '' %>"
-        >
-      </div>
-
-      <div class="mb-3">
-        <label>Projects Launched</label>
-        <input
-          type="text"
-          name="projectsLaunched"
-          class="form-control"
-          value="<%= about ? about.projectsLaunched : '' %>"
-        >
-      </div>
-
-      <button class="btn btn-primary">
-        Save About Page
-      </button>
-
-    </form>
-
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="mb-1 fw-bold"><i class="bi bi-file-person me-2 text-primary"></i>About Page</h4>
+    <p class="text-muted mb-0 small">Manage your about page content</p>
   </div>
 </div>
 
-<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<form action="/admin/about" method="POST" enctype="multipart/form-data">
+  <div class="row g-4">
 
+    <!-- LEFT COLUMN -->
+    <div class="col-12 col-lg-8">
+
+      <!-- Hero Section -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-layout-text-window me-2 text-primary"></i>Hero Section</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Heading Line 1</label>
+            <input type="text" name="headingLine1" class="form-control" value="<%= about ? about.headingLine1 : '' %>" placeholder="e.g. We Help" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Heading Line 2</label>
+            <input type="text" name="headingLine2" class="form-control" value="<%= about ? about.headingLine2 : '' %>" placeholder="e.g. Entrepreneurs" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Heading Line 3</label>
+            <input type="text" name="headingLine3" class="form-control" value="<%= about ? about.headingLine3 : '' %>" placeholder="e.g. Build Great Businesses" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Description 1</label>
+            <textarea name="description1" class="form-control" rows="3" placeholder="First paragraph"><%= about ? about.description1 : '' %></textarea>
+          </div>
+          <div class="mb-0">
+            <label class="form-label fw-semibold">Description 2</label>
+            <textarea name="description2" class="form-control" rows="3" placeholder="Second paragraph"><%= about ? about.description2 : '' %></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Story Section -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-book me-2 text-success"></i>Our Story</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Story Title</label>
+            <input type="text" name="storyTitle" class="form-control" value="<%= about ? about.storyTitle : '' %>" placeholder="e.g. How It All Started" />
+          </div>
+          <div class="mb-0">
+            <label class="form-label fw-semibold">Story Content</label>
+            <textarea id="editor" name="storyContent" class="form-control" rows="8" placeholder="Full story content"><%= about ? about.storyContent : '' %></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mission & Vision -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-bullseye me-2 text-danger"></i>Mission & Vision</h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label fw-semibold">Mission Title</label>
+              <input type="text" name="missionTitle" class="form-control" value="<%= about ? about.missionTitle : '' %>" placeholder="Our Mission" />
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Mission Description</label>
+              <textarea name="missionDescription" class="form-control" rows="3"><%= about ? about.missionDescription : '' %></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Vision Title</label>
+              <input type="text" name="visionTitle" class="form-control" value="<%= about ? about.visionTitle : '' %>" placeholder="Our Vision" />
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Vision Description</label>
+              <textarea name="visionDescription" class="form-control" rows="3"><%= about ? about.visionDescription : '' %></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="col-12 col-lg-4">
+
+      <!-- Founder -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-person-circle me-2 text-warning"></i>Founder</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Founder Image</label>
+            <% if (about && about.founderImage) { %>
+              <div class="text-center mb-2">
+                <img src="<%= about.founderImage %>" class="img-thumbnail rounded-circle" style="width:90px;height:90px;object-fit:cover" />
+              </div>
+            <% } %>
+            <input type="file" name="founderImage" class="form-control" accept="image/*" />
+            <div class="text-muted small mt-1">Leave empty to keep current</div>
+          </div>
+          <div class="mb-0">
+            <label class="form-label fw-semibold">Founder Name</label>
+            <input type="text" name="founderName" class="form-control" value="<%= about ? about.founderName : '' %>" placeholder="Founder's full name" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-bar-chart me-2 text-info"></i>Statistics</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Business Ideas</label>
+            <input type="text" name="businessIdeas" class="form-control" value="<%= about ? about.businessIdeas : '' %>" placeholder="e.g. 500+" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Startup Ideas</label>
+            <input type="text" name="startupIdeas" class="form-control" value="<%= about ? about.startupIdeas : '' %>" placeholder="e.g. 200+" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Community Members</label>
+            <input type="text" name="communityMembers" class="form-control" value="<%= about ? about.communityMembers : '' %>" placeholder="e.g. 10K+" />
+          </div>
+          <div class="mb-0">
+            <label class="form-label fw-semibold">Projects Launched</label>
+            <input type="text" name="projectsLaunched" class="form-control" value="<%= about ? about.projectsLaunched : '' %>" placeholder="e.g. 50+" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Save Button -->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary btn-lg">
+          <i class="bi bi-save me-2"></i>Save About Page
+        </button>
+      </div>
+
+    </div>
+  </div>
+</form>
+
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <script>
   CKEDITOR.replace('editor');
 </script>

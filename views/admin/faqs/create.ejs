@@ -1,65 +1,69 @@
 <%- include('../partials/header') %>
 
-<div class="card">
-  <div class="card-header">
-    ➕ Add New FAQ
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="mb-1 fw-bold"><i class="bi bi-question-circle me-2 text-primary"></i>Add New FAQ</h4>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/faqs">FAQs</a></li>
+        <li class="breadcrumb-item active">Add New</li>
+      </ol>
+    </nav>
   </div>
+  <a href="/admin/faqs" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> Back
+  </a>
+</div>
 
-  <div class="card-body">
-    <form action="/admin/faqs/create" method="POST">
-
-      <div class="mb-3">
-        <label class="form-label">Question</label>
-        <input
-          type="text"
-          name="question"
-          class="form-control"
-          required
-        />
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white py-3">
+        <h6 class="mb-0 fw-semibold"><i class="bi bi-plus-circle me-2 text-primary"></i>FAQ Details</h6>
       </div>
+      <div class="card-body">
+        <form action="/admin/faqs/create" method="POST">
 
-      <div class="mb-3">
-        <label class="form-label">Answer</label>
-        <textarea
-          name="answer"
-          class="form-control"
-          rows="5"
-          required
-        ></textarea>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Question <span class="text-danger">*</span></label>
+            <input type="text" name="question" class="form-control" required placeholder="Enter the question" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Answer <span class="text-danger">*</span></label>
+            <textarea name="answer" class="form-control" rows="5" required placeholder="Enter the answer"></textarea>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-6">
+              <label class="form-label fw-semibold">Order</label>
+              <input type="number" name="order" class="form-control" value="0" min="0" />
+              <div class="text-muted small mt-1">Lower number = shown first</div>
+            </div>
+            <div class="col-6 d-flex align-items-end pb-1">
+              <div class="d-flex justify-content-between align-items-center w-100 border rounded px-3 py-2">
+                <div>
+                  <div class="fw-semibold">Active</div>
+                  <small class="text-muted">Visible on site</small>
+                </div>
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="checkbox" name="isActive" value="true" style="width:2.2em;height:1.3em" checked />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-plus-circle me-1"></i> Save FAQ
+            </button>
+            <a href="/admin/faqs" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+
+        </form>
       </div>
-
-      <div class="mb-3">
-        <label class="form-label">Order</label>
-        <input
-          type="number"
-          name="order"
-          class="form-control"
-          value="0"
-        />
-      </div>
-
-      <div class="form-check form-switch mb-3">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          name="isActive"
-          value="true"
-          checked
-        />
-        <label class="form-check-label">
-          Active
-        </label>
-      </div>
-
-      <button type="submit" class="btn btn-primary">
-        Save FAQ
-      </button>
-
-      <a href="/admin/faqs" class="btn btn-secondary">
-        Back
-      </a>
-
-    </form>
+    </div>
   </div>
 </div>
 

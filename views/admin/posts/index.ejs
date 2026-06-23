@@ -1,71 +1,155 @@
 <%- include('../partials/header') %>
 
-<div class="card">
-  <div class="card-body p-0">
-    <table class="table table-hover mb-0">
-      <thead><tr><th>#</th><th>Title</th><th>Author</th><th>Upvotes</th><th>Comments</th><th>Pinned</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
-      <tbody>
-        <% if (posts.length === 0) { %>
-          <tr><td colspan="9" class="text-center text-muted py-4">No community posts yet.</td></tr>
-        <% } %>
-        <% posts.forEach((p, i) => { %>
-        <tr>
-          <td class="text-muted"><%= ((currentPage-1)*10) + i + 1 %></td>
-          <td><strong><%= p.title.substring(0,45) %><%= p.title.length > 45 ? '...' : '' %></strong></td>
-          <td><small>@<%= p.authorName %></small></td>
-          <td>👍 <%= p.upvotes %></td>
-          <td>💬 <%= p.commentCount %></td>
-          <td><% if (p.isPinned) { %><span class="badge bg-warning text-dark">📌 Yes</span><% } else { %>-<% } %></td>
-       <td>
-  <% if (p.status === 'pending') { %>
-    <span class="badge bg-warning text-dark">Pending</span>
-  <% } else if (p.status === 'approved') { %>
-    <span class="badge bg-success">Approved</span>
-  <% } else if (p.status === 'rejected') { %>
-    <span class="badge bg-danger">Rejected</span>
-  <% } %>
-</td>
-          <td><%= new Date(p.createdAt).toLocaleDateString() %></td>
-         <td>
-  <% if (p.status === 'pending') { %>
-
-    <form action="/admin/posts/<%= p._id %>/approve" method="POST" style="display:inline">
-      <button class="btn btn-sm btn-success py-0 me-1">
-        Approve
-      </button>
-    </form>
-
-    <form action="/admin/posts/<%= p._id %>/reject" method="POST" style="display:inline">
-      <button class="btn btn-sm btn-danger py-0 me-1">
-        Reject
-      </button>
-    </form>
-
-  <% } %>
-
-  <form action="/admin/posts/<%= p._id %>/toggle" method="POST" style="display:inline">
-    <button class="btn btn-sm btn-outline-warning py-0 me-1">
-      <%= p.isActive ? 'Hide' : 'Show' %>
-    </button>
-  </form>
-
-  <form action="/admin/posts/<%= p._id %>/delete" method="POST" style="display:inline">
-    <button class="btn btn-sm btn-outline-danger py-0 btn-delete">
-      <i class="bi bi-trash"></i>
-    </button>
-  </form>
-</td>
-        </tr>
-        <% }) %>
-      </tbody>
-    </table>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="mb-1 fw-bold"><i class="bi bi-chat-square-text me-2 text-primary"></i>Community Posts</h4>
+    <p class="text-muted mb-0 small">Review and moderate community posts</p>
   </div>
 </div>
 
-<% if (totalPages > 1) { %>
-<nav class="mt-3"><ul class="pagination pagination-sm justify-content-center">
-  <% for(let i = 1; i <= totalPages; i++) { %><li class="page-item <%= currentPage===i?'active':'' %>"><a class="page-link" href="/admin/posts?page=<%= i %>"><%= i %></a></li><% } %>
-</ul></nav>
-<% } %>
+<!-- Stats Pills -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <a href="/admin/posts" class="text-decoration-none">
+      <div class="card border-0 shadow-sm text-center py-3 <%= currentStatus === 'all' || !currentStatus ? 'border-primary border-2' : '' %>">
+        <div class="fw-bold fs-5">All</div>
+        <div class="text-muted small">Posts</div>
+      </div>
+    </a>
+  </div>
+  <div class="col-6 col-md-3">
+    <a href="/admin/posts?status=pending" class="text-decoration-none">
+      <div class="card border-0 shadow-sm text-center py-3 <%= currentStatus === 'pending' ? 'border-warning border-2' : '' %>">
+        <div class="fw-bold fs-5 text-warning">Pending</div>
+        <div class="text-muted small">Need Review</div>
+      </div>
+    </a>
+  </div>
+  <div class="col-6 col-md-3">
+    <a href="/admin/posts?status=approved" class="text-decoration-none">
+      <div class="card border-0 shadow-sm text-center py-3 <%= currentStatus === 'approved' ? 'border-success border-2' : '' %>">
+        <div class="fw-bold fs-5 text-success">Approved</div>
+        <div class="text-muted small">Live</div>
+      </div>
+    </a>
+  </div>
+  <div class="col-6 col-md-3">
+    <a href="/admin/posts?status=rejected" class="text-decoration-none">
+      <div class="card border-0 shadow-sm text-center py-3 <%= currentStatus === 'rejected' ? 'border-danger border-2' : '' %>">
+        <div class="fw-bold fs-5 text-danger">Rejected</div>
+        <div class="text-muted small">Declined</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+
+<div class="card shadow-sm border-0">
+  <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+    <span class="fw-semibold">
+      <% if (currentStatus === 'pending') { %>⏳ Pending Posts
+      <% } else if (currentStatus === 'approved') { %>✅ Approved Posts
+      <% } else if (currentStatus === 'rejected') { %>❌ Rejected Posts
+      <% } else { %>All Posts<% } %>
+    </span>
+    <span class="text-muted small">Page <%= currentPage %> of <%= totalPages %></span>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-3">#</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Upvotes</th>
+            <th>Comments</th>
+            <th>Pinned</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th class="text-end pe-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (posts.length === 0) { %>
+            <tr>
+              <td colspan="9" class="text-center text-muted py-5">
+                <i class="bi bi-inbox fs-2 d-block mb-2 opacity-50"></i>
+                No posts found.
+              </td>
+            </tr>
+          <% } %>
+          <% posts.forEach((p, i) => { %>
+          <tr>
+            <td class="ps-3 text-muted small"><%= ((currentPage-1)*10) + i + 1 %></td>
+            <td>
+              <div class="fw-semibold"><%= p.title.substring(0,45) %><%= p.title.length > 45 ? '...' : '' %></div>
+            </td>
+            <td><small class="text-muted">@<%= p.authorName %></small></td>
+            <td><span class="badge bg-light text-dark border">👍 <%= p.upvotes %></span></td>
+            <td><span class="badge bg-light text-dark border">💬 <%= p.commentCount %></span></td>
+            <td class="text-center">
+              <% if (p.isPinned) { %><span class="badge bg-warning text-dark">📌 Yes</span><% } else { %><span class="text-muted">—</span><% } %>
+            </td>
+            <td>
+              <% if (p.status === 'pending') { %>
+                <span class="badge bg-warning-subtle text-warning border border-warning-subtle">Pending</span>
+              <% } else if (p.status === 'approved') { %>
+                <span class="badge bg-success-subtle text-success border border-success-subtle">Approved</span>
+              <% } else if (p.status === 'rejected') { %>
+                <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Rejected</span>
+              <% } %>
+            </td>
+            <td><small><%= new Date(p.createdAt).toLocaleDateString() %></small></td>
+            <td class="text-end pe-3">
+              <div class="d-flex gap-1 justify-content-end flex-wrap">
+                <% if (p.status === 'pending') { %>
+                  <form action="/admin/posts/<%= p._id %>/approve" method="POST" style="display:inline">
+                    <button class="btn btn-sm btn-success" title="Approve">
+                      <i class="bi bi-check-lg"></i>
+                    </button>
+                  </form>
+                  <form action="/admin/posts/<%= p._id %>/reject" method="POST" style="display:inline">
+                    <button class="btn btn-sm btn-danger" title="Reject">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                  </form>
+                <% } %>
+                <form action="/admin/posts/<%= p._id %>/toggle" method="POST" style="display:inline">
+                  <button class="btn btn-sm btn-outline-warning" title="<%= p.isActive ? 'Hide' : 'Show' %>">
+                    <i class="bi bi-eye<%= p.isActive ? '-slash' : '' %>"></i>
+                  </button>
+                </form>
+                <form action="/admin/posts/<%= p._id %>/delete" method="POST" style="display:inline">
+                  <button class="btn btn-sm btn-outline-danger btn-delete" title="Delete">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <% if (totalPages > 1) { %>
+  <div class="card-footer bg-white py-3">
+    <nav><ul class="pagination pagination-sm justify-content-center mb-0">
+      <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+        <a class="page-link" href="?page=<%= currentPage - 1 %>&status=<%= currentStatus %>"><i class="bi bi-chevron-left"></i></a>
+      </li>
+      <% for(let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+          <a class="page-link" href="?page=<%= i %>&status=<%= currentStatus %>"><%= i %></a>
+        </li>
+      <% } %>
+      <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+        <a class="page-link" href="?page=<%= currentPage + 1 %>&status=<%= currentStatus %>"><i class="bi bi-chevron-right"></i></a>
+      </li>
+    </ul></nav>
+  </div>
+  <% } %>
+</div>
 
 <%- include('../partials/footer') %>

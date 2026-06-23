@@ -1,39 +1,99 @@
 <%- include('../partials/header') %>
 
-<div class="card" style="max-width:800px">
-  <div class="card-header"><%= study ? '✏️ Edit Case Study' : '➕ Create Case Study' %></div>
-  <div class="card-body">
-    <form action="/admin/case-studies/<%= study ? study._id + '/edit' : 'create' %>" method="POST">
-      <div class="row g-3">
-        <div class="col-12">
-          <label class="form-label fw-semibold">Title *</label>
-          <input type="text" name="title" class="form-control" value="<%= study ? study.title : '' %>" required placeholder="e.g. Growing a GEO tool to mid-five-figure MRR"/>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="mb-1 fw-bold">
+      <i class="bi bi-briefcase me-2 text-primary"></i>
+      <%= study ? 'Edit Case Study' : 'Create Case Study' %>
+    </h4>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/case-studies">Case Studies</a></li>
+        <li class="breadcrumb-item active"><%= study ? 'Edit' : 'Create' %></li>
+      </ol>
+    </nav>
+  </div>
+  <a href="/admin/case-studies" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> Back
+  </a>
+</div>
+
+<form action="/admin/case-studies/<%= study ? study._id + '/edit' : 'create' %>" method="POST" id="csForm" onsubmit="return validateForm()">
+  <div class="row g-4">
+
+    <!-- LEFT -->
+    <div class="col-12 col-lg-8">
+
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-info-circle me-2 text-primary"></i>Basic Information</h6>
         </div>
-        <div class="col-12">
-          <label class="form-label fw-semibold">Excerpt *</label>
-          <textarea name="excerpt" class="form-control" rows="2" required placeholder="Short summary shown in listing"><%= study ? study.excerpt : '' %></textarea>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
+            <input type="text" name="title" id="title" class="form-control" value="<%= study ? study.title : '' %>" placeholder="e.g. Growing a GEO tool to mid-five-figure MRR" required />
+            <div id="titleError" class="text-danger small mt-1"></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Excerpt <span class="text-danger">*</span></label>
+            <textarea name="excerpt" id="excerpt" class="form-control" rows="2" placeholder="Short summary shown in listing" required><%= study ? study.excerpt : '' %></textarea>
+            <div id="excerptError" class="text-danger small mt-1"></div>
+          </div>
+          <div class="mb-0">
+            <label class="form-label fw-semibold">Full Story Content</label>
+            <textarea name="content" class="form-control" rows="10" placeholder="Full case study content (supports HTML)"><%= study ? study.content : '' %></textarea>
+          </div>
         </div>
-        <div class="col-12">
-          <label class="form-label fw-semibold">Full Story Content</label>
-          <textarea name="content" class="form-control" rows="8" placeholder="Full case study content (supports HTML)"><%= study ? study.content : '' %></textarea>
+      </div>
+
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-person-badge me-2 text-success"></i>Founder & Company</h6>
         </div>
-        <div class="col-md-6">
-          <label class="form-label fw-semibold">Founder Name *</label>
-          <input type="text" name="founderName" class="form-control" value="<%= study ? study.founderName : '' %>" required/>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Founder Name <span class="text-danger">*</span></label>
+              <input type="text" name="founderName" class="form-control" value="<%= study ? study.founderName : '' %>" required />
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Company Name <span class="text-danger">*</span></label>
+              <input type="text" name="companyName" class="form-control" value="<%= study ? study.companyName : '' %>" required />
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Monthly Revenue (USD) <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" name="monthlyRevenue" class="form-control" value="<%= study ? study.monthlyRevenue : '' %>" required min="0" />
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Company Size (employees)</label>
+              <input type="number" name="companySize" class="form-control" value="<%= study ? study.companySize : 2 %>" min="1" />
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Cover Image URL</label>
+              <input type="text" name="image" class="form-control" value="<%= study ? study.image : '/images/startup-sketch.png' %>" placeholder="/images/startup-sketch.png" />
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Founder Image URL</label>
+              <input type="text" name="founderImage" class="form-control" value="<%= study ? study.founderImage : '/images/person1.jpg' %>" placeholder="/images/person1.jpg" />
+            </div>
+          </div>
         </div>
-        <div class="col-md-6">
-          <label class="form-label fw-semibold">Company Name *</label>
-          <input type="text" name="companyName" class="form-control" value="<%= study ? study.companyName : '' %>" required/>
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="col-12 col-lg-4">
+
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-tags me-2 text-warning"></i>Classification</h6>
         </div>
-        <div class="col-md-6">
-          <label class="form-label fw-semibold">Monthly Revenue (USD) *</label>
-          <input type="number" name="monthlyRevenue" class="form-control" value="<%= study ? study.monthlyRevenue : '' %>" required min="0"/>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-semibold">Company Size (employees)</label>
-          <input type="number" name="companySize" class="form-control" value="<%= study ? study.companySize : 2 %>" min="1"/>
-        </div>
-        <div class="col-md-6">
+        <div class="card-body">
           <label class="form-label fw-semibold">Industry</label>
           <select name="industry" class="form-select">
             <% ['Marketing','Advertising','Analytics','Real Estate','Automations','SaaS','E-Commerce','Other'].forEach(ind => { %>
@@ -41,33 +101,65 @@
             <% }) %>
           </select>
         </div>
-        <div class="col-md-6">
-          <label class="form-label fw-semibold">Cover Image URL</label>
-          <input type="text" name="image" class="form-control" value="<%= study ? study.image : '/images/startup-sketch.png' %>"/>
+      </div>
+
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-toggle-on me-2 text-secondary"></i>Status</h6>
         </div>
-        <div class="col-md-6">
-          <label class="form-label fw-semibold">Founder Image URL</label>
-          <input type="text" name="founderImage" class="form-control" value="<%= study ? study.founderImage : '/images/person1.jpg' %>"/>
-        </div>
-        <div class="col-md-3">
-          <div class="form-check form-switch mt-4">
-            <input class="form-check-input" type="checkbox" name="isActive" value="true" <%= !study || study.isActive ? 'checked' : '' %>/>
-            <label class="form-check-label">Active</label>
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <div class="fw-semibold">Active</div>
+              <small class="text-muted">Visible on site</small>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" name="isActive" value="true" style="width:2.5em;height:1.4em" <%= !study || study.isActive ? 'checked' : '' %> />
+            </div>
           </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-check form-switch mt-4">
-            <input class="form-check-input" type="checkbox" name="isFeatured" value="true" <%= study && study.isFeatured ? 'checked' : '' %>/>
-            <label class="form-check-label">⭐ Featured</label>
+          <hr class="my-2">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold">Featured ⭐</div>
+              <small class="text-muted">Show at top</small>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" name="isFeatured" value="true" style="width:2.5em;height:1.4em" <%= study && study.isFeatured ? 'checked' : '' %> />
+            </div>
           </div>
-        </div>
-        <div class="col-12 d-flex gap-2">
-          <button type="submit" class="btn btn-primary"><%= study ? 'Update' : 'Create' %> Case Study</button>
-          <a href="/admin/case-studies" class="btn btn-outline-secondary">Cancel</a>
         </div>
       </div>
-    </form>
+
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+          <i class="bi bi-<%= study ? 'save' : 'plus-circle' %> me-2"></i>
+          <%= study ? 'Update Case Study' : 'Create Case Study' %>
+        </button>
+        <a href="/admin/case-studies" class="btn btn-outline-secondary">
+          <i class="bi bi-x-circle me-2"></i>Cancel
+        </a>
+      </div>
+
+    </div>
   </div>
-</div>
+</form>
+
+<script>
+function validateForm() {
+  let valid = true;
+  const title = document.getElementById('title').value.trim();
+  const excerpt = document.getElementById('excerpt').value.trim();
+  if (!title) { document.getElementById('titleError').innerText = 'Title is required.'; valid = false; }
+  else document.getElementById('titleError').innerText = '';
+  if (!excerpt) { document.getElementById('excerptError').innerText = 'Excerpt is required.'; valid = false; }
+  else document.getElementById('excerptError').innerText = '';
+  if (valid) {
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+  }
+  return valid;
+}
+</script>
 
 <%- include('../partials/footer') %>

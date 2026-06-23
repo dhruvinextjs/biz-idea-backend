@@ -1,108 +1,69 @@
 <%- include('../partials/header') %>
 
-<div class="card">
-  <div class="card-header">
-    ➕ Add Testimonial
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="mb-1 fw-bold"><i class="bi bi-star me-2 text-warning"></i>Add Testimonial</h4>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/testimonials">Testimonials</a></li>
+        <li class="breadcrumb-item active">Add New</li>
+      </ol>
+    </nav>
   </div>
+  <a href="/admin/testimonials" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> Back
+  </a>
+</div>
 
-  <div class="card-body">
-
-    <form
-      action="/admin/testimonials/create"
-      method="POST"
-      enctype="multipart/form-data"
-    >
-
-      <div class="mb-3">
-        <label class="form-label fw-semibold">Name *</label>
-        <input
-          type="text"
-          name="name"
-          class="form-control"
-          required
-        />
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white py-3">
+        <h6 class="mb-0 fw-semibold"><i class="bi bi-person-plus me-2 text-warning"></i>Testimonial Details</h6>
       </div>
+      <div class="card-body">
+        <form action="/admin/testimonials/create" method="POST" enctype="multipart/form-data">
 
-      <div class="mb-3">
-        <label class="form-label fw-semibold">
-          Role / Company
-        </label>
-        <input
-          type="text"
-          name="role"
-          class="form-control"
-        />
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
+              <input type="text" name="name" class="form-control" required placeholder="Customer name" />
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Role / Company</label>
+              <input type="text" name="role" class="form-control" placeholder="e.g. CEO at Acme Inc." />
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Content <span class="text-danger">*</span></label>
+              <textarea name="content" class="form-control" rows="4" required placeholder="What did they say?"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Profile Image</label>
+              <input type="file" name="image" class="form-control" accept="image/*" />
+              <div class="text-muted small mt-1">Optional — PNG, JPG</div>
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-semibold">Rating</label>
+              <input type="number" name="rating" class="form-control" value="5" min="1" max="5" />
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-semibold">Order</label>
+              <input type="number" name="order" class="form-control" value="0" min="0" />
+            </div>
+          </div>
+
+          <hr class="my-4">
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-plus-circle me-1"></i> Save Testimonial
+            </button>
+            <a href="/admin/testimonials" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+
+        </form>
       </div>
-
-      <div class="mb-3">
-        <label class="form-label fw-semibold">
-          Content *
-        </label>
-        <textarea
-          name="content"
-          class="form-control"
-          rows="4"
-          required
-        ></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label fw-semibold">
-          Image
-        </label>
-
-        <input
-          type="file"
-          name="image"
-          class="form-control"
-          accept="image/*"
-        />
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label fw-semibold">
-          Rating
-        </label>
-
-        <input
-          type="number"
-          name="rating"
-          class="form-control"
-          value="5"
-          min="1"
-          max="5"
-        />
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label fw-semibold">
-          Order
-        </label>
-
-        <input
-          type="number"
-          name="order"
-          class="form-control"
-          value="0"
-        />
-      </div>
-
-      <button
-        type="submit"
-        class="btn btn-primary"
-      >
-        Save Testimonial
-      </button>
-
-      <a
-        href="/admin/testimonials"
-        class="btn btn-outline-secondary"
-      >
-        Cancel
-      </a>
-
-    </form>
-
+    </div>
   </div>
 </div>
 

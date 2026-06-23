@@ -1,61 +1,143 @@
 <%- include('../partials/header') %>
 
-<div class="card" style="max-width:800px">
-  <div class="card-header"><%= blog ? '✏️ Edit Blog' : '➕ Create Blog Post' %></div>
-  <div class="card-body">
-    <form action="/admin/blogs/<%= blog ? blog._id + '/edit' : 'create' %>" method="POST">
-      <div class="row g-3">
-        <div class="col-12">
-          <label class="form-label fw-semibold">Title *</label>
-          <input type="text" name="title" class="form-control" value="<%= blog ? blog.title : '' %>" required/>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="mb-1 fw-bold">
+      <i class="bi bi-file-richtext me-2 text-primary"></i>
+      <%= blog ? 'Edit Blog Post' : 'Create Blog Post' %>
+    </h4>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/blogs">Blogs</a></li>
+        <li class="breadcrumb-item active"><%= blog ? 'Edit' : 'Create' %></li>
+      </ol>
+    </nav>
+  </div>
+  <a href="/admin/blogs" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> Back
+  </a>
+</div>
+
+<form action="/admin/blogs/<%= blog ? blog._id + '/edit' : 'create' %>" method="POST" id="blogForm" onsubmit="return validateForm()">
+  <div class="row g-4">
+
+    <!-- LEFT -->
+    <div class="col-12 col-lg-8">
+
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-pencil-square me-2 text-primary"></i>Content</h6>
         </div>
-        <div class="col-12">
-          <label class="form-label fw-semibold">Excerpt *</label>
-          <textarea name="excerpt" class="form-control" rows="2" required><%= blog ? blog.excerpt : '' %></textarea>
-        </div>
-        <div class="col-12">
-          <label class="form-label fw-semibold">Content *</label>
-          <textarea name="content" class="form-control" rows="10" required placeholder="Full blog content (supports HTML)"><%= blog ? blog.content : '' %></textarea>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-semibold">Category</label>
-          <select name="category" class="form-select">
-            <% ['IDEAS','GUIDE','FINANCE','TECH','MARKETING','GENERAL'].forEach(cat => { %>
-              <option value="<%= cat %>" <%= blog && blog.category === cat ? 'selected' : '' %>><%= cat %></option>
-            <% }) %>
-          </select>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-semibold">Author</label>
-          <input type="text" name="author" class="form-control" value="<%= blog ? blog.author : 'TheBizIdeas Team' %>"/>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-semibold">Cover Image URL</label>
-          <input type="text" name="image" class="form-control" value="<%= blog ? blog.image : '/images/startup-sketch.png' %>"/>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-semibold">Published Date</label>
-          <input type="date" name="publishedAt" class="form-control" value="<%= blog ? new Date(blog.publishedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0] %>"/>
-        </div>
-        <div class="col-md-6">
-          <div class="form-check form-switch mt-2">
-            <input class="form-check-input" type="checkbox" name="isActive" value="true" <%= !blog || blog.isActive ? 'checked' : '' %>/>
-            <label class="form-check-label">Active</label>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
+            <input type="text" name="title" id="title" class="form-control" value="<%= blog ? blog.title : '' %>" required placeholder="Enter blog title" />
+            <div id="titleError" class="text-danger small mt-1"></div>
           </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-check form-switch mt-2">
-            <input class="form-check-input" type="checkbox" name="isFeatured" value="true" <%= blog && blog.isFeatured ? 'checked' : '' %>/>
-            <label class="form-check-label">⭐ Featured</label>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Excerpt <span class="text-danger">*</span></label>
+            <textarea name="excerpt" id="excerpt" class="form-control" rows="2" required placeholder="Short summary shown in listing"><%= blog ? blog.excerpt : '' %></textarea>
+            <div id="excerptError" class="text-danger small mt-1"></div>
           </div>
-        </div>
-        <div class="col-12 d-flex gap-2">
-          <button type="submit" class="btn btn-primary"><%= blog ? 'Update' : 'Create' %> Blog</button>
-          <a href="/admin/blogs" class="btn btn-outline-secondary">Cancel</a>
+          <div class="mb-0">
+            <label class="form-label fw-semibold">Full Content <span class="text-danger">*</span></label>
+            <textarea name="content" id="content" class="form-control" rows="12" required placeholder="Full blog content (supports HTML)"><%= blog ? blog.content : '' %></textarea>
+            <div id="contentError" class="text-danger small mt-1"></div>
+          </div>
         </div>
       </div>
-    </form>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="col-12 col-lg-4">
+
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-sliders me-2 text-warning"></i>Settings</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Category</label>
+            <select name="category" class="form-select">
+              <% ['IDEAS','GUIDE','FINANCE','TECH','MARKETING','GENERAL'].forEach(cat => { %>
+                <option value="<%= cat %>" <%= blog && blog.category === cat ? 'selected' : '' %>><%= cat %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Author</label>
+            <input type="text" name="author" class="form-control" value="<%= blog ? blog.author : 'TheBizIdeas Team' %>" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Cover Image URL</label>
+            <input type="text" name="image" class="form-control" value="<%= blog ? blog.image : '/images/startup-sketch.png' %>" placeholder="/images/startup-sketch.png" />
+          </div>
+          <div class="mb-0">
+            <label class="form-label fw-semibold">Published Date</label>
+            <input type="date" name="publishedAt" class="form-control" value="<%= blog ? new Date(blog.publishedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0] %>" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="mb-0 fw-semibold"><i class="bi bi-toggle-on me-2 text-secondary"></i>Status</h6>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <div class="fw-semibold">Active</div>
+              <small class="text-muted">Visible on site</small>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" name="isActive" value="true" style="width:2.5em;height:1.4em" <%= !blog || blog.isActive ? 'checked' : '' %> />
+            </div>
+          </div>
+          <hr class="my-2">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold">Featured ⭐</div>
+              <small class="text-muted">Show at top</small>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" name="isFeatured" value="true" style="width:2.5em;height:1.4em" <%= blog && blog.isFeatured ? 'checked' : '' %> />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+          <i class="bi bi-<%= blog ? 'save' : 'plus-circle' %> me-2"></i>
+          <%= blog ? 'Update Blog' : 'Create Blog' %>
+        </button>
+        <a href="/admin/blogs" class="btn btn-outline-secondary">
+          <i class="bi bi-x-circle me-2"></i>Cancel
+        </a>
+      </div>
+
+    </div>
   </div>
-</div>
+</form>
+
+<script>
+function validateForm() {
+  let valid = true;
+  ['title','excerpt','content'].forEach(id => {
+    const el = document.getElementById(id);
+    const err = document.getElementById(id + 'Error');
+    if (!el.value.trim()) { err.innerText = id.charAt(0).toUpperCase() + id.slice(1) + ' is required.'; valid = false; }
+    else err.innerText = '';
+  });
+  if (valid) {
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+  }
+  return valid;
+}
+</script>
 
 <%- include('../partials/footer') %>
