@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { getNotificationSettings, updateNotificationSettings } = require('../controllers/notificationController');
+const { getNotificationSettings, updateNotificationSettings } = require('../controllers/Notificationcontroller');
 
 
 const { protect } = require('../middleware/auth'); // aapka JWT auth middleware
