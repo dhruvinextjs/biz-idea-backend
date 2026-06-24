@@ -1626,6 +1626,64 @@ exports.getPendingPosts = async (req, res) => {
   }
 };
 
+// @desc    Show create post form
+// @route   GET /admin/posts/create
+exports.getCreatePost = async (req, res) => {
+  res.render("admin/posts/create", { title: "Create Post" });
+};
+
+// @desc    Admin creates post (auto-approved, optionally pinned)
+// @route   POST /admin/posts/create
+exports.createPost = async (req, res) => {
+  try {
+    const { title, content, tags, isPinned } = req.body;
+
+    if (!title || !content) {
+      req.flash("error", "Title and content are required.");
+      return res.redirect("/admin/posts/create");
+    }
+
+    const slugify = require("slugify");
+    let slug = slugify(title, { lower: true, strict: true });
+
+    // Ensure slug uniqueness
+    const existing = await Post.findOne({ slug });
+    if (existing) slug = `${slug}-${Date.now()}`;
+
+    await Post.create({
+      title,
+      slug,
+      content,
+      tags: tags ? tags.split(",").map(t => t.trim()).filter(Boolean) : [],
+      image: req.file ? `/uploads/posts/${req.file.filename}` : null,
+      authorName: "Admin",
+      authorAvatar: "/images/avatar.png",
+      status: "approved",           // Admin posts are auto-approved
+      isPinned: isPinned === "on",  // Optionally pin from the form
+      approvedBy: req.session.adminId,
+      approvedAt: new Date(),
+      isActive: true,
+    });
+
+    req.flash("success", "Post created and published successfully.");
+    res.redirect("/admin/posts?status=approved");
+  } catch (error) {
+    req.flash("error", error.message);
+    res.redirect("/admin/posts/create");
+  }
+};
+exports.getPostDetail = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ success: false, message: "Post not found" });
+    }
+    res.json({ success: true, data: post });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 exports.postsPage = async (req, res) => {
   try {
     const posts = await Post.find({ status: "pending" })
