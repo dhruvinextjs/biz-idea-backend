@@ -27,6 +27,81 @@
     <h5>Description</h5>
     <p><%= idea.description %></p>
 
+    <hr>
+
+<h5>Business Overview</h5>
+<p><%= idea.businessOverview || '-' %></p>
+
+<h5>The Problem</h5>
+<p><%= idea.problem || '-' %></p>
+
+<h5>The Solution</h5>
+<p><%= idea.solution || '-' %></p>
+
+<h5>How It Works</h5>
+
+<% if (idea.howItWorks && idea.howItWorks.length) { %>
+<ol>
+  <% idea.howItWorks.forEach(step => { %>
+    <li><%= step %></li>
+  <% }) %>
+</ol>
+<% } else { %>
+<p>-</p>
+<% } %>
+
+<h5>Revenue Model</h5>
+
+<% if (idea.revenueModel && idea.revenueModel.length) { %>
+<ul>
+  <% idea.revenueModel.forEach(item => { %>
+    <li><%= item %></li>
+  <% }) %>
+</ul>
+<% } else { %>
+<p>-</p>
+<% } %>
+
+<h5>Execution Breakdown</h5>
+
+<p>
+  <strong>Investment Required:</strong>
+  <%= idea.executionBreakdown?.investmentRequired || '-' %>
+</p>
+
+<p>
+  <strong>Time To Launch:</strong>
+  <%= idea.executionBreakdown?.timeToLaunch || '-' %>
+</p>
+
+<p>
+  <strong>Required Team:</strong>
+  <%= idea.executionBreakdown?.requiredTeam || '-' %>
+</p>
+
+<p>
+  <strong>Profit Margin Detail:</strong>
+  <%= idea.executionBreakdown?.profitMarginDetail || '-' %>
+</p>
+
+<h5>Tech Stack</h5>
+
+<% if (idea.techStack && idea.techStack.length) { %>
+<ul>
+  <% idea.techStack.forEach(item => { %>
+    <li><%= item %></li>
+  <% }) %>
+</ul>
+<% } else { %>
+<p>-</p>
+<% } %>
+
+<h5>Marketing Strategy</h5>
+<p><%= idea.marketingStrategy || '-' %></p>
+
+<h5>Conclusion</h5>
+<p><%= idea.conclusion || '-' %></p>
+
     <a href="/admin/ideas?type=<%= idea.type %>" class="btn btn-secondary">
       Back
     </a>

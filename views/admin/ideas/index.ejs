@@ -267,10 +267,32 @@
         <tr>
           <td><%= ((currentPage - 1) * 10) + i + 1 %></td>
           <td>
-            <div class="idea-title-text">
-              <%= idea.title.substring(0, 45) %><%= idea.title.length > 45 ? '…' : '' %>
-            </div>
-            <div class="idea-team"><%= idea.teamSize %></div>
+           <div class="idea-title-text">
+  <%= idea.title.substring(0, 45) %>
+  <%= idea.title.length > 45 ? '…' : '' %>
+</div>
+
+<div class="idea-team">
+  <%= idea.teamSize %>
+</div>
+
+<div
+  style="
+    font-size:12px;
+    color:#64748b;
+    max-width:300px;
+    margin-top:4px;
+  "
+>
+  <%= idea.description
+      ? idea.description.substring(0, 80)
+      : '' %>
+
+  <%= idea.description &&
+      idea.description.length > 80
+      ? '...'
+      : '' %>
+</div>
           </td>
           <td><span class="badge-cat"><%= idea.category %></span></td>
           <td style="white-space:nowrap;">

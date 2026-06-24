@@ -1128,24 +1128,31 @@ exports.getCreateIdea = (req, res) => {
   res.render("admin/ideas/form", { title: "Create Idea", idea: null, type });
 };
 
-// exports.postCreateIdea = async (req, res) => {
-//   try {
-//     const idea = await BusinessIdea.create(req.body);
-//     sendIdeaNotification(idea).catch(err => console.error('Notification error:', err.message));
-//     req.flash('success', 'Idea created.');
-//     res.redirect(`/admin/ideas?type=${req.body.type || 'business'}`);
-//   } catch (e) {
-//     req.flash('error', e.message);
-//     res.redirect('/admin/ideas/create?type=' + (req.body.type || 'business'));
-//   }
-// };
-
 exports.postCreateIdea = async (req, res) => {
   try {
 
-    const data = {
-      ...req.body
-    };
+ const data = {
+  ...req.body,
+
+  howItWorks: req.body.howItWorks
+    ? req.body.howItWorks.split("\n").filter(Boolean)
+    : [],
+
+  revenueModel: req.body.revenueModel
+    ? req.body.revenueModel.split("\n").filter(Boolean)
+    : [],
+
+  techStack: req.body.techStack
+    ? req.body.techStack.split("\n").filter(Boolean)
+    : [],
+
+  executionBreakdown: {
+    investmentRequired: req.body.investmentRequired,
+    timeToLaunch: req.body.timeToLaunch,
+    requiredTeam: req.body.requiredTeam,
+    profitMarginDetail: req.body.profitMarginDetail,
+  },
+};
 
     if (req.file) {
       data.image = `/uploads/ideas/${req.file.filename}`;
@@ -1171,24 +1178,31 @@ exports.getEditIdea = async (req, res) => {
   res.render("admin/ideas/form", { title: "Edit Idea", idea, type: idea.type });
 };
 
-// exports.postEditIdea = async (req, res) => {
-//   try {
-//     await BusinessIdea.findByIdAndUpdate(req.params.id, req.body);
-//     req.flash("success", "Idea updated.");
-//     res.redirect(`/admin/ideas?type=${req.body.type || "business"}`);
-//   } catch (e) {
-//     req.flash("error", e.message);
-//     res.redirect(`/admin/ideas/${req.params.id}/edit`);
-//   }
-// };
-
 exports.postEditIdea = async (req, res) => {
   try {
 
-    const data = {
-      ...req.body
-    };
+const data = {
+  ...req.body,
 
+  howItWorks: req.body.howItWorks
+    ? req.body.howItWorks.split("\n").filter(Boolean)
+    : [],
+
+  revenueModel: req.body.revenueModel
+    ? req.body.revenueModel.split("\n").filter(Boolean)
+    : [],
+
+  techStack: req.body.techStack
+    ? req.body.techStack.split("\n").filter(Boolean)
+    : [],
+
+  executionBreakdown: {
+    investmentRequired: req.body.investmentRequired,
+    timeToLaunch: req.body.timeToLaunch,
+    requiredTeam: req.body.requiredTeam,
+    profitMarginDetail: req.body.profitMarginDetail,
+  },
+};
     if (req.file) {
       data.image = `/uploads/ideas/${req.file.filename}`;
     }
@@ -1304,7 +1318,13 @@ exports.deleteBlog = async (req, res) => {
 
 // ========== SERVICES ==========
 exports.getServices = async (req, res) => {
-  const services = await Service.find().sort({ order: 1, createdAt: 1 });
+const services = await Service.find({
+  isActive: true
+}).sort({
+  isFeatured: -1,
+  order: 1,
+  createdAt: -1
+});
   res.render("admin/services/index", { title: "Services", services });
 };
 

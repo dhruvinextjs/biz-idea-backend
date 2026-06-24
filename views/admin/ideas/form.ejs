@@ -65,16 +65,139 @@
             <div id="descError" class="text-danger small mt-1"></div>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Full Description</label>
-            <textarea
-              name="fullDescription"
-              id="fullDescription"
-              class="form-control"
-              rows="5"
-              placeholder="Detailed description, how it works, target market, etc."
-            ><%= idea ? idea.fullDescription : '' %></textarea>
-          </div>
+        <div class="mb-3">
+  <label class="form-label fw-semibold">Business Overview</label>
+  <textarea
+    name="businessOverview"
+    class="form-control"
+    rows="4"
+  ><%= idea ? idea.businessOverview : '' %></textarea>
+</div>
+
+<div class="mb-3">
+  <label class="form-label fw-semibold">Problem</label>
+  <textarea
+    name="problem"
+    class="form-control"
+    rows="4"
+  ><%= idea ? idea.problem : '' %></textarea>
+</div>
+
+<div class="mb-3">
+  <label class="form-label fw-semibold">Solution</label>
+  <textarea
+    name="solution"
+    class="form-control"
+    rows="4"
+  ><%= idea ? idea.solution : '' %></textarea>
+</div>
+
+<div class="mb-3">
+  <label class="form-label fw-semibold">
+    How It Works
+  </label>
+
+  <textarea
+    name="howItWorks"
+    class="form-control"
+    rows="5"
+    placeholder="One step per line"
+  ><%= idea && idea.howItWorks ? idea.howItWorks.join('\n') : '' %></textarea>
+</div>
+
+<div class="mb-3">
+  <label class="form-label fw-semibold">
+    Revenue Model
+  </label>
+
+  <textarea
+    name="revenueModel"
+    class="form-control"
+    rows="5"
+    placeholder="One item per line"
+  ><%= idea && idea.revenueModel ? idea.revenueModel.join('\n') : '' %></textarea>
+</div>
+
+<div class="row g-3">
+
+  <div class="col-md-6">
+    <label class="form-label">
+      Investment Required
+    </label>
+
+    <input
+      type="text"
+      name="investmentRequired"
+      class="form-control"
+      value="<%= idea ? idea.investmentRequired : '' %>"
+    >
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">
+      Time To Launch
+    </label>
+
+    <input
+      type="text"
+      name="timeToLaunch"
+      class="form-control"
+      value="<%= idea ? idea.timeToLaunch : '' %>"
+    >
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">
+      Required Team
+    </label>
+
+    <input
+      type="text"
+      name="requiredTeam"
+      class="form-control"
+      value="<%= idea ? idea.requiredTeam : '' %>"
+    >
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">
+      Profit Margin Detail
+    </label>
+
+    <input
+      type="text"
+      name="profitMarginDetail"
+      class="form-control"
+      value="<%= idea ? idea.profitMarginDetail : '' %>"
+    >
+  </div>
+
+</div>
+
+<div class="mb-3 mt-3">
+  <label class="form-label fw-semibold">
+    Tech Stack & Tools Required
+  </label>
+
+  <textarea
+    name="techStack"
+    class="form-control"
+    rows="5"
+    placeholder="One item per line"
+  ><%= idea && idea.techStack ? idea.techStack.join('\n') : '' %></textarea>
+</div>
+
+<div class="mb-3">
+  <label class="form-label fw-semibold">
+    Marketing Strategy
+  </label>
+
+  <textarea
+    name="marketingStrategy"
+    class="form-control"
+    rows="5"
+  ><%= idea ? idea.marketingStrategy : '' %></textarea>
+</div>
 
           <div class="mb-0">
             <label class="form-label fw-semibold">Tags <span class="text-muted fw-normal">(comma separated)</span></label>

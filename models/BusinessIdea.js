@@ -4,65 +4,133 @@ const slugify = require('slugify');
 const businessIdeaSchema = new mongoose.Schema({
   title: { type: String, required: true, trim: true },
   slug: { type: String, unique: true },
+
+  // Basic
   description: { type: String, required: true },
-  fullDescription: { type: String, default: '' },
+
+  // Detail Page Sections
+  businessOverview: { type: String, default: '' },
+
+  problem: { type: String, default: '' },
+
+  solution: { type: String, default: '' },
+
+  howItWorks: {
+    type: [String],
+    default: []
+  },
+
+  revenueModel: {
+    type: [String],
+    default: []
+  },
+
+  executionBreakdown: {
+    investmentRequired: { type: String, default: '' },
+    timeToLaunch: { type: String, default: '' },
+    requiredTeam: { type: String, default: '' },
+    profitMarginDetail: { type: String, default: '' }
+  },
+
+  techStack: {
+    type: [String],
+    default: []
+  },
+
+  marketingStrategy: { type: String, default: '' },
+
+  conclusion: { type: String, default: '' },
+
   category: {
     type: String,
     enum: ['AI & Tech', 'SaaS', 'E-Commerce', 'Local Business', 'Services', 'Other'],
     default: 'Other'
   },
+
   platform: {
-  type: String,
-  enum: [
-    "iOS & Android",
-    "Mac/PC Desktop",
-    "Web App",
-    "Wearable OS"
-  ]
-},
+    type: String,
+    enum: [
+      "iOS & Android",
+      "Mac/PC Desktop",
+      "Web App",
+      "Wearable OS"
+    ]
+  },
 
-costToBuild: {
-  type: String,
-  enum: [
-    "$0 - $2K",
-    "$2K - $5K",
-    "$5K - $20K",
-    "$20K+"
-  ]
-},
+  costToBuild: {
+    type: String,
+    enum: [
+      "$0 - $2K",
+      "$2K - $5K",
+      "$5K - $20K",
+      "$20K+"
+    ]
+  },
 
-monetization: {
-  type: String,
-  enum: [
-    "Free",
-    "Paid",
-    "In-App Purchase",
-    "Ads"
-  ]
-},
-  type: { type: String, enum: ['business', 'app', 'startup'], default: 'business' },
+  monetization: {
+    type: String,
+    enum: [
+      "Free",
+      "Paid",
+      "In-App Purchase",
+      "Ads"
+    ]
+  },
+
+  type: {
+    type: String,
+    enum: ['business', 'app', 'startup'],
+    default: 'business'
+  },
+
   investmentMin: { type: Number, default: 1000 },
   investmentMax: { type: Number, default: 5000 },
-  profitMargin: { type: Number, default: 50 }, // percentage
-  teamSize: { type: String, enum: ['Solo (1)', 'Small (2-5)', 'Medium (6-15)', 'Large (15+)'], default: 'Solo (1)' },
-  image: { type: String, default: '/images/startup-sketch.png' },
+
+  profitMargin: { type: Number, default: 50 },
+
+  teamSize: {
+    type: String,
+    enum: ['Solo (1)', 'Small (2-5)', 'Medium (6-15)', 'Large (15+)'],
+    default: 'Solo (1)'
+  },
+
+  image: {
+    type: String,
+    default: '/images/startup-sketch.png'
+  },
+
   tags: [{ type: String }],
-  upvotes: { type: Number, default: 0 },
-  upvotedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  isActive: { type: Boolean, default: true },
-  isFeatured: { type: Boolean, default: false },
-  likes: [
-  {
+
+  upvotes: {
+    type: Number,
+    default: 0
+  },
+
+  upvotedBy: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+
+  likes: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-  },
-],
-dislikes: [
-  {
+  }],
+
+  dislikes: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+  }],
+
+  isActive: {
+    type: Boolean,
+    default: true
   },
-],
+
+  isFeatured: {
+    type: Boolean,
+    default: false
+  }
+
 }, { timestamps: true });
 
 businessIdeaSchema.pre('save', function (next) {
