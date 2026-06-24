@@ -42,7 +42,174 @@
           </div>
           <div class="mb-0">
             <label class="form-label fw-semibold">Full Story Content</label>
-            <textarea name="content" class="form-control" rows="10" placeholder="Full case study content (supports HTML)"><%= study ? study.content : '' %></textarea>
+       <div class="card shadow-sm border-0 mb-4">
+  <div class="card-header bg-white py-3">
+    <h6 class="mb-0 fw-semibold">
+      <i class="bi bi-file-earmark-text me-2 text-primary"></i>
+      Case Study Details
+    </h6>
+  </div>
+
+  <div class="card-body">
+
+    <!-- Company Overview -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">
+        Company Overview
+      </label>
+      <textarea
+        name="companyOverview"
+        class="form-control"
+        rows="4"
+        placeholder="Example: Acme SaaS is a marketing automation platform helping agencies manage campaigns..."
+      ><%= study ? study.companyOverview : '' %></textarea>
+    </div>
+
+    <!-- Founder Story -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">
+        Founder Story
+      </label>
+      <textarea
+        name="founderStory"
+        class="form-control"
+        rows="4"
+        placeholder="Founder background, journey and inspiration..."
+      ><%= study ? study.founderStory : '' %></textarea>
+    </div>
+
+    <!-- Problem -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">
+        Problem
+      </label>
+      <textarea
+        name="problem"
+        class="form-control"
+        rows="4"
+        placeholder="What problem were customers facing?"
+      ><%= study ? study.problem : '' %></textarea>
+    </div>
+
+    <!-- Solution -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">
+        Solution
+      </label>
+      <textarea
+        name="solution"
+        class="form-control"
+        rows="4"
+        placeholder="Describe the product/service solution..."
+      ><%= study ? study.solution : '' %></textarea>
+    </div>
+
+    <!-- Business Model -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">
+        Business Model
+      </label>
+      <textarea
+        name="businessModel"
+        class="form-control"
+        rows="4"
+        placeholder="Subscription, SaaS, One-time purchase, Commission etc..."
+      ><%= study ? study.businessModel : '' %></textarea>
+    </div>
+
+    <!-- Revenue -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">
+        Revenue Details
+      </label>
+      <textarea
+        name="revenue"
+        class="form-control"
+        rows="4"
+        placeholder="Revenue milestones, MRR, ARR etc..."
+      ><%= study ? study.revenue : '' %></textarea>
+    </div>
+
+    <!-- Funding -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">
+        Funding
+      </label>
+      <textarea
+        name="funding"
+        class="form-control"
+        rows="4"
+        placeholder="Bootstrapped, Seed Round, Angel Investors etc..."
+      ><%= study ? study.funding : '' %></textarea>
+    </div>
+
+    <!-- Growth -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">
+        Growth Journey
+      </label>
+      <textarea
+        name="growth"
+        class="form-control"
+        rows="4"
+        placeholder="Growth milestones and achievements..."
+      ><%= study ? study.growth : '' %></textarea>
+    </div>
+
+    <!-- Marketing -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">
+        Marketing Strategy
+      </label>
+      <textarea
+        name="marketingStrategy"
+        class="form-control"
+        rows="4"
+        placeholder="SEO, Ads, Social Media, Partnerships etc..."
+      ><%= study ? study.marketingStrategy : '' %></textarea>
+    </div>
+
+    <!-- First Customers -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">
+        First Customers
+      </label>
+      <textarea
+        name="firstCustomers"
+        class="form-control"
+        rows="4"
+        placeholder="Explain how first users/customers were acquired..."
+      ><%= study ? study.firstCustomers : '' %></textarea>
+    </div>
+
+    <!-- Lessons -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">
+        Lessons Learned
+      </label>
+      <textarea
+        name="lessons"
+        class="form-control"
+        rows="5"
+        placeholder="Lesson 1&#10;Lesson 2&#10;Lesson 3"
+      ><%= study && study.lessons ? study.lessons.join('\n') : '' %></textarea>
+    </div>
+
+    <!-- How To Start -->
+    <div class="mb-0">
+      <label class="form-label fw-semibold">
+        How To Start Similar Business
+      </label>
+      <textarea
+        name="howToStart"
+        class="form-control"
+        rows="5"
+        placeholder="Step by step guide to start a similar business..."
+      ><%= study ? study.howToStart : '' %></textarea>
+    </div>
+
+  </div>
+</div>
           </div>
         </div>
       </div>
