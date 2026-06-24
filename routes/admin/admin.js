@@ -140,6 +140,9 @@ router.post(
 );
 router.post('/services/:id/delete', panelPermission('services'), admin.deleteService);
 
+router.get('/services/:id/view-json', panelPermission('services'), admin.getServiceViewJson);
+
+
 // FAQs — permission: 'faqs'
 router.get('/faqs', panelPermission('faqs'), admin.getFAQs);
 router.get('/faqs/create', panelPermission('faqs'), admin.getCreateFaq);
