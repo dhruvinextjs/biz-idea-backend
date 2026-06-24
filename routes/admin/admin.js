@@ -57,6 +57,15 @@ const ideaUpload = multer({
   storage: ideaStorage,
 });
 
+const postStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads/posts');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const postUpload = multer({ storage: postStorage });
 
 // ── Public ──────────────────────────────────────────
 router.get('/login', admin.getLogin);
@@ -226,6 +235,13 @@ router.post('/posts/:id/toggle', panelPermission('posts'), admin.togglePostStatu
 router.post('/posts/:id/delete', panelPermission('posts'), admin.deletePost);
 router.get('/posts/pending', admin.getPendingPosts);
 router.get("/posts", admin.postsPage);
+
+router.get("/posts/create",panelPermission('posts'), admin.getCreatePost);
+// router.post("/posts/create",panelPermission('posts'), admin.createPost);
+router.post('/posts/create', panelPermission('posts'), postUpload.single('image'), admin.createPost);
+
+
+router.get("/posts/:id/detail", admin.getPostDetail);
 
 // Contacts — permission: 'contacts'
 router.get('/contacts', panelPermission('contacts'), admin.getContacts);

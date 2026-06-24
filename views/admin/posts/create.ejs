@@ -1,0 +1,71 @@
+<%- include('../partials/header') %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="mb-1 fw-bold">
+      <i class="bi bi-pencil-square me-2 text-primary"></i>Create Post
+    </h4>
+    <p class="text-muted mb-0 small">Admin posts are auto-approved and go live immediately</p>
+  </div>
+  <a href="/admin/posts" class="btn btn-outline-secondary btn-sm">
+    <i class="bi bi-arrow-left me-1"></i> Back to Posts
+  </a>
+</div>
+
+<% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <%= errorMessage %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+<% } %>
+
+<div class="card shadow-sm border-0">
+  <div class="card-body p-4">
+    <form action="/admin/posts/create" method="POST" enctype="multipart/form-data">
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
+        <input type="text" name="title" class="form-control" placeholder="Enter post title..." required />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Content <span class="text-danger">*</span></label>
+        <textarea name="content" class="form-control" rows="8"
+          placeholder="Write your post content here..." required></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Cover Image <span class="text-muted small fw-normal">(optional)</span></label>
+        <input type="file" name="image" class="form-control" accept="image/*" />
+        <div class="form-text">Supported: JPG, PNG, WEBP — max 5MB</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Tags <span class="text-muted small fw-normal">(optional)</span></label>
+        <input type="text" name="tags" class="form-control"
+          placeholder="e.g. announcement, tips, news (comma-separated)" />
+        <div class="form-text">Separate multiple tags with commas</div>
+      </div>
+
+      <div class="mb-4">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" name="isPinned" id="isPinned" />
+          <label class="form-check-label fw-semibold" for="isPinned">
+            📌 Pin this post
+            <span class="text-muted small fw-normal ms-1">— pinned posts appear first on the homepage</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary px-4">
+          <i class="bi bi-send me-1"></i> Publish Post
+        </button>
+        <a href="/admin/posts" class="btn btn-outline-secondary">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
