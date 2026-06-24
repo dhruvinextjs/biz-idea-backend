@@ -49,6 +49,9 @@ const serviceSchema = new mongoose.Schema({
   price: { type: String, default: 'Contact Us' },
   isActive: { type: Boolean, default: true },
   order: { type: Number, default: 0 },
+
+   isPinned: { type: Boolean, default: false },
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('Service', serviceSchema);

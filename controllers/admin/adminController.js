@@ -1319,8 +1319,13 @@ exports.postCreateService = async (req, res) => {
     data.features = titles
       .map((title, index) => ({ title, description: descriptions[index] || "" }))
       .filter(item => item.title.trim() !== "");
+
     if (req.files?.image?.[0]) data.image = `/uploads/services/${req.files.image[0].filename}`;
     if (req.files?.detailImage?.[0]) data.detailImage = `/uploads/services/${req.files.detailImage[0].filename}`;
+
+    // ✅ checkbox — "on" aata hai agar checked ho, warna undefined
+    data.isPinned = req.body.isPinned === 'on';
+
     await Service.create(data);
     req.flash("success", "Service created.");
     res.redirect("/admin/services");
@@ -1344,14 +1349,29 @@ exports.postEditService = async (req, res) => {
     data.features = titles
       .map((title, index) => ({ title, description: descriptions[index] || "" }))
       .filter(item => item.title.trim() !== "");
+
     if (req.files?.image?.[0]) data.image = `/uploads/services/${req.files.image[0].filename}`;
     if (req.files?.detailImage?.[0]) data.detailImage = `/uploads/services/${req.files.detailImage[0].filename}`;
+
+    // ✅ checkbox — unchecked hone par explicitly false set karna zaroori hai
+    data.isPinned = req.body.isPinned === 'on';
+
     await Service.findByIdAndUpdate(req.params.id, data, { new: true });
     req.flash("success", "Updated.");
     res.redirect("/admin/services");
   } catch (e) {
     req.flash("error", e.message);
     res.redirect(`/admin/services/${req.params.id}/edit`);
+  }
+};
+
+exports.getServiceViewJson = async (req, res) => {
+  try {
+    const service = await Service.findById(req.params.id);
+    if (!service) return res.status(404).json({ success: false, message: "Service not found" });
+    res.json({ success: true, data: service });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 

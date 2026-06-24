@@ -23,6 +23,7 @@
             <th>Service</th>
             <th>Price</th>
             <th>Features</th>
+            <th>Pinned</th>
             <th>Status</th>
             <th class="text-end pe-3">Actions</th>
           </tr>
@@ -30,7 +31,7 @@
         <tbody>
           <% if (services.length === 0) { %>
             <tr>
-              <td colspan="6" class="text-center text-muted py-5">
+              <td colspan="7" class="text-center text-muted py-5">
                 <i class="bi bi-inbox fs-2 d-block mb-2 opacity-50"></i>
                 No services yet. <a href="/admin/services/create">Add one!</a>
               </td>
@@ -44,15 +45,19 @@
             <td>
               <div class="d-flex align-items-center gap-3">
                 <% if (s.image) { %>
-                  <img src="<%= s.image %>" width="48" height="48" style="object-fit:cover;border-radius:8px;border:1px solid #e2e8f0" />
+                  <img src="<%= s.image %>" width="48" height="48"
+                    style="object-fit:cover;border-radius:8px;border:1px solid #e2e8f0" />
                 <% } else { %>
-                  <div class="d-flex align-items-center justify-content-center bg-primary-subtle rounded" style="width:48px;height:48px">
+                  <div class="d-flex align-items-center justify-content-center bg-primary-subtle rounded"
+                    style="width:48px;height:48px">
                     <i class="bi bi-briefcase text-primary"></i>
                   </div>
                 <% } %>
                 <div>
                   <div class="fw-semibold"><%= s.title %></div>
-                  <small class="text-muted"><%= s.description.substring(0, 60) %><%= s.description.length > 60 ? '...' : '' %></small>
+                  <small class="text-muted">
+                    <%= s.description.substring(0, 60) %><%= s.description.length > 60 ? '...' : '' %>
+                  </small>
                 </div>
               </div>
             </td>
@@ -62,6 +67,16 @@
             <td>
               <span class="text-muted small"><%= s.features ? s.features.length : 0 %> features</span>
             </td>
+
+            <!-- ✅ Pinned column -->
+            <td class="text-center">
+              <% if (s.isPinned) { %>
+                <span class="badge bg-warning text-dark">📌 Yes</span>
+              <% } else { %>
+                <span class="text-muted">—</span>
+              <% } %>
+            </td>
+
             <td>
               <% if (s.isActive) { %>
                 <span class="badge bg-success-subtle text-success border border-success-subtle">Active</span>
@@ -69,15 +84,30 @@
                 <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Hidden</span>
               <% } %>
             </td>
+
             <td class="text-end pe-3">
-              <a href="/admin/services/<%= s._id %>/edit" class="btn btn-sm btn-outline-primary me-1" title="Edit">
-                <i class="bi bi-pencil"></i>
-              </a>
-              <form action="/admin/services/<%= s._id %>/delete" method="POST" style="display:inline">
-                <button class="btn btn-sm btn-outline-danger btn-delete" title="Delete">
-                  <i class="bi bi-trash"></i>
+              <div class="d-flex gap-1 justify-content-end">
+
+                <!-- ✅ View button -->
+                <button
+                  class="btn btn-sm btn-outline-info btn-view-service"
+                  title="View Details"
+                  data-id="<%= s._id %>">
+                  <i class="bi bi-eye"></i>
                 </button>
-              </form>
+
+                <a href="/admin/services/<%= s._id %>/edit"
+                  class="btn btn-sm btn-outline-primary" title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </a>
+
+                <form action="/admin/services/<%= s._id %>/delete" method="POST" style="display:inline">
+                  <button class="btn btn-sm btn-outline-danger btn-delete" title="Delete">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+
+              </div>
             </td>
           </tr>
           <% }) %>
@@ -86,5 +116,128 @@
     </div>
   </div>
 </div>
+
+
+<!-- ===================== SERVICE DETAIL MODAL ===================== -->
+<div class="modal fade" id="serviceDetailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow">
+
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title fw-bold">
+          <i class="bi bi-briefcase me-2 text-primary"></i>Service Details
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body p-4" id="serviceDetailBody">
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="text-muted mt-2 mb-0">Loading...</p>
+        </div>
+      </div>
+
+      <div class="modal-footer border-top">
+        <a id="modalEditBtn" href="#" class="btn btn-primary btn-sm">
+          <i class="bi bi-pencil me-1"></i> Edit Service
+        </a>
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- =============================================================== -->
+
+
+<script>
+document.querySelectorAll('.btn-view-service').forEach(btn => {
+  btn.addEventListener('click', async function () {
+    const id     = this.dataset.id;
+    const modal  = new bootstrap.Modal(document.getElementById('serviceDetailModal'));
+    const body   = document.getElementById('serviceDetailBody');
+    const editBtn = document.getElementById('modalEditBtn');
+
+    body.innerHTML = `
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="text-muted mt-2 mb-0">Loading...</p>
+      </div>`;
+    editBtn.href = '#';
+    modal.show();
+
+    try {
+      const res  = await fetch(`/admin/services/${id}/view-json`);
+      const json = await res.json();
+      if (!json.success) throw new Error(json.message);
+
+      const s = json.data;
+      editBtn.href = `/admin/services/${s._id}/edit`;
+
+      const featuresHtml = s.features && s.features.length
+        ? s.features.map(f => `
+            <div class="border rounded p-2 mb-2">
+              <div class="fw-semibold small">${f.title}</div>
+              <div class="text-muted small">${f.description || '—'}</div>
+            </div>`).join('')
+        : '<p class="text-muted small mb-0">No features added.</p>';
+
+      body.innerHTML = `
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            ${s.image
+              ? `<img src="${s.image}" class="img-fluid rounded w-100" style="max-height:180px;object-fit:cover;" alt="Listing image">
+                 <p class="text-muted small text-center mt-1 mb-0">Listing Image</p>`
+              : '<div class="bg-light rounded d-flex align-items-center justify-content-center" style="height:120px"><span class="text-muted small">No listing image</span></div>'}
+          </div>
+          <div class="col-md-6">
+            ${s.detailImage
+              ? `<img src="${s.detailImage}" class="img-fluid rounded w-100" style="max-height:180px;object-fit:cover;" alt="Detail image">
+                 <p class="text-muted small text-center mt-1 mb-0">Detail Page Image</p>`
+              : '<div class="bg-light rounded d-flex align-items-center justify-content-center" style="height:120px"><span class="text-muted small">No detail image</span></div>'}
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap mb-3">
+          ${s.isActive
+            ? '<span class="badge bg-success-subtle text-success border border-success-subtle">Active</span>'
+            : '<span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Hidden</span>'}
+          ${s.isPinned
+            ? '<span class="badge bg-warning text-dark">📌 Pinned</span>'
+            : '<span class="badge bg-light text-muted border">Not Pinned</span>'}
+          <span class="badge bg-light text-dark border">Order: ${s.order}</span>
+          <span class="badge bg-success-subtle text-success border border-success-subtle">${s.price}</span>
+        </div>
+
+        <h5 class="fw-bold mb-1">${s.title}</h5>
+        <p class="text-muted small mb-3">${s.description}</p>
+
+        ${s.fullDescription ? `
+          <hr class="my-3">
+          <div class="mb-3" style="white-space:pre-wrap;line-height:1.7;font-size:0.9rem;">
+            ${s.fullDescription}
+          </div>` : ''}
+
+        <hr class="my-3">
+        <p class="fw-semibold small mb-2">Features (${s.features ? s.features.length : 0})</p>
+        ${featuresHtml}
+      `;
+
+    } catch (err) {
+      body.innerHTML = `
+        <div class="text-center py-5 text-danger">
+          <i class="bi bi-exclamation-triangle fs-2 d-block mb-2"></i>
+          <p class="mb-0">Failed to load: ${err.message}</p>
+        </div>`;
+    }
+  });
+});
+
+document.querySelectorAll('.btn-delete').forEach(btn => {
+  btn.addEventListener('click', e => {
+    if (!confirm('Delete this service?')) e.preventDefault();
+  });
+});
+</script>
 
 <%- include('../partials/footer') %>

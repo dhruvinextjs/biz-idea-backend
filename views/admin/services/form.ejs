@@ -39,17 +39,20 @@
         <div class="card-body">
           <div class="mb-3">
             <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
-            <input type="text" name="title" id="title" class="form-control" value="<%= service ? service.title : '' %>" required placeholder="Service title" />
+            <input type="text" name="title" id="title" class="form-control"
+              value="<%= service ? service.title : '' %>" required placeholder="Service title" />
             <div id="titleError" class="text-danger small mt-1"></div>
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold">Short Description <span class="text-danger">*</span></label>
-            <textarea name="description" id="desc" class="form-control" rows="2" required placeholder="Brief description shown in listing"><%= service ? service.description : '' %></textarea>
+            <textarea name="description" id="desc" class="form-control" rows="2" required
+              placeholder="Brief description shown in listing"><%= service ? service.description : '' %></textarea>
             <div id="descError" class="text-danger small mt-1"></div>
           </div>
           <div class="mb-0">
             <label class="form-label fw-semibold">Full Description</label>
-            <textarea name="fullDescription" class="form-control" rows="4" placeholder="Detailed description for service page"><%= service ? service.fullDescription : '' %></textarea>
+            <textarea name="fullDescription" class="form-control" rows="4"
+              placeholder="Detailed description for service page"><%= service ? service.fullDescription : '' %></textarea>
           </div>
         </div>
       </div>
@@ -65,21 +68,12 @@
             <div class="fw-semibold small text-muted mb-2">Feature <%= i + 1 %></div>
             <div class="row g-2">
               <div class="col-12 col-md-5">
-                <input
-                  type="text"
-                  name="featureTitle[]"
-                  class="form-control form-control-sm"
-                  placeholder="Feature title"
-                  value="<%= service?.features?.[i]?.title || '' %>"
-                />
+                <input type="text" name="featureTitle[]" class="form-control form-control-sm"
+                  placeholder="Feature title" value="<%= service?.features?.[i]?.title || '' %>" />
               </div>
               <div class="col-12 col-md-7">
-                <textarea
-                  name="featureDescription[]"
-                  class="form-control form-control-sm"
-                  rows="2"
-                  placeholder="Feature description"
-                ><%= service?.features?.[i]?.description || '' %></textarea>
+                <textarea name="featureDescription[]" class="form-control form-control-sm" rows="2"
+                  placeholder="Feature description"><%= service?.features?.[i]?.description || '' %></textarea>
               </div>
             </div>
           </div>
@@ -98,31 +92,30 @@
           <h6 class="mb-0 fw-semibold"><i class="bi bi-image me-2 text-info"></i>Images</h6>
         </div>
         <div class="card-body">
-
           <div class="mb-4">
             <label class="form-label fw-semibold">Listing Image</label>
             <% if (service && service.image) { %>
               <div class="mb-2 text-center">
-                <img src="<%= service.image %>" class="img-thumbnail" style="max-height:100px;object-fit:cover;border-radius:8px" />
+                <img src="<%= service.image %>" class="img-thumbnail"
+                  style="max-height:100px;object-fit:cover;border-radius:8px" />
                 <p class="text-muted small mt-1 mb-0">Current</p>
               </div>
             <% } %>
             <input type="file" name="image" class="form-control" accept="image/*" />
             <div class="text-muted small mt-1">Shown in service listing</div>
           </div>
-
           <div>
             <label class="form-label fw-semibold">Detail Page Image</label>
             <% if (service && service.detailImage) { %>
               <div class="mb-2 text-center">
-                <img src="<%= service.detailImage %>" class="img-thumbnail" style="max-height:100px;object-fit:cover;border-radius:8px" />
+                <img src="<%= service.detailImage %>" class="img-thumbnail"
+                  style="max-height:100px;object-fit:cover;border-radius:8px" />
                 <p class="text-muted small mt-1 mb-0">Current</p>
               </div>
             <% } %>
             <input type="file" name="detailImage" class="form-control" accept="image/*" />
             <div class="text-muted small mt-1">Shown on service detail page</div>
           </div>
-
         </div>
       </div>
 
@@ -134,11 +127,13 @@
         <div class="card-body">
           <div class="mb-3">
             <label class="form-label fw-semibold">Price</label>
-            <input type="text" name="price" class="form-control" value="<%= service ? service.price : 'Contact Us' %>" placeholder="$499 / Contact Us" />
+            <input type="text" name="price" class="form-control"
+              value="<%= service ? service.price : 'Contact Us' %>" placeholder="$499 / Contact Us" />
           </div>
           <div>
             <label class="form-label fw-semibold">Display Order</label>
-            <input type="number" name="order" class="form-control" value="<%= service ? service.order : 0 %>" min="0" />
+            <input type="number" name="order" class="form-control"
+              value="<%= service ? service.order : 0 %>" min="0" />
             <div class="text-muted small mt-1">Lower = shown first</div>
           </div>
         </div>
@@ -150,15 +145,35 @@
           <h6 class="mb-0 fw-semibold"><i class="bi bi-toggle-on me-2 text-secondary"></i>Status</h6>
         </div>
         <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center">
+
+          <!-- Active toggle -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
               <div class="fw-semibold">Active</div>
               <small class="text-muted">Visible on site</small>
             </div>
             <div class="form-check form-switch mb-0">
-              <input class="form-check-input" type="checkbox" name="isActive" value="true" style="width:2.5em;height:1.4em" <%= !service || service.isActive ? 'checked' : '' %> />
+              <input class="form-check-input" type="checkbox" name="isActive" value="true"
+                style="width:2.5em;height:1.4em"
+                <%= !service || service.isActive ? 'checked' : '' %> />
             </div>
           </div>
+
+          <hr class="my-2">
+
+          <!-- ✅ Pin toggle -->
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold">📌 Pin on Homepage</div>
+              <small class="text-muted">Show in featured/pinned section</small>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" name="isPinned"
+                style="width:2.5em;height:1.4em"
+                <%= service && service.isPinned ? 'checked' : '' %> />
+            </div>
+          </div>
+
         </div>
       </div>
 
