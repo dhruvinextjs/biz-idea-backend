@@ -29,7 +29,7 @@ const postUpload = multer({
 
 // Posts
 const postRouter = express.Router();
-const { getPosts, getPost, createPost, upvotePost, addComment, getRecentPosts,deletePost } = require('../controllers/postController');
+const { getPosts, getPost, createPost, upvotePost, addComment, getRecentPosts,deletePost,likeComment } = require('../controllers/postController');
 postRouter.get('/recent', getRecentPosts);
 postRouter.get('/', getPosts);
 postRouter.get('/:id', getPost);
@@ -42,6 +42,11 @@ postRouter.post(
 postRouter.post('/:id/upvote', protect, upvotePost);
 postRouter.post('/:id/comments', protect, addComment);
 postRouter.delete('/:id', protect, deletePost);
+postRouter.post(
+  '/:id/comments/:commentId/like',
+  protect,
+  likeComment
+);
 
 // Blogs
 const blogRouter = express.Router();

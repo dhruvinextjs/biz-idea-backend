@@ -142,3 +142,46 @@ exports.addComment = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get homepage posts (recent)
+
+
+exports.likeComment = asyncHandler(async (req, res) => {
+  const { id, commentId } = req.params;
+
+  const post = await Post.findById(id);
+
+  if (!post) {
+    return res.status(404).json({
+      success: false,
+      message: "Post not found"
+    });
+  }
+
+  const comment = post.comments.id(commentId);
+
+  if (!comment) {
+    return res.status(404).json({
+      success: false,
+      message: "Comment not found"
+    });
+  }
+
+  const alreadyLiked = comment.likedBy.some(
+    userId => userId.toString() === req.user.id
+  );
+
+  if (alreadyLiked) {
+    comment.likes -= 1;
+    comment.likedBy.pull(req.user.id);
+  } else {
+    comment.likes += 1;
+    comment.likedBy.push(req.user.id);
+  }
+
+  await post.save();
+
+  res.status(200).json({
+    success: true,
+    liked: !alreadyLiked,
+    likes: comment.likes
+  });
+});
