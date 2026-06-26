@@ -52,37 +52,97 @@
   }
 
   /* Dropdown Styles */
-  .adm-nav .adm-drop {
-    display: none;
-    position: absolute; 
-    top: calc(100% + 4px); 
-    left: 0;
-    background: #fff; 
-    border: 1px solid #e2e8f0;
-    border-radius: 10px; 
-    padding: 6px 0;
-    min-width: 195px; 
-    list-style: none;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-    z-index: 99999;
-  }
-  .adm-nav .adm-dd.adm-open > .adm-drop { 
-    display: block; 
-  }
+.adm-nav .adm-drop{
+  display:none;
+  position:absolute;
+  top:calc(100% + 6px);
+  left:0;
 
-  .adm-nav .adm-drop a {
-    display: block; 
-    padding: 9px 16px;
-    color: #334155; 
-    font-size: 13.2px; 
-    font-weight: 500;
-    text-decoration: none;
-  }
-  .adm-nav .adm-drop a:hover { 
-    color: var(--primary); 
-    background: #f8fafc; 
-  }
+  width:220px;        /* fixed width */
+  min-width:220px;
 
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  padding:6px 0;
+  margin:0;
+  list-style:none;
+  box-shadow:0 12px 28px rgba(15,23,42,.12);
+  z-index:99999;
+}
+
+.adm-nav .adm-drop li{
+    display:block !important;
+    width:100%;
+    margin:0;
+    padding:0;
+    float:none !important;
+}
+
+.adm-nav .adm-drop li a{
+    display:block !important;
+    width:100%;
+    padding:10px 16px;
+    color:#334155;
+    text-decoration:none;
+    white-space:nowrap;
+    box-sizing:border-box;
+}
+
+.adm-nav .adm-drop li a:hover{
+    background:#f1f5f9;
+    color:var(--primary);
+}
+
+.adm-nav .adm-drop a{
+  display:block;          /* flex mat use karo */
+  width:100%;
+  padding:10px 16px;
+  line-height:1.4;
+  white-space:nowrap;
+  text-decoration:none;
+  color:#334155;
+  border-radius:0;
+}
+
+.adm-nav .adm-drop a:hover{
+  background:#f1f5f9;
+  color:var(--primary);
+}
+
+.adm-nav .adm-dd{
+    position:relative;
+}
+
+.adm-nav .adm-drop{
+    display:none;
+    position:absolute;
+    top:calc(100% + 6px);
+    left:0;
+
+    width:220px;
+
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    padding:6px 0;
+    margin:0;
+
+    list-style:none;
+    box-shadow:0 12px 28px rgba(15,23,42,.12);
+    z-index:99999;
+
+    /* IMPORTANT */
+    flex-direction:column !important;
+}
+
+.adm-nav .adm-drop a{
+    padding:8px 14px;
+    line-height:1.2;
+}
+.adm-nav .adm-dd.adm-open > .adm-drop {
+    display: block;
+}
   .adm-nav .adm-right {
     display: flex; 
     align-items: center;
