@@ -111,28 +111,39 @@ exports.getCreateIdea = (req, res) => {
 exports.postCreateIdea = async (req, res) => {
   try {
 
- const data = {
-  ...req.body,
+    // ✅ Helper — empty string ko undefined kar do taaki enum error na aaye
+    const clean = (val) => (val && val.trim() !== '' ? val : undefined);
 
-  howItWorks: req.body.howItWorks
-    ? req.body.howItWorks.split("\n").filter(Boolean)
-    : [],
+    const data = {
+      ...req.body,
 
-  revenueModel: req.body.revenueModel
-    ? req.body.revenueModel.split("\n").filter(Boolean)
-    : [],
+      // ✅ Enum fields — empty hone par undefined
+      platform:     clean(req.body.platform),
+      costToBuild:  clean(req.body.costToBuild),
+      monetization: clean(req.body.monetization),
+      category:     clean(req.body.category),
+      teamSize:     clean(req.body.teamSize),
+      type:         clean(req.body.type),
 
-  techStack: req.body.techStack
-    ? req.body.techStack.split("\n").filter(Boolean)
-    : [],
+      howItWorks: req.body.howItWorks
+        ? req.body.howItWorks.split("\n").filter(Boolean)
+        : [],
 
-  executionBreakdown: {
-    investmentRequired: req.body.investmentRequired,
-    timeToLaunch: req.body.timeToLaunch,
-    requiredTeam: req.body.requiredTeam,
-    profitMarginDetail: req.body.profitMarginDetail,
-  },
-};
+      revenueModel: req.body.revenueModel
+        ? req.body.revenueModel.split("\n").filter(Boolean)
+        : [],
+
+      techStack: req.body.techStack
+        ? req.body.techStack.split("\n").filter(Boolean)
+        : [],
+
+      executionBreakdown: {
+        investmentRequired:  req.body.investmentRequired  || '',
+        timeToLaunch:        req.body.timeToLaunch        || '',
+        requiredTeam:        req.body.requiredTeam        || '',
+        profitMarginDetail:  req.body.profitMarginDetail  || '',
+      },
+    };
 
     if (req.file) {
       data.image = `/uploads/ideas/${req.file.filename}`;

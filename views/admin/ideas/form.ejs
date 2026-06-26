@@ -1,462 +1,406 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h4 class="mb-1 fw-bold">
-      <i class="bi bi-lightbulb me-2 text-primary"></i>
-      <%= idea ? 'Edit Idea' : 'Create New Idea' %>
-    </h4>
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-        <li class="breadcrumb-item"><a href="/admin/ideas?type=<%= idea ? idea.type : type %>">Ideas</a></li>
-        <li class="breadcrumb-item active"><%= idea ? 'Edit' : 'Create' %></li>
-      </ol>
-    </nav>
-  </div>
-  <a href="/admin/ideas?type=<%= idea ? idea.type : type %>" class="btn btn-outline-secondary">
-    <i class="bi bi-arrow-left me-1"></i> Back
-  </a>
-</div>
+<head>
+  <%- include('../_layouts/head') %>
+  <title><%= idea ? 'Edit Idea' : 'Create Idea' %> | <%= title %></title>
 
-<form
-  action="/admin/ideas/<%= idea ? idea._id + '/edit' : 'create' %>"
-  method="POST"
-  enctype="multipart/form-data"
-  id="ideaForm"
-  onsubmit="return validateForm()">
+  <!-- Bootstrap Icons only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
-  <div class="row g-4">
-
-    <!-- ─── LEFT COLUMN ─────────────────────────────── -->
-    <div class="col-12 col-lg-8">
-
-      <!-- Basic Info -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-info-circle me-2 text-primary"></i>Basic Information</h6>
-        </div>
-        <div class="card-body">
-
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
-            <input
-              type="text"
-              name="title"
-              id="title"
-              class="form-control"
-              value="<%= idea ? idea.title : '' %>"
-              placeholder="e.g. AI-powered fitness app with AR guidance"
-              required
-            />
-            <div id="titleError" class="text-danger small mt-1"></div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Short Description <span class="text-danger">*</span></label>
-            <textarea
-              name="description"
-              id="description"
-              class="form-control"
-              rows="2"
-              placeholder="Brief one-line description of the idea"
-              required
-            ><%= idea ? idea.description : '' %></textarea>
-            <div id="descError" class="text-danger small mt-1"></div>
-          </div>
-
-        <div class="mb-3">
-  <label class="form-label fw-semibold">Business Overview</label>
-  <textarea
-    name="businessOverview"
-    class="form-control"
-    rows="4"
-  ><%= idea ? idea.businessOverview : '' %></textarea>
-</div>
-
-<div class="mb-3">
-  <label class="form-label fw-semibold">Problem</label>
-  <textarea
-    name="problem"
-    class="form-control"
-    rows="4"
-  ><%= idea ? idea.problem : '' %></textarea>
-</div>
-
-<div class="mb-3">
-  <label class="form-label fw-semibold">Solution</label>
-  <textarea
-    name="solution"
-    class="form-control"
-    rows="4"
-  ><%= idea ? idea.solution : '' %></textarea>
-</div>
-
-<div class="mb-3">
-  <label class="form-label fw-semibold">
-    How It Works
-  </label>
-
-  <textarea
-    name="howItWorks"
-    class="form-control"
-    rows="5"
-    placeholder="One step per line"
-  ><%= idea && idea.howItWorks ? idea.howItWorks.join('\n') : '' %></textarea>
-</div>
-
-<div class="mb-3">
-  <label class="form-label fw-semibold">
-    Revenue Model
-  </label>
-
-  <textarea
-    name="revenueModel"
-    class="form-control"
-    rows="5"
-    placeholder="One item per line"
-  ><%= idea && idea.revenueModel ? idea.revenueModel.join('\n') : '' %></textarea>
-</div>
-
-<div class="row g-3">
-
-  <div class="col-md-6">
-    <label class="form-label">
-      Investment Required
-    </label>
-
-    <input
-      type="text"
-      name="investmentRequired"
-      class="form-control"
-      value="<%= idea ? idea.investmentRequired : '' %>"
-    >
-  </div>
-
-  <div class="col-md-6">
-    <label class="form-label">
-      Time To Launch
-    </label>
-
-    <input
-      type="text"
-      name="timeToLaunch"
-      class="form-control"
-      value="<%= idea ? idea.timeToLaunch : '' %>"
-    >
-  </div>
-
-  <div class="col-md-6">
-    <label class="form-label">
-      Required Team
-    </label>
-
-    <input
-      type="text"
-      name="requiredTeam"
-      class="form-control"
-      value="<%= idea ? idea.requiredTeam : '' %>"
-    >
-  </div>
-
-  <div class="col-md-6">
-    <label class="form-label">
-      Profit Margin Detail
-    </label>
-
-    <input
-      type="text"
-      name="profitMarginDetail"
-      class="form-control"
-      value="<%= idea ? idea.profitMarginDetail : '' %>"
-    >
-  </div>
-
-</div>
-
-<div class="mb-3 mt-3">
-  <label class="form-label fw-semibold">
-    Tech Stack & Tools Required
-  </label>
-
-  <textarea
-    name="techStack"
-    class="form-control"
-    rows="5"
-    placeholder="One item per line"
-  ><%= idea && idea.techStack ? idea.techStack.join('\n') : '' %></textarea>
-</div>
-
-<div class="mb-3">
-  <label class="form-label fw-semibold">
-    Marketing Strategy
-  </label>
-
-  <textarea
-    name="marketingStrategy"
-    class="form-control"
-    rows="5"
-  ><%= idea ? idea.marketingStrategy : '' %></textarea>
-</div>
-
-          <div class="mb-0">
-            <label class="form-label fw-semibold">Tags <span class="text-muted fw-normal">(comma separated)</span></label>
-            <input
-              type="text"
-              name="tags"
-              class="form-control"
-              value="<%= idea && idea.tags ? idea.tags.join(', ') : '' %>"
-              placeholder="AI, SaaS, mobile, fitness"
-            />
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Investment & Team -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-cash-stack me-2 text-success"></i>Investment & Team</h6>
-        </div>
-        <div class="card-body">
-
-          <div class="row g-3">
-            <div class="col-12 col-md-4">
-              <label class="form-label fw-semibold">Min Investment ($)</label>
-              <input type="number" name="investmentMin" class="form-control" value="<%= idea ? idea.investmentMin : 1000 %>" min="0" />
-            </div>
-            <div class="col-12 col-md-4">
-              <label class="form-label fw-semibold">Max Investment ($)</label>
-              <input type="number" name="investmentMax" class="form-control" value="<%= idea ? idea.investmentMax : 5000 %>" min="0" />
-            </div>
-            <div class="col-12 col-md-4">
-              <label class="form-label fw-semibold">Profit Margin (%)</label>
-              <input type="number" name="profitMargin" class="form-control" value="<%= idea ? idea.profitMargin : 50 %>" min="0" max="100" />
-            </div>
-
-            <div class="col-12 col-md-6">
-              <label class="form-label fw-semibold">Team Size</label>
-              <select name="teamSize" class="form-select">
-                <% ['Solo (1)','Small (2-5)','Medium (6-15)','Large (15+)'].forEach(s => { %>
-                  <option value="<%= s %>" <%= idea && idea.teamSize === s ? 'selected' : '' %>><%= s %></option>
-                <% }) %>
-              </select>
-            </div>
-
-            <!-- App-only fields -->
-            <div class="col-12 col-md-6" id="platformField" style="display:<%= (idea ? idea.type : type) === 'app' ? 'block' : 'none' %>">
-              <label class="form-label fw-semibold">Platform</label>
-              <select name="platform" class="form-select">
-                <option value="">Select Platform</option>
-                <% ['iOS & Android','Mac/PC Desktop','Web App','Wearable OS'].forEach(p => { %>
-                  <option value="<%= p %>" <%= idea && idea.platform === p ? 'selected' : '' %>><%= p %></option>
-                <% }) %>
-              </select>
-            </div>
-
-            <div class="col-12 col-md-6" id="costField" style="display:<%= (idea ? idea.type : type) === 'app' ? 'block' : 'none' %>">
-              <label class="form-label fw-semibold">Cost to Build</label>
-              <select name="costToBuild" class="form-select">
-                <option value="">Select Cost</option>
-                <% ['$0 - $2K','$2K - $5K','$5K - $20K','$20K+'].forEach(c => { %>
-                  <option value="<%= c %>" <%= idea && idea.costToBuild === c ? 'selected' : '' %>><%= c %></option>
-                <% }) %>
-              </select>
-            </div>
-
-            <div class="col-12 col-md-6" id="monetizationField" style="display:<%= (idea ? idea.type : type) === 'app' ? 'block' : 'none' %>">
-              <label class="form-label fw-semibold">Monetization</label>
-              <select name="monetization" class="form-select">
-                <option value="">Select Monetization</option>
-                <% ['Free','Paid','In-App Purchase','Ads'].forEach(m => { %>
-                  <option value="<%= m %>" <%= idea && idea.monetization === m ? 'selected' : '' %>><%= m %></option>
-                <% }) %>
-              </select>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ─── RIGHT COLUMN ────────────────────────────── -->
-    <div class="col-12 col-lg-4">
-
-      <!-- Classification -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-tags me-2 text-warning"></i>Classification</h6>
-        </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Idea Type</label>
-            <select name="type" id="typeSelect" class="form-select">
-              <option value="business" <%= (idea ? idea.type : type) === 'business' ? 'selected' : '' %>>Business Idea</option>
-              <option value="app"      <%= (idea ? idea.type : type) === 'app'      ? 'selected' : '' %>>App Idea</option>
-              <option value="startup"  <%= (idea ? idea.type : type) === 'startup'  ? 'selected' : '' %>>Startup Idea</option>
-            </select>
-          </div>
-          <div class="mb-0">
-            <label class="form-label fw-semibold">Category</label>
-            <select name="category" class="form-select">
-              <% ['AI & Tech','SaaS','E-Commerce','Local Business','Services','Other'].forEach(cat => { %>
-                <option value="<%= cat %>" <%= idea && idea.category === cat ? 'selected' : '' %>><%= cat %></option>
-              <% }) %>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Image Upload -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-image me-2 text-info"></i>Idea Image</h6>
-        </div>
-        <div class="card-body">
-
-          <% if (idea && idea.image && !idea.image.startsWith('/images/')) { %>
-            <div class="text-center mb-3">
-              <img
-                src="<%= idea.image %>"
-                alt="Current Image"
-                class="img-thumbnail"
-                style="max-height:150px;max-width:100%;object-fit:cover;border-radius:8px"
-              />
-              <p class="text-muted small mt-1 mb-0">Current image</p>
-            </div>
-          <% } %>
-
-          <div id="imagePreviewBox" class="text-center mb-3" style="display:none">
-            <img id="imagePreview" src="" alt="Preview"
-              class="img-thumbnail"
-              style="max-height:150px;max-width:100%;object-fit:cover;border-radius:8px"
-            />
-            <p class="text-muted small mt-1 mb-0">New image preview</p>
-          </div>
-
-          <label class="form-label fw-semibold">Upload Image</label>
-          <input
-            type="file"
-            name="image"
-            id="imageFile"
-            class="form-control"
-            accept="image/png,image/jpeg,image/jpg,image/webp"
-          />
-          <div class="text-muted small mt-1">PNG, JPG, WEBP. Leave empty to keep existing.</div>
-        </div>
-      </div>
-
-      <!-- Status -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-toggle-on me-2 text-secondary"></i>Status</h6>
-        </div>
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-              <div class="fw-semibold">Active</div>
-              <small class="text-muted">Visible on site</small>
-            </div>
-            <div class="form-check form-switch mb-0">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                name="isActive"
-                id="isActive"
-                value="true"
-                style="width:2.5em;height:1.4em"
-                <%= !idea || idea.isActive ? 'checked' : '' %>
-              />
-            </div>
-          </div>
-          <hr class="my-2">
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <div class="fw-semibold">Featured ⭐</div>
-              <small class="text-muted">Show at top</small>
-            </div>
-            <div class="form-check form-switch mb-0">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                name="isFeatured"
-                id="isFeatured"
-                value="true"
-                style="width:2.5em;height:1.4em"
-                <%= idea && idea.isFeatured ? 'checked' : '' %>
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
-          <i class="bi bi-<%= idea ? 'save' : 'plus-circle' %> me-2"></i>
-          <%= idea ? 'Update Idea' : 'Create Idea' %>
-        </button>
-        <a href="/admin/ideas?type=<%= idea ? idea.type : type %>" class="btn btn-outline-secondary">
-          <i class="bi bi-x-circle me-2"></i>Cancel
-        </a>
-      </div>
-
-    </div>
-  </div>
-</form>
-
-<script>
-  // Image preview
-  document.getElementById('imageFile').addEventListener('change', function () {
-    const file = this.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        document.getElementById('imagePreview').src = e.target.result;
-        document.getElementById('imagePreviewBox').style.display = 'block';
-      };
-      reader.readAsDataURL(file);
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
+    .section-title {
+      font-size: 1rem; font-weight: 600; color: #1a237e;
+      border-left: 4px solid #3949ab; padding-left: 10px;
+      margin: 20px 0 10px;
     }
-  });
+    .required-star { color: #e53935; }
+    .form-note { font-size: 12px; color: #757575; margin-top: 4px; }
+    /* Fix select label overlap */
+    .input-field .select-wrapper + label,
+    .input-field label.active { color: #3949ab !important; }
+  </style>
+</head>
 
-  // Show/hide app-only fields
-  document.getElementById('typeSelect').addEventListener('change', function () {
-    const isApp = this.value === 'app';
-    ['platformField', 'costField', 'monetizationField'].forEach(id => {
-      document.getElementById(id).style.display = isApp ? 'block' : 'none';
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
+
+  <%- include('../partials/header') %>
+
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0">
+                <span><%= idea ? 'Edit Idea' : 'Create New Idea' %></span>
+              </h5>
+            </div>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="/admin/ideas?type=<%= idea ? idea.type : type %>">
+                  Back to Ideas
+                </a>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col s12">
+        <div class="container">
+          <div class="section">
+            <div class="card-panel">
+              <div class="card-content">
+
+                <form id="ideaForm" method="POST"
+                  action="/admin/ideas/<%= idea ? idea._id + '/edit' : 'create' %>"
+                  enctype="multipart/form-data"
+                  onsubmit="return validateForm()">
+
+                  <div class="row">
+
+                    <!-- ── BASIC INFO ── -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-info-circle"></i> Basic Information</p>
+                    </div>
+
+                    <div class="input-field col s12">
+                      <input id="title" name="title" type="text"
+                        value="<%= idea ? idea.title : '' %>" required>
+                      <label for="title" class="<%= idea ? 'active' : '' %>">
+                        Title <span class="required-star">*</span>
+                      </label>
+                      <span id="titleError" class="helper-text red-text"></span>
+                    </div>
+
+                    <div class="input-field col s12">
+                      <textarea id="description" name="description"
+                        class="materialize-textarea" required><%= idea ? idea.description : '' %></textarea>
+                      <label for="description" class="<%= idea ? 'active' : '' %>">
+                        Short Description <span class="required-star">*</span>
+                      </label>
+                      <span id="descError" class="helper-text red-text"></span>
+                    </div>
+
+                    <div class="input-field col s12">
+                      <textarea id="businessOverview" name="businessOverview"
+                        class="materialize-textarea"><%= idea ? idea.businessOverview : '' %></textarea>
+                      <label for="businessOverview" class="<%= idea ? 'active' : '' %>">Business Overview</label>
+                    </div>
+
+                    <div class="input-field col s12 m6">
+                      <textarea id="problem" name="problem"
+                        class="materialize-textarea"><%= idea ? idea.problem : '' %></textarea>
+                      <label for="problem" class="<%= idea ? 'active' : '' %>">Problem</label>
+                    </div>
+
+                    <div class="input-field col s12 m6">
+                      <textarea id="solution" name="solution"
+                        class="materialize-textarea"><%= idea ? idea.solution : '' %></textarea>
+                      <label for="solution" class="<%= idea ? 'active' : '' %>">Solution</label>
+                    </div>
+
+                    <div class="input-field col s12 m6">
+                      <textarea id="howItWorks" name="howItWorks"
+                        class="materialize-textarea"
+                        placeholder="Step 1&#10;Step 2&#10;Step 3"><%= idea && idea.howItWorks ? idea.howItWorks.join('\n') : '' %></textarea>
+                      <label for="howItWorks" class="<%= idea ? 'active' : '' %>">
+                        How It Works <span style="font-weight:400; color:#9e9e9e; font-size:12px;">(one step per line)</span>
+                      </label>
+                    </div>
+
+                    <div class="input-field col s12 m6">
+                      <textarea id="revenueModel" name="revenueModel"
+                        class="materialize-textarea"
+                        placeholder="Subscription&#10;Ads&#10;Licensing"><%= idea && idea.revenueModel ? idea.revenueModel.join('\n') : '' %></textarea>
+                      <label for="revenueModel" class="<%= idea ? 'active' : '' %>">
+                        Revenue Model <span style="font-weight:400; color:#9e9e9e; font-size:12px;">(one item per line)</span>
+                      </label>
+                    </div>
+
+                    <div class="input-field col s12 m6">
+                      <input id="investmentRequired" name="investmentRequired" type="text"
+                        value="<%= idea ? idea.investmentRequired : '' %>"
+                        placeholder="e.g. $5K - $20K">
+                      <label for="investmentRequired" class="<%= idea ? 'active' : '' %>">Investment Required</label>
+                    </div>
+
+                    <div class="input-field col s12 m6">
+                      <input id="timeToLaunch" name="timeToLaunch" type="text"
+                        value="<%= idea ? idea.timeToLaunch : '' %>"
+                        placeholder="e.g. 3-6 months">
+                      <label for="timeToLaunch" class="<%= idea ? 'active' : '' %>">Time To Launch</label>
+                    </div>
+
+                    <div class="input-field col s12 m6">
+                      <input id="requiredTeam" name="requiredTeam" type="text"
+                        value="<%= idea ? idea.requiredTeam : '' %>"
+                        placeholder="e.g. Developer, Designer">
+                      <label for="requiredTeam" class="<%= idea ? 'active' : '' %>">Required Team</label>
+                    </div>
+
+                    <div class="input-field col s12 m6">
+                      <input id="profitMarginDetail" name="profitMarginDetail" type="text"
+                        value="<%= idea ? idea.profitMarginDetail : '' %>"
+                        placeholder="e.g. 60-70% after year 1">
+                      <label for="profitMarginDetail" class="<%= idea ? 'active' : '' %>">Profit Margin Detail</label>
+                    </div>
+
+                    <div class="input-field col s12">
+                      <textarea id="techStack" name="techStack"
+                        class="materialize-textarea"
+                        placeholder="React&#10;Node.js&#10;MongoDB"><%= idea && idea.techStack ? idea.techStack.join('\n') : '' %></textarea>
+                      <label for="techStack" class="<%= idea ? 'active' : '' %>">
+                        Tech Stack &amp; Tools <span style="font-weight:400; color:#9e9e9e; font-size:12px;">(one item per line)</span>
+                      </label>
+                    </div>
+
+                    <div class="input-field col s12">
+                      <textarea id="marketingStrategy" name="marketingStrategy"
+                        class="materialize-textarea"><%= idea ? idea.marketingStrategy : '' %></textarea>
+                      <label for="marketingStrategy" class="<%= idea ? 'active' : '' %>">Marketing Strategy</label>
+                    </div>
+
+                    <div class="input-field col s12">
+                      <input id="tags" name="tags" type="text"
+                        value="<%= idea && idea.tags ? idea.tags.join(', ') : '' %>"
+                        placeholder="AI, SaaS, mobile, fitness">
+                      <label for="tags" class="<%= idea ? 'active' : '' %>">
+                        Tags <span style="font-weight:400; color:#9e9e9e; font-size:12px;">(comma separated)</span>
+                      </label>
+                    </div>
+
+                    <!-- ── INVESTMENT & TEAM ── -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-cash-stack"></i> Investment &amp; Team</p>
+                    </div>
+
+                    <div class="input-field col s12 m4">
+                      <input id="investmentMin" name="investmentMin" type="number" min="0"
+                        value="<%= idea ? idea.investmentMin : 1000 %>">
+                      <label for="investmentMin" class="active">Min Investment ($)</label>
+                    </div>
+
+                    <div class="input-field col s12 m4">
+                      <input id="investmentMax" name="investmentMax" type="number" min="0"
+                        value="<%= idea ? idea.investmentMax : 5000 %>">
+                      <label for="investmentMax" class="active">Max Investment ($)</label>
+                    </div>
+
+                    <div class="input-field col s12 m4">
+                      <input id="profitMargin" name="profitMargin" type="number" min="0" max="100"
+                        value="<%= idea ? idea.profitMargin : 50 %>">
+                      <label for="profitMargin" class="active">Profit Margin (%)</label>
+                    </div>
+
+                    <div class="input-field col s12 m6">
+                      <select id="teamSize" name="teamSize">
+                        <% ['Solo (1)','Small (2-5)','Medium (6-15)','Large (15+)'].forEach(s => { %>
+                          <option value="<%= s %>" <%= idea && idea.teamSize === s ? 'selected' : '' %>><%= s %></option>
+                        <% }) %>
+                      </select>
+                      <label>Team Size</label>
+                    </div>
+
+                    <!-- App-only fields -->
+                    <div class="input-field col s12 m6" id="platformField"
+                      style="display:<%= (idea ? idea.type : type) === 'app' ? 'block' : 'none' %>">
+                      <select name="platform">
+                        <option value="">Select Platform</option>
+                        <% ['iOS & Android','Mac/PC Desktop','Web App','Wearable OS'].forEach(p => { %>
+                          <option value="<%= p %>" <%= idea && idea.platform === p ? 'selected' : '' %>><%= p %></option>
+                        <% }) %>
+                      </select>
+                      <label>Platform</label>
+                    </div>
+
+                    <div class="input-field col s12 m6" id="costField"
+                      style="display:<%= (idea ? idea.type : type) === 'app' ? 'block' : 'none' %>">
+                      <select name="costToBuild">
+                        <option value="">Select Cost</option>
+                        <% ['$0 - $2K','$2K - $5K','$5K - $20K','$20K+'].forEach(c => { %>
+                          <option value="<%= c %>" <%= idea && idea.costToBuild === c ? 'selected' : '' %>><%= c %></option>
+                        <% }) %>
+                      </select>
+                      <label>Cost to Build</label>
+                    </div>
+
+                    <div class="input-field col s12 m6" id="monetizationField"
+                      style="display:<%= (idea ? idea.type : type) === 'app' ? 'block' : 'none' %>">
+                      <select name="monetization">
+                        <option value="">Select Monetization</option>
+                        <% ['Free','Paid','In-App Purchase','Ads'].forEach(m => { %>
+                          <option value="<%= m %>" <%= idea && idea.monetization === m ? 'selected' : '' %>><%= m %></option>
+                        <% }) %>
+                      </select>
+                      <label>Monetization</label>
+                    </div>
+
+                    <!-- ── CLASSIFICATION ── -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-tags"></i> Classification</p>
+                    </div>
+
+                    <div class="input-field col s12 m6">
+                      <select id="typeSelect" name="type">
+                        <option value="business" <%= (idea ? idea.type : type) === 'business' ? 'selected' : '' %>>Business Idea</option>
+                        <option value="app"      <%= (idea ? idea.type : type) === 'app'      ? 'selected' : '' %>>App Idea</option>
+                        <option value="startup"  <%= (idea ? idea.type : type) === 'startup'  ? 'selected' : '' %>>Startup Idea</option>
+                      </select>
+                      <label>Idea Type</label>
+                    </div>
+
+                    <div class="input-field col s12 m6">
+                      <select name="category">
+                        <% ['AI & Tech','SaaS','E-Commerce','Local Business','Services','Other'].forEach(cat => { %>
+                          <option value="<%= cat %>" <%= idea && idea.category === cat ? 'selected' : '' %>><%= cat %></option>
+                        <% }) %>
+                      </select>
+                      <label>Category</label>
+                    </div>
+
+                    <!-- ── IMAGE ── -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-image"></i> Idea Image</p>
+                    </div>
+
+                    <div class="col s12 m6">
+                      <% if (idea && idea.image && !idea.image.startsWith('/images/')) { %>
+                        <div style="margin-bottom:10px;">
+                          <img src="<%= idea.image %>" alt="Current"
+                            style="max-height:120px; max-width:100%; border-radius:8px; border:1px solid #e0e0e0;">
+                          <p class="form-note">Current image</p>
+                        </div>
+                      <% } %>
+                      <div id="imagePreviewBox" style="display:none; margin-bottom:10px;">
+                        <img id="imagePreview" src="" alt="Preview"
+                          style="max-height:120px; max-width:100%; border-radius:8px; border:1px solid #e0e0e0;">
+                        <p class="form-note">New image preview</p>
+                      </div>
+                      <div class="file-field input-field">
+                        <div class="btn gradient-45deg-purple-deep-orange">
+                          <span>Upload</span>
+                          <input type="file" name="image" id="imageFile" accept="image/png,image/jpeg,image/jpg,image/webp">
+                        </div>
+                        <div class="file-path-wrapper">
+                          <input class="file-path validate" type="text" placeholder="PNG, JPG, WEBP. Leave empty to keep existing.">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- ── STATUS ── -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-toggle-on"></i> Status</p>
+                    </div>
+
+                    <div class="col s12 m6">
+                      <div class="switch" style="margin: 10px 0;">
+                        <label>
+                          Inactive
+                          <input type="checkbox" name="isActive" value="true" <%= !idea || idea.isActive ? 'checked' : '' %>>
+                          <span class="lever"></span>
+                          Active
+                        </label>
+                      </div>
+                      <p class="form-note">Visible on site when active</p>
+                    </div>
+
+                    <div class="col s12 m6">
+                      <div class="switch" style="margin: 10px 0;">
+                        <label>
+                          Normal
+                          <input type="checkbox" name="isFeatured" value="true" <%= idea && idea.isFeatured ? 'checked' : '' %>>
+                          <span class="lever"></span>
+                          Featured ⭐
+                        </label>
+                      </div>
+                      <p class="form-note">Show at top when featured</p>
+                    </div>
+
+                    <!-- ── BUTTONS ── -->
+                    <div class="col s12 right-align" style="margin-top:20px;">
+                      <button type="submit" id="submitBtn"
+                        class="btn gradient-45deg-purple-deep-orange waves-effect waves-light">
+                        <i class="material-icons left"><%= idea ? 'save' : 'add_circle' %></i>
+                        <%= idea ? 'Update Idea' : 'Create Idea' %>
+                      </button>
+                      <a href="/admin/ideas?type=<%= idea ? idea.type : type %>"
+                        class="btn grey waves-effect waves-light" style="margin-left:8px;">
+                        <i class="material-icons left">cancel</i>Cancel
+                      </a>
+                    </div>
+
+                  </div><!-- /row -->
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="content-overlay"></div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../_layouts/commonJs') %>
+
+  <script>
+    $(document).ready(function () {
+      $('select').formSelect();
+      M.updateTextFields();
+
+      // Auto-resize textareas
+      document.querySelectorAll('.materialize-textarea').forEach(el => {
+        M.textareaAutoResize(el);
+      });
     });
-  });
 
-  // Form validation
-  function validateForm() {
-    let valid = true;
+    // Image preview
+    document.getElementById('imageFile').addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          document.getElementById('imagePreview').src = e.target.result;
+          document.getElementById('imagePreviewBox').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
 
-    const title = document.getElementById('title').value.trim();
-    const desc  = document.getElementById('description').value.trim();
+    // Show/hide app-only fields
+    document.getElementById('typeSelect').addEventListener('change', function () {
+      const isApp = this.value === 'app';
+      ['platformField', 'costField', 'monetizationField'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = isApp ? 'block' : 'none';
+      });
+    });
 
-    if (!title) {
-      document.getElementById('titleError').innerText = 'Title is required.';
-      valid = false;
-    } else {
-      document.getElementById('titleError').innerText = '';
+    // Validation
+    function validateForm() {
+      let valid = true;
+      const title = document.getElementById('title').value.trim();
+      const desc  = document.getElementById('description').value.trim();
+      const te = document.getElementById('titleError');
+      const de = document.getElementById('descError');
+      if (!title) { te.innerText = 'Title is required.'; valid = false; }
+      else te.innerText = '';
+      if (!desc) { de.innerText = 'Description is required.'; valid = false; }
+      else de.innerText = '';
+      if (valid) {
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="material-icons left">hourglass_empty</i> Saving...';
+      }
+      return valid;
     }
+  </script>
 
-    if (!desc) {
-      document.getElementById('descError').innerText = 'Short description is required.';
-      valid = false;
-    } else {
-      document.getElementById('descError').innerText = '';
-    }
-
-    if (valid) {
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
-    }
-
-    return valid;
-  }
-</script>
-
-<%- include('../partials/footer') %>
+</body>
+</html>

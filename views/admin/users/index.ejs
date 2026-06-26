@@ -1,305 +1,162 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h4 class="mb-1 fw-bold">
-      <i class="bi bi-people me-2 text-primary"></i>
-      Users
-    </h4>
-    <p class="text-muted mb-0 small">
-      Manage all registered users
-    </p>
-  </div>
+<head>
+  <%- include('../_layouts/head') %>
+  <title>User List | <%= title %></title>
 
-  <div class="text-muted small">
-    Page <%= currentPage %> of <%= totalPages %>
-  </div>
-</div>
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/extensions/responsive/css/responsive.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/css/select.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/css/pages/data-tables.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
-<!-- Search Card -->
-<!-- Search -->
-<div class="mb-4">
-  <form
-    method="GET"
-    action="/admin/users"
-    class="d-flex align-items-center gap-2"
-  >
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
+  </style>
+</head>
 
-    <div
-      class="position-relative"
-      style="width:380px;max-width:100%;"
-    >
-      <i
-        class="bi bi-search position-absolute"
-        style="
-          left:14px;
-          top:50%;
-          transform:translateY(-50%);
-          color:#94a3b8;
-          font-size:14px;
-        "
-      ></i>
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
 
-      <input
-        type="text"
-        name="search"
-        class="form-control border-0 shadow-sm"
-        placeholder="Search users..."
-        value="<%= search %>"
-        style="
-          height:44px;
-          padding-left:40px;
-          border-radius:12px;
-          background:#fff;
-        "
-      />
-    </div>
+  <%- include('../partials/header') %>
 
-    <button
-      type="submit"
-      class="btn btn-primary px-4"
-      style="
-        height:44px;
-        border-radius:12px;
-      "
-    >
-      Search
-    </button>
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span>User List</span></h5>
+            </div>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="/admin/users/add">Create New User</a>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <% if(search) { %>
-      <a
-        href="/admin/users"
-        class="btn btn-light border px-3"
-        style="
-          height:44px;
-          border-radius:12px;
-          display:flex;
-          align-items:center;
-        "
-      >
-        Clear
-      </a>
-    <% } %>
+      <div class="col s12">
+        <div class="container">
+          <div class="section section-data-tables">
+            <div class="row">
+              <div class="col s12">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="row">
+                      <div class="col s12 overflow">
 
-  </form>
-</div>
+                        
+                        <table id="page-length-option" class="display" style="width:100%">
+                          <thead>
+                            <tr>
+                              <th>Sr</th>
+                              <th>Profile</th>
+                              <th>Name</th>
+                              <th>Email</th>
+                              <th>Stage</th>
+                              <th>Interests</th>
+                              <th>Status</th>
+                              <th>Joined</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% for(let i = 0; i < users.length; i++) { const u = users[i]; %>
+                            <tr>
+                              <td><%= i + 1 %></td>
+                              <td>
+                                <img src="<%= u.avatar || '/img/avatar.png' %>"
+                                  alt="profile" width="40" height="40"
+                                  class="responsive-img"
+                                  style="object-fit:cover; border-radius:50%;"
+                                  onerror="this.onerror=null; this.src='/img/avatar.png';">
+                              </td>
+                              <td>
+                                <a href="/admin/users/<%= u._id %>"
+                                  style="color:inherit; text-decoration:none; font-weight:500;">
+                                  <%= u.name || u.username %>
+                                </a>
+                                <!-- <div style="font-size:12px; color:#9e9e9e;">@<%= u.username %></div> -->
+                              </td>
+                              <td><%= u.email || '—' %></td>
+                              <td>
+                                <% if (u.stage) { %>
+                                  <span style="background:rgba(33,150,243,0.12); color:#2196F3; border:1px solid rgba(33,150,243,0.3); padding:3px 10px; border-radius:12px; font-size:11px;">
+                                    <%= u.stage?.name || u.stage?.title || '—' %>
+                                  </span>
+                                <% } else { %>—<% } %>
+                              </td>
+                              <td>
+                                <% if (u.businessInterests && u.businessInterests.length > 0) { %>
+                                  <span style="background:rgba(255,193,7,0.12); color:#FFC107; border:1px solid rgba(255,193,7,0.3); padding:3px 10px; border-radius:12px; font-size:11px;">
+                                    <%= u.businessInterests.length %> Selected
+                                  </span>
+                                <% } else { %>—<% } %>
+                              </td>
+                              <td>
+                                <% if (u.isActive) { %>
+                                  <span style="background:rgba(76,175,80,0.12); color:#4CAF50; border:1px solid rgba(76,175,80,0.3); padding:3px 10px; border-radius:12px; font-size:11px;">Active</span>
+                                <% } else { %>
+                                  <span style="background:rgba(158,158,158,0.12); color:#9e9e9e; border:1px solid rgba(158,158,158,0.3); padding:3px 10px; border-radius:12px; font-size:11px;">Inactive</span>
+                                <% } %>
+                              </td>
+                              <td><%= new Date(u.createdAt).toLocaleDateString('en-GB') %></td>
+                              <td style="white-space:nowrap;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                  <a href="/admin/users/<%= u._id %>" class="waves-effect waves-light" title="View">
+                                    <i class="material-icons" style="font-size:18px; color:#2196F3;">remove_red_eye</i>
+                                  </a>
+                                  <a href="/admin/users/edit/<%= u._id %>" class="waves-effect waves-light" title="Edit">
+                                    <i class="material-icons" style="font-size:18px; color:#2196F3;">edit</i>
+                                  </a>
+                                  <form action="/admin/users/<%= u._id %>/delete" method="POST" style="display:inline; margin:0;">
+                                    <button type="submit" class="waves-effect waves-light"
+                                      style="background:none; border:none; padding:0; margin:0; cursor:pointer;"
+                                      title="Delete" onclick="return confirm('Delete this user?');">
+                                      <i class="material-icons" style="font-size:18px; color:#2196F3;">delete</i>
+                                    </button>
+                                  </form>
+                                  <% if (u.isActive) { %>
+                                    <a href="/admin/users/block/<%= u._id %>"
+                                      class="btn btn-small waves-effect waves-light"
+                                      style="background:linear-gradient(45deg,#F44336,#EF5350); color:white; font-size:11px; padding:0 14px; height:28px; line-height:28px; border-radius:14px; box-shadow:0 2px 5px rgba(0,0,0,0.1); min-width:64px; text-align:center;">
+                                      Block
+                                    </a>
+                                  <% } else { %>
+                                    <a href="/admin/users/unblock/<%= u._id %>"
+                                      class="btn btn-small waves-effect waves-light"
+                                      style="background:linear-gradient(45deg,#4CAF50,#66BB6A); color:white; font-size:11px; padding:0 14px; height:28px; line-height:28px; border-radius:14px; box-shadow:0 2px 5px rgba(0,0,0,0.1); min-width:64px; text-align:center;">
+                                      Unblock
+                                    </a>
+                                  <% } %>
+                                </div>
+                              </td>
+                            </tr>
+                            <% } %>
+                          </tbody>
+                        </table>
 
-<!-- Users Table -->
-<div class="card shadow-sm border-0">
-  <div class="card-header bg-white py-3">
-    <span class="fw-semibold">All Users</span>
-  </div>
-
-  <div class="card-body p-0">
-    <div class="table-responsive">
-      <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
-          <tr>
-            <th class="ps-3">#</th>
-            <th>User</th>
-            <th>Email</th>
-            <th>Stage</th>
-            <th>Interests</th>
-            <th>Status</th>
-            <th>Joined</th>
-            <th class="text-end pe-3">Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          <% if (users.length === 0) { %>
-            <tr>
-              <td colspan="8" class="text-center text-muted py-5">
-                <i class="bi bi-people fs-1 d-block mb-2 opacity-50"></i>
-                No users found
-              </td>
-            </tr>
-          <% } %>
-
-          <% users.forEach((u, i) => { %>
-
-          <tr>
-
-            <td class="ps-3">
-              <span class="text-muted">
-                <%= ((currentPage - 1) * 10) + i + 1 %>
-              </span>
-            </td>
-
-            <td>
-              <div class="d-flex align-items-center gap-3">
-
-                <img
-                  src="<%= u.avatar || '/images/avatar.png' %>"
-                  width="48"
-                  height="48"
-                  class="rounded-circle"
-                  style="object-fit:cover;border:1px solid #e2e8f0"
-                />
-
-                <div>
-                  <a
-                    href="/admin/users/<%= u._id %>"
-                    class="text-decoration-none text-dark fw-semibold"
-                  >
-                    <%= u.name || u.username %>
-                  </a>
-
-                  <div class="small text-muted">
-                    @<%= u.username %>
+                      </div>
+                    </div>
                   </div>
                 </div>
-
               </div>
-            </td>
-
-            <td>
-              <small class="text-muted">
-                <%= u.email %>
-              </small>
-            </td>
-
-            <td>
-              <% if (u.stage) { %>
-
-                <span
-                  class="badge bg-primary-subtle text-primary border border-primary-subtle"
-                >
-                  <%= u.stage?.name || u.stage?.title || '-' %>
-                </span>
-
-              <% } else { %>
-
-                <span class="text-muted">-</span>
-
-              <% } %>
-            </td>
-
-            <td>
-
-              <% if (u.businessInterests && u.businessInterests.length > 0) { %>
-
-                <span class="badge bg-light text-dark border">
-                  <%= u.businessInterests.length %> Selected
-                </span>
-
-              <% } else { %>
-
-                <span class="text-muted">-</span>
-
-              <% } %>
-
-            </td>
-
-            <td>
-
-              <% if (u.isActive) { %>
-
-                <span class="badge bg-success-subtle text-success border border-success-subtle">
-                  Active
-                </span>
-
-              <% } else { %>
-
-                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">
-                  Inactive
-                </span>
-
-              <% } %>
-
-            </td>
-
-            <td>
-              <small class="text-muted">
-                <%= new Date(u.createdAt).toLocaleDateString('en-IN') %>
-              </small>
-            </td>
-
-            <td class="text-end pe-3">
-
-              <div class="d-flex justify-content-end gap-1">
-
-                <a
-                  href="/admin/users/<%= u._id %>"
-                  class="btn btn-sm btn-outline-info"
-                  title="View"
-                >
-                  <i class="bi bi-eye"></i>
-                </a>
-
-                <form
-                  action="/admin/users/<%= u._id %>/toggle"
-                  method="POST"
-                  style="display:inline"
-                >
-                  <button
-                    class="btn btn-sm btn-outline-warning"
-                    title="<%= u.isActive ? 'Deactivate' : 'Activate' %>"
-                  >
-                    <i class="bi bi-<%= u.isActive ? 'pause' : 'play' %>"></i>
-                  </button>
-                </form>
-
-                <form
-                  action="/admin/users/<%= u._id %>/delete"
-                  method="POST"
-                  style="display:inline"
-                >
-                  <button
-                    class="btn btn-sm btn-outline-danger btn-delete"
-                    title="Delete"
-                  >
-                    <i class="bi bi-trash"></i>
-                  </button>
-                </form>
-
-              </div>
-
-            </td>
-
-          </tr>
-
-          <% }) %>
-
-        </tbody>
-      </table>
+            </div>
+          </div>
+        </div>
+        <div class="content-overlay"></div>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Pagination -->
-<% if (totalPages > 1) { %>
+  <%- include('../_layouts/commonJs') %>
+  <script src="/app-assets/vendors/data-tables/js/jquery.dataTables.min.js"></script>
+  <script src="/app-assets/js/scripts/data-tables.js"></script>
 
-<nav class="mt-4">
-  <ul class="pagination pagination-sm justify-content-center">
-
-    <% for(let i = 1; i <= totalPages; i++) { %>
-
-      <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-        <a
-          class="page-link"
-          href="/admin/users?page=<%= i %><%= search ? '&search=' + search : '' %>"
-        >
-          <%= i %>
-        </a>
-      </li>
-
-    <% } %>
-
-  </ul>
-</nav>
-
-<% } %>
-
-<script>
-document.querySelectorAll('.btn-delete').forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    if (!confirm('Delete this user?')) {
-      e.preventDefault();
-    }
-  });
-});
-</script>
-
-<%- include('../partials/footer') %>
+</body>
+</html>

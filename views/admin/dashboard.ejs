@@ -1,275 +1,197 @@
-<%- include('./partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
 
-<style>
-  .stat-card {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 1.25rem 1rem;
-    text-align: center;
-    transition: box-shadow 0.2s;
-  }
-  .stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
-  .stat-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 0.6rem;
-    font-size: 1.2rem;
-  }
-  .stat-value {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #1e293b;
-    line-height: 1;
-  }
-  .stat-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-top: 0.25rem;
-  }
-  .section-card {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 1.25rem;
-  }
-  .section-card-header {
-    padding: 0.875rem 1.25rem;
-    border-bottom: 1px solid #f1f5f9;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .section-card-title {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: #64748b;
-    margin: 0;
-  }
-  .table { margin: 0; }
-  .table thead th {
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #94a3b8;
-    border-bottom: 1px solid #f1f5f9;
-    padding: 0.65rem 1rem;
-    background: #fafafa;
-  }
-  .table tbody td {
-    font-size: 0.875rem;
-    color: #334155;
-    padding: 0.75rem 1rem;
-    vertical-align: middle;
-    border-bottom: 1px solid #f8fafc;
-  }
-  .table tbody tr:last-child td { border-bottom: none; }
-  .table tbody tr:hover td { background: #fafafa; }
-  .badge-active {
-    background: #dcfce7;
-    color: #16a34a;
-    font-weight: 600;
-    font-size: 0.7rem;
-    padding: 0.25em 0.65em;
-    border-radius: 20px;
-  }
-  .badge-inactive {
-    background: #fee2e2;
-    color: #dc2626;
-    font-weight: 600;
-    font-size: 0.7rem;
-    padding: 0.25em 0.65em;
-    border-radius: 20px;
-  }
-  .btn-view-all {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #6366f1;
-    border: 1px solid #e0e7ff;
-    border-radius: 6px;
-    padding: 0.25rem 0.75rem;
-    text-decoration: none;
-    transition: all 0.15s;
-  }
-  .btn-view-all:hover { background: #6366f1; color: #fff; }
-  .btn-edit-sm {
-    font-size: 0.72rem;
-    padding: 0.2rem 0.6rem;
-    border-radius: 5px;
-    border: 1px solid #e2e8f0;
-    color: #475569;
-    background: #fff;
-    text-decoration: none;
-    transition: all 0.15s;
-  }
-  .btn-edit-sm:hover { border-color: #6366f1; color: #6366f1; }
-</style>
+<head>
+  <%- include('./_layouts/head') %>
+  <title>Dashboard | <%= title %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
-<!-- Stats Row -->
-<div class="row g-3 mb-4">
-  <div class="col-6 col-md-4 col-lg-2">
-    <div class="stat-card">
-      <div class="stat-icon bg-primary bg-opacity-10 text-primary">
-        <i class="bi bi-people-fill"></i>
-      </div>
-      <div class="stat-value"><%= stats.totalUsers %></div>
-      <div class="stat-label">Users</div>
-    </div>
-  </div>
-  <div class="col-6 col-md-4 col-lg-2">
-    <div class="stat-card">
-      <div class="stat-icon bg-warning bg-opacity-10 text-warning">
-        <i class="bi bi-lightbulb-fill"></i>
-      </div>
-      <div class="stat-value"><%= stats.totalIdeas %></div>
-      <div class="stat-label">Ideas</div>
-    </div>
-  </div>
-  <div class="col-6 col-md-4 col-lg-2">
-    <div class="stat-card">
-      <div class="stat-icon bg-success bg-opacity-10 text-success">
-        <i class="bi bi-journal-richtext"></i>
-      </div>
-      <div class="stat-value"><%= stats.totalCaseStudies %></div>
-      <div class="stat-label">Case Studies</div>
-    </div>
-  </div>
-  <div class="col-6 col-md-4 col-lg-2">
-    <div class="stat-card">
-      <div class="stat-icon bg-info bg-opacity-10 text-info">
-        <i class="bi bi-pen-fill"></i>
-      </div>
-      <div class="stat-value"><%= stats.totalBlogs %></div>
-      <div class="stat-label">Blogs</div>
-    </div>
-  </div>
-  <div class="col-6 col-md-4 col-lg-2">
-    <div class="stat-card">
-      <div class="stat-icon bg-danger bg-opacity-10 text-danger">
-        <i class="bi bi-envelope-fill"></i>
-      </div>
-      <div class="stat-value"><%= stats.newContacts %></div>
-      <div class="stat-label">New Enquiries</div>
-    </div>
-  </div>
-  <div class="col-6 col-md-4 col-lg-2">
-    <div class="stat-card">
-      <div class="stat-icon" style="background:#f3f0ff; color:#8b5cf6;">
-        <i class="bi bi-bell-fill"></i>
-      </div>
-      <div class="stat-value"><%= stats.newsletterSubs %></div>
-      <div class="stat-label">Subscribers</div>
-    </div>
-  </div>
-</div>
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
 
-<div class="row g-3">
+    .stat-card {
+      background:#fff; border-radius:12px; padding:1.2rem 1rem;
+      text-align:center; border:1px solid #e2e8f0;
+      transition:box-shadow 0.2s;
+    }
+    .stat-card:hover { box-shadow:0 4px 16px rgba(0,0,0,0.08); }
+    .stat-icon {
+      width:46px; height:46px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      margin:0 auto 0.6rem; font-size:1.25rem;
+    }
+    .stat-value { font-size:1.8rem; font-weight:700; color:#1e293b; line-height:1; }
+    .stat-label { font-size:0.72rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-top:0.25rem; }
 
-  <!-- Recent Users -->
-  <div class="col-12">
-    <div class="section-card">
-      <div class="section-card-header">
-        <span class="section-card-title">Recent Users</span>
-        <a href="/admin/users" class="btn-view-all">View All</a>
+    .section-card { background:#fff; border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; margin-bottom:1.25rem; }
+    .section-card-header {
+      padding:0.875rem 1.25rem; border-bottom:1px solid #f1f5f9;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .section-card-title { font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:#64748b; margin:0; }
+
+    .dash-table { width:100%; border-collapse:collapse; }
+    .dash-table thead th {
+      font-size:0.72rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:0.06em; color:#94a3b8; padding:0.65rem 1rem;
+      background:#fafafa; border-bottom:1px solid #f1f5f9;
+    }
+    .dash-table tbody td {
+      font-size:0.875rem; color:#334155; padding:0.75rem 1rem;
+      vertical-align:middle; border-bottom:1px solid #f8fafc;
+    }
+    .dash-table tbody tr:last-child td { border-bottom:none; }
+    .dash-table tbody tr:hover td { background:#fafafa; }
+
+    .badge-active   { background:#dcfce7; color:#16a34a; font-weight:600; font-size:0.7rem; padding:0.25em 0.7em; border-radius:20px; }
+    .badge-inactive { background:#fee2e2; color:#dc2626; font-weight:600; font-size:0.7rem; padding:0.25em 0.7em; border-radius:20px; }
+    .badge-type     { background:#ede9fe; color:#6366f1; font-weight:600; font-size:0.7rem; padding:0.25em 0.7em; border-radius:20px; }
+
+    .btn-view-all { font-size:0.75rem; font-weight:600; color:#6366f1; border:1px solid #e0e7ff; border-radius:6px; padding:0.25rem 0.75rem; text-decoration:none; transition:all 0.15s; }
+    .btn-view-all:hover { background:#6366f1; color:#fff; }
+    .btn-edit-sm { font-size:0.72rem; padding:0.2rem 0.65rem; border-radius:5px; border:1px solid #e2e8f0; color:#475569; background:#fff; text-decoration:none; transition:all 0.15s; }
+    .btn-edit-sm:hover { border-color:#6366f1; color:#6366f1; }
+
+    /* Stats grid */
+    .stats-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; margin-bottom:1.5rem; }
+    @media(max-width:900px){ .stats-grid { grid-template-columns:repeat(3,1fr); } }
+    @media(max-width:500px){ .stats-grid { grid-template-columns:repeat(2,1fr); } }
+  </style>
+</head>
+
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
+
+  <%- include('./partials/header') %>
+
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span>Dashboard</span></h5>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Status</th>
-              <th>Joined</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% recentUsers.forEach(u => { %>
-            <tr>
-              <td>
-                <strong><%= u.name %></strong>
-                <br><small class="text-muted">@<%= u.username %></small>
-              </td>
-              <td><%= u.email %></td>
-              
-              <td>
-                <span class="<%= u.isActive ? 'badge-active' : 'badge-inactive' %>">
-                  <%= u.isActive ? 'Active' : 'Inactive' %>
-                </span>
-              </td>
-              <td><%= new Date(u.createdAt).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }) %></td>
-            </tr>
-            <% }) %>
-          </tbody>
-        </table>
+
+      <div class="col s12">
+        <div class="container">
+          <div class="section">
+
+            <!-- Stats -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-icon" style="background:#eff6ff; color:#3b82f6;"><i class="bi bi-people-fill"></i></div>
+                <div class="stat-value"><%= stats.totalUsers %></div>
+                <div class="stat-label">Users</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background:#fffbeb; color:#f59e0b;"><i class="bi bi-lightbulb-fill"></i></div>
+                <div class="stat-value"><%= stats.totalIdeas %></div>
+                <div class="stat-label">Ideas</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background:#f0fdf4; color:#22c55e;"><i class="bi bi-journal-richtext"></i></div>
+                <div class="stat-value"><%= stats.totalCaseStudies %></div>
+                <div class="stat-label">Case Studies</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background:#f0f9ff; color:#0ea5e9;"><i class="bi bi-pen-fill"></i></div>
+                <div class="stat-value"><%= stats.totalBlogs %></div>
+                <div class="stat-label">Blogs</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background:#fef2f2; color:#ef4444;"><i class="bi bi-envelope-fill"></i></div>
+                <div class="stat-value"><%= stats.newContacts %></div>
+                <div class="stat-label">Enquiries</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background:#f5f3ff; color:#8b5cf6;"><i class="bi bi-bell-fill"></i></div>
+                <div class="stat-value"><%= stats.newsletterSubs %></div>
+                <div class="stat-label">Subscribers</div>
+              </div>
+            </div>
+
+            <!-- Recent Users -->
+            <div class="section-card">
+              <div class="section-card-header">
+                <span class="section-card-title"><i class="bi bi-people me-2"></i>Recent Users</span>
+                <a href="/admin/users" class="btn-view-all">View All</a>
+              </div>
+              <div style="overflow-x:auto;">
+                <table class="dash-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Status</th>
+                      <th>Joined</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% recentUsers.forEach(u => { %>
+                    <tr>
+                      <td>
+                        <strong><%= u.name %></strong>
+                        <br><small style="color:#9e9e9e;">@<%= u.username %></small>
+                      </td>
+                      <td><%= u.email %></td>
+                      <td><span class="<%= u.isActive ? 'badge-active' : 'badge-inactive' %>"><%= u.isActive ? 'Active' : 'Inactive' %></span></td>
+                      <td><%= new Date(u.createdAt).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'}) %></td>
+                    </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Recent Ideas -->
+            <div class="section-card">
+              <div class="section-card-header">
+                <span class="section-card-title"><i class="bi bi-lightbulb me-2"></i>Recent Ideas</span>
+                <a href="/admin/ideas" class="btn-view-all">View All</a>
+              </div>
+              <div style="overflow-x:auto;">
+                <table class="dash-table">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Type</th>
+                      <th>Category</th>
+                      <th>Investment</th>
+                      <th>Margin</th>
+                      <th>Status</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% recentIdeas.forEach(idea => { %>
+                    <tr>
+                      <td><strong><%= idea.title.substring(0,50) %><%= idea.title.length > 50 ? '…' : '' %></strong></td>
+                      <td><span class="badge-type"><%= idea.type %></span></td>
+                      <td><%= idea.category %></td>
+                      <td style="white-space:nowrap;">$<%= idea.investmentMin.toLocaleString() %> – $<%= idea.investmentMax.toLocaleString() %></td>
+                      <td><%= idea.profitMargin %>%</td>
+                      <td><span class="<%= idea.isActive ? 'badge-active' : 'badge-inactive' %>"><%= idea.isActive ? 'Active' : 'Inactive' %></span></td>
+                      <td><a href="/admin/ideas/<%= idea._id %>/edit" class="btn-edit-sm">Edit</a></td>
+                    </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="content-overlay"></div>
       </div>
     </div>
   </div>
 
-  <!-- Recent Ideas -->
-  <div class="col-12">
-    <div class="section-card">
-      <div class="section-card-header">
-        <span class="section-card-title">Recent Ideas</span>
-        <a href="/admin/ideas" class="btn-view-all">View All</a>
-      </div>
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Type</th>
-              <th>Category</th>
-              <th>Investment</th>
-              <th>Margin</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% recentIdeas.forEach(idea => { %>
-            <tr>
-              <td>
-                <strong>
-                  <%= idea.title.substring(0,50) %><%= idea.title.length > 50 ? '…' : '' %>
-                </strong>
-              </td>
-              <td>
-                <span class="badge bg-primary" style="font-size:0.7rem; border-radius:20px;">
-                  <%= idea.type %>
-                </span>
-              </td>
-              <td><%= idea.category %></td>
-              <td style="white-space:nowrap;">
-                $<%= idea.investmentMin.toLocaleString() %> – $<%= idea.investmentMax.toLocaleString() %>
-              </td>
-              <td><%= idea.profitMargin %>%</td>
-              <td>
-                <span class="<%= idea.isActive ? 'badge-active' : 'badge-inactive' %>">
-                  <%= idea.isActive ? 'Active' : 'Inactive' %>
-                </span>
-              </td>
-              <td>
-                <a href="/admin/ideas/<%= idea._id %>/edit" class="btn-edit-sm">Edit</a>
-              </td>
-            </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+  <%- include('./_layouts/commonJs') %>
 
-</div>
-
-<%- include('./partials/footer') %>
+</body>
+</html>

@@ -1,356 +1,155 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
 
-<style>
-  .page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-  }
-  .page-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin: 0;
-  }
-  .page-subtitle {
-    font-size: 0.825rem;
-    color: #94a3b8;
-    margin: 0.15rem 0 0;
-  }
-  .btn-add {
-    background: #6366f1;
-    border: none;
-    color: #fff;
-    padding: 0.5rem 1.2rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.875rem;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    transition: background 0.2s;
-  }
-  .btn-add:hover { background: #4f46e5; color: #fff; }
+<head>
+  <%- include('../_layouts/head') %>
+  <title>Ideas | <%= title %></title>
 
-  .type-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1.25rem;
-    flex-wrap: wrap;
-  }
-  .type-tab {
-    padding: 0.45rem 1.1rem;
-    border-radius: 999px;
-    font-size: 0.825rem;
-    font-weight: 600;
-    border: 1.5px solid #e2e8f0;
-    color: #64748b;
-    text-decoration: none;
-    transition: all 0.2s;
-    background: #fff;
-  }
-  .type-tab:hover { border-color: #6366f1; color: #6366f1; }
-  .type-tab.active {
-    background: #6366f1;
-    border-color: #6366f1;
-    color: #fff;
-  }
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/extensions/responsive/css/responsive.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/css/select.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/css/pages/data-tables.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
-  .section-card {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  .section-card-header {
-    padding: 0.875rem 1.25rem;
-    border-bottom: 1px solid #f1f5f9;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .section-card-title {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: #64748b;
-    margin: 0;
-  }
-  .records-badge {
-    background: #f1f5f9;
-    color: #475569;
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 0.2em 0.7em;
-    border-radius: 20px;
-  }
-  .table { margin: 0; }
-  .table thead th {
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #94a3b8;
-    border-bottom: 1px solid #f1f5f9;
-    padding: 0.65rem 1rem;
-    background: #fafafa;
-    white-space: nowrap;
-  }
-  .table tbody td {
-    font-size: 0.875rem;
-    color: #334155;
-    padding: 0.75rem 1rem;
-    vertical-align: middle;
-    border-bottom: 1px solid #f8fafc;
-  }
-  .table tbody tr:last-child td { border-bottom: none; }
-  .table tbody tr:hover td { background: #fafafa; }
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
+    .badge-active   { background:rgba(76,175,80,0.12);  color:#4CAF50; border:1px solid rgba(76,175,80,0.3);  padding:3px 10px; border-radius:12px; font-size:11px; }
+    .badge-inactive { background:rgba(158,158,158,0.12);color:#9e9e9e; border:1px solid rgba(158,158,158,0.3);padding:3px 10px; border-radius:12px; font-size:11px; }
+    .badge-featured { background:rgba(255,193,7,0.12);  color:#FFC107; border:1px solid rgba(255,193,7,0.3);  padding:3px 10px; border-radius:12px; font-size:11px; }
+    .type-tabs { display:flex; gap:8px; margin-bottom:12px; }
+    .type-tab { padding:5px 18px; border-radius:20px; font-size:13px; font-weight:500; text-decoration:none; border:1px solid #e2e8f0; color:#475569; transition:all 0.2s; }
+    .type-tab.active, .type-tab:hover { background:#6366f1; color:#fff; border-color:#6366f1; }
+  </style>
+</head>
 
-  .idea-title-text { font-weight: 600; color: #1e293b; }
-  .idea-team { font-size: 0.75rem; color: #94a3b8; margin-top: 2px; }
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
 
-  .badge-cat {
-    background: #f1f5f9;
-    color: #475569;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 0.25em 0.7em;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
-  }
-  .badge-type {
-    background: #ede9fe;
-    color: #6366f1;
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 0.25em 0.7em;
-    border-radius: 20px;
-  }
-  .badge-featured {
-    background: #fef9c3;
-    color: #a16207;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 0.25em 0.7em;
-    border-radius: 20px;
-  }
-  .badge-active {
-    background: #dcfce7;
-    color: #16a34a;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 0.25em 0.7em;
-    border-radius: 20px;
-  }
-  .badge-inactive {
-    background: #f1f5f9;
-    color: #94a3b8;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 0.25em 0.7em;
-    border-radius: 20px;
-  }
-  .action-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    border: 1px solid #e2e8f0;
-    background: #fff;
-    color: #64748b;
-    text-decoration: none;
-    transition: all 0.15s;
-    cursor: pointer;
-  }
-  .action-btn:hover { border-color: #6366f1; color: #6366f1; }
-  .action-btn.danger:hover { border-color: #ef4444; color: #ef4444; }
+  <%- include('../partials/header') %>
 
-  .pagination .page-link {
-    border-radius: 8px !important;
-    margin: 0 2px;
-    font-size: 0.825rem;
-    color: #475569;
-    border-color: #e2e8f0;
-  }
-  .pagination .page-item.active .page-link {
-    background: #6366f1;
-    border-color: #6366f1;
-    color: #fff;
-  }
-  .empty-state {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: #94a3b8;
-  }
-  .empty-state i { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; }
-</style>
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span>Ideas Management</span></h5>
+            </div>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="/admin/ideas/create?type=<%= type %>">
+                  Add New Idea
+                </a>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<%
-  const _success = Array.isArray(success) ? success.filter(Boolean) : (success ? [success] : []);
-  const _error   = Array.isArray(error)   ? error.filter(Boolean)   : (error   ? [error]   : []);
-%>
+      <div class="col s12">
+        <div class="container">
+          <div class="section section-data-tables">
+            <div class="row">
+              <div class="col s12">
 
-<% if (_success.length > 0) { %>
-  <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2 mb-3" role="alert">
-    <i class="bi bi-check-circle-fill"></i> <%= _success[0] %>
-    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
-  </div>
-<% } %>
-<% if (_error.length > 0) { %>
-  <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2 mb-3" role="alert">
-    <i class="bi bi-exclamation-circle-fill"></i> <%= _error[0] %>
-    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
-  </div>
-<% } %>
+                <!-- Type Tabs -->
+                <div class="type-tabs">
+                  <a href="/admin/ideas?type=business" class="type-tab <%= type === 'business' ? 'active' : '' %>">
+                    <i class="bi bi-briefcase me-1"></i>Business
+                  </a>
+                  <a href="/admin/ideas?type=app" class="type-tab <%= type === 'app' ? 'active' : '' %>">
+                    <i class="bi bi-phone me-1"></i>App
+                  </a>
+                  <a href="/admin/ideas?type=startup" class="type-tab <%= type === 'startup' ? 'active' : '' %>">
+                    <i class="bi bi-rocket me-1"></i>Startup
+                  </a>
+                </div>
 
-<div class="page-header">
-  <div>
-    <h1 class="page-title">Idea Management</h1>
-    <p class="page-subtitle">Manage all business, app and startup ideas</p>
-  </div>
-  <a href="/admin/ideas/create?type=<%= type %>" class="btn-add">
-    <i class="bi bi-plus-lg"></i> Add New Idea
-  </a>
-</div>
+                <div class="card">
+                  <div class="card-content">
+                    <div class="row">
+                      <div class="col s12 overflow">
+                        <table id="page-length-option" class="display" style="width:100%">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Idea</th>
+                              <th>Category</th>
+                              <th>Investment</th>
+                              <th>Margin</th>
+                              <th>Featured</th>
+                              <th>Status</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% ideas.forEach((idea, i) => { %>
+                            <tr>
+                              <td><%= ((currentPage - 1) * 10) + i + 1 %></td>
+                              <td>
+                                <strong><%= idea.title.substring(0, 45) %><%= idea.title.length > 45 ? '…' : '' %></strong>
+                                <!-- <div style="font-size:12px; color:#9e9e9e;"><%= idea.teamSize %></div>
+                                <small style="color:#9e9e9e;">
+                                  <%= idea.description ? idea.description.substring(0, 70) + '...' : '' %>
+                                </small> -->
+                              </td>
+                              <td><%= idea.category %></td>
+                              <td style="white-space:nowrap;">
+                                $<%= idea.investmentMin.toLocaleString() %> – $<%= idea.investmentMax.toLocaleString() %>
+                              </td>
+                              <td><strong><%= idea.profitMargin %>%</strong></td>
+                              <td>
+                                <% if (idea.isFeatured) { %>
+                                  <span class="badge-featured">Featured</span>
+                                <% } else { %>
+                                  <span class="badge-inactive">No</span>
+                                <% } %>
+                              </td>
+                              <td>
+                                <span class="<%= idea.isActive ? 'badge-active' : 'badge-inactive' %>">
+                                  <%= idea.isActive ? 'Active' : 'Hidden' %>
+                                </span>
+                              </td>
+                              <td style="white-space:nowrap;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                  <a href="/admin/ideas/<%= idea._id %>/view" class="waves-effect waves-light" title="View">
+                                    <i class="material-icons" style="font-size:18px; color:#2196F3;">remove_red_eye</i>
+                                  </a>
+                                  <a href="/admin/ideas/<%= idea._id %>/edit" class="waves-effect waves-light" title="Edit">
+                                    <i class="material-icons" style="font-size:18px; color:#2196F3;">edit</i>
+                                  </a>
+                                  <form action="/admin/ideas/<%= idea._id %>/delete?type=<%= type %>" method="POST" style="display:inline; margin:0;">
+                                    <button type="submit" class="waves-effect waves-light"
+                                      style="background:none; border:none; padding:0; margin:0; cursor:pointer;"
+                                      title="Delete" onclick="return confirm('Delete this idea?');">
+                                      <i class="material-icons" style="font-size:18px; color:#2196F3;">delete</i>
+                                    </button>
+                                  </form>
+                                </div>
+                              </td>
+                            </tr>
+                            <% }) %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-<div class="type-tabs">
-  <a href="/admin/ideas?type=business" class="type-tab <%= type === 'business' ? 'active' : '' %>">
-    Business
-  </a>
-  <a href="/admin/ideas?type=app" class="type-tab <%= type === 'app' ? 'active' : '' %>">
-    App
-  </a>
-  <a href="/admin/ideas?type=startup" class="type-tab <%= type === 'startup' ? 'active' : '' %>">
-    Startup
-  </a>
-</div>
-
-<div class="section-card">
-  <div class="section-card-header">
-    <span class="section-card-title">Ideas List</span>
-    <span class="records-badge"><%= ideas.length %> Records</span>
-  </div>
-
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Idea</th>
-          <th>Category</th>
-          <th>Investment</th>
-          <th>Margin</th>
-          <th>Featured</th>
-          <th>Status</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if (ideas.length === 0) { %>
-          <tr>
-            <td colspan="8">
-              <div class="empty-state">
-                <i class="bi bi-lightbulb"></i>
-                No ideas found. <a href="/admin/ideas/create?type=<%= type %>">Add one?</a>
               </div>
-            </td>
-          </tr>
-        <% } %>
-
-        <% ideas.forEach((idea, i) => { %>
-        <tr>
-          <td><%= ((currentPage - 1) * 10) + i + 1 %></td>
-          <td>
-           <div class="idea-title-text">
-  <%= idea.title.substring(0, 45) %>
-  <%= idea.title.length > 45 ? '…' : '' %>
-</div>
-
-<div class="idea-team">
-  <%= idea.teamSize %>
-</div>
-
-<div
-  style="
-    font-size:12px;
-    color:#64748b;
-    max-width:300px;
-    margin-top:4px;
-  "
->
-  <%= idea.description
-      ? idea.description.substring(0, 80)
-      : '' %>
-
-  <%= idea.description &&
-      idea.description.length > 80
-      ? '...'
-      : '' %>
-</div>
-          </td>
-          <td><span class="badge-cat"><%= idea.category %></span></td>
-          <td style="white-space:nowrap;">
-            $<%= idea.investmentMin.toLocaleString() %> – $<%= idea.investmentMax.toLocaleString() %>
-          </td>
-          <td><strong><%= idea.profitMargin %>%</strong></td>
-          <td>
-            <% if (idea.isFeatured) { %>
-              <span class="badge-featured"><i class="bi bi-star-fill me-1"></i>Featured</span>
-            <% } else { %>
-              <span class="badge-inactive">No</span>
-            <% } %>
-          </td>
-          <td>
-            <span class="<%= idea.isActive ? 'badge-active' : 'badge-inactive' %>">
-              <%= idea.isActive ? 'Active' : 'Hidden' %>
-            </span>
-          </td>
-        <td>
-  <div class="d-flex gap-1">
-
-    <!-- View -->
-    <a href="/admin/ideas/<%= idea._id %>/view" class="action-btn" title="View">
-      <i class="bi bi-eye"></i>
-    </a>
-
-    <!-- Edit -->
-    <a href="/admin/ideas/<%= idea._id %>/edit" class="action-btn" title="Edit">
-      <i class="bi bi-pencil"></i>
-    </a>
-
-    <!-- Delete -->
-    <form action="/admin/ideas/<%= idea._id %>/delete?type=<%= type %>" method="POST"
-      onsubmit="return confirm('Delete this idea?')">
-      <button type="submit" class="action-btn danger" title="Delete">
-        <i class="bi bi-trash"></i>
-      </button>
-    </form>
-
+            </div>
+          </div>
+        </div>
+        <div class="content-overlay"></div>
+      </div>
+    </div>
   </div>
-</td>
-        </tr>
-        <% }) %>
-      </tbody>
-    </table>
-  </div>
-</div>
 
-<% if (totalPages > 1) { %>
-<nav class="mt-4">
-  <ul class="pagination justify-content-center">
-    <% for (let i = 1; i <= totalPages; i++) { %>
-      <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-        <a class="page-link" href="/admin/ideas?type=<%= type %>&page=<%= i %>"><%= i %></a>
-      </li>
-    <% } %>
-  </ul>
-</nav>
-<% } %>
+  <%- include('../_layouts/commonJs') %>
+  <script src="/app-assets/vendors/data-tables/js/jquery.dataTables.min.js"></script>
+  <script src="/app-assets/js/scripts/data-tables.js"></script>
 
-<%- include('../partials/footer') %>
+</body>
+</html>
