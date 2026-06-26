@@ -1,114 +1,141 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<head>
+  <%- include('../_layouts/head') %>
+  <title>Sub Admin List | <%= title %></title>
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/extensions/responsive/css/responsive.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/css/select.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/css/pages/data-tables.css">
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
+    .badge-active   { background:rgba(76,175,80,0.12);  color:#4CAF50; border:1px solid rgba(76,175,80,0.3);  padding:3px 10px; border-radius:12px; font-size:11px; }
+    .badge-inactive { background:rgba(158,158,158,0.12);color:#9e9e9e; border:1px solid rgba(158,158,158,0.3);padding:3px 10px; border-radius:12px; font-size:11px; }
+    .perm-chip { background:rgba(99,102,241,0.10); color:#6366f1; border:1px solid rgba(99,102,241,0.25); padding:2px 8px; border-radius:10px; font-size:10px; margin:2px; display:inline-block; }
+  </style>
+</head>
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <div>
-    <p class="text-muted mb-0" style="font-size:.85rem">
-      Create sub-admins with limited access. Each sub-admin can only access the sections you grant them.
-    </p>
-  </div>
-  <a href="/admin/sub-admins/create" class="btn btn-primary btn-sm">
-    <i class="bi bi-plus-lg me-1"></i>Create Sub-Admin
-  </a>
-</div>
+  <%- include('../partials/header') %>
 
-<div class="card">
-  <div class="card-body p-0">
-    <table class="table table-hover mb-0">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Name & Email</th>
-          <th>Permissions</th>
-          <th>Status</th>
-          <th>Last Login</th>
-          <th>Created</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if (subAdmins.length === 0) { %>
-          <tr>
-            <td colspan="7" class="text-center text-muted py-5">
-              No sub-admins yet.<br>
-              <a href="/admin/sub-admins/create" class="btn btn-primary btn-sm mt-2">Create your first sub-admin</a>
-            </td>
-          </tr>
-        <% } %>
-        <% subAdmins.forEach((s, i) => { %>
-        <tr>
-          <td class="text-muted"><%= i + 1 %></td>
-          <td>
-            <strong><%= s.name %></strong><br>
-            <small class="text-muted"><%= s.email %></small>
-          </td>
-          <td style="max-width:320px">
-            <% if (s.permissions.length === 0) { %>
-              <span class="text-muted small">No permissions assigned</span>
-            <% } else { %>
-              <div class="d-flex flex-wrap gap-1">
-                <% s.permissions.forEach(p => { %>
-                  <span class="badge bg-primary bg-opacity-10 text-primary" style="font-size:.7rem;border:1px solid #c7d2fe"><%= p %></span>
-                <% }) %>
-              </div>
-            <% } %>
-          </td>
-          <td>
-            <span class="badge <%= s.isActive ? 'badge-active' : 'badge-inactive' %>">
-              <%= s.isActive ? 'Active' : 'Deactivated' %>
-            </span>
-          </td>
-          <td>
-            <small class="text-muted">
-              <%= s.lastLogin ? new Date(s.lastLogin).toLocaleDateString() + ' ' + new Date(s.lastLogin).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : 'Never' %>
-            </small>
-          </td>
-          <td><small class="text-muted"><%= new Date(s.createdAt).toLocaleDateString() %></small></td>
-          <td>
-            <a href="/admin/sub-admins/<%= s._id %>/edit" class="btn btn-sm btn-outline-secondary py-0 me-1">
-              <i class="bi bi-pencil"></i>
-            </a>
-            <form action="/admin/sub-admins/<%= s._id %>/delete" method="POST" style="display:inline">
-              <button class="btn btn-sm btn-outline-danger py-0 btn-delete">
-                <i class="bi bi-trash"></i>
-              </button>
-            </form>
-          </td>
-        </tr>
-        <% }) %>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- Permissions Reference -->
-<div class="card mt-3">
-  <div class="card-header">🔑 Available Permissions Reference</div>
-  <div class="card-body">
-    <div class="row g-2">
-      <% const permDesc = {
-        'dashboard': 'View dashboard stats',
-        'ideas': 'Manage Business / App / Startup Ideas',
-        'case-studies': 'Manage Case Studies',
-        'blogs': 'Manage Blog posts',
-        'posts': 'Manage Community Posts',
-        'services': 'Manage Services offered',
-        'faqs': 'Manage FAQs',
-        'testimonials': 'Manage Testimonials',
-        'users': 'View and manage registered users',
-        'contacts': 'View and reply to contact messages',
-        'newsletter': 'View newsletter subscribers',
-        'sub-admins': 'Create and manage sub-admins (Super only)',
-      }; %>
-      <% allPermissions.forEach(p => { %>
-      <div class="col-md-4 col-lg-3">
-        <div class="d-flex align-items-start gap-2 p-2 rounded" style="background:#f8fafc;border:1px solid #e2e8f0">
-          <span class="badge bg-primary bg-opacity-10 text-primary mt-1" style="font-size:.65rem;white-space:nowrap;border:1px solid #c7d2fe"><%= p %></span>
-          <small class="text-muted" style="font-size:.75rem"><%= permDesc[p] || p %></small>
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span>Manage Sub Admins</span></h5>
+            </div>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="/admin/sub-admins/create">Add Sub Admin</a>
+              </ol>
+            </div>
+          </div>
         </div>
       </div>
-      <% }) %>
+
+      <div class="col s12">
+        <div class="container">
+          <div class="section section-data-tables">
+            <div class="row">
+              <div class="col s12">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="row">
+                      <div class="col s12 overflow">
+                        <table id="page-length-option" class="display" style="width:100%">
+                          <thead>
+                            <tr>
+                              <th>Sr</th>
+                              <th>Name</th>
+                              <th>Email</th>
+                              <th>Permissions</th>
+                              <th>Last Login</th>
+                              <th>Created</th>
+                              <th>Status</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% if (subAdmins && subAdmins.length > 0) { %>
+                              <% for (let i = 0; i < subAdmins.length; i++) { const sa = subAdmins[i]; %>
+                              <tr>
+                                <td><%= i + 1 %></td>
+                                <td><strong><%= sa.name %></strong></td>
+                                <td><%= sa.email %></td>
+                                <td style="max-width:260px;">
+                                  <% if (!sa.permissions || sa.permissions.length === 0) { %>
+                                    <span style="font-size:12px; color:#9e9e9e;">No permissions</span>
+                                  <% } else { %>
+                                    <% sa.permissions.forEach(p => { %>
+                                      <span class="perm-chip"><%= p %></span>
+                                    <% }) %>
+                                  <% } %>
+                                </td>
+                                <td>
+                                  <small style="color:#9e9e9e;">
+                                    <%= sa.lastLogin ? new Date(sa.lastLogin).toLocaleDateString('en-GB') + ' ' + new Date(sa.lastLogin).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : 'Never' %>
+                                  </small>
+                                </td>
+                                <td><%= new Date(sa.createdAt).toLocaleDateString('en-GB') %></td>
+                                <td>
+                                  <span class="<%= sa.isActive ? 'badge-active' : 'badge-inactive' %>">
+                                    <%= sa.isActive ? 'Active' : 'Deactivated' %>
+                                  </span>
+                                </td>
+                                <td style="white-space:nowrap;">
+                                  <div style="display:flex; align-items:center; gap:8px;">
+                                    <a href="/admin/sub-admins/<%= sa._id %>/edit" class="waves-effect waves-light" title="Edit">
+                                      <i class="material-icons" style="font-size:18px; color:#2196F3;">edit</i>
+                                    </a>
+                                    <form action="/admin/sub-admins/<%= sa._id %>/delete" method="POST" style="display:inline; margin:0;">
+                                      <button type="submit" class="waves-effect waves-light"
+                                        style="background:none; border:none; padding:0; margin:0; cursor:pointer;"
+                                        title="Delete" onclick="return confirm('Delete this sub admin?');">
+                                        <i class="material-icons" style="font-size:18px; color:#2196F3;">delete</i>
+                                      </button>
+                                    </form>
+                                    <% if (sa.isActive) { %>
+                                      <a href="/admin/sub-admins/<%= sa._id %>/deactivate"
+                                        class="btn btn-small waves-effect waves-light"
+                                        style="background:linear-gradient(45deg,#F44336,#EF5350); color:white; font-size:11px; padding:0 14px; height:28px; line-height:28px; border-radius:14px; box-shadow:0 2px 5px rgba(0,0,0,0.1); min-width:70px; text-align:center;">
+                                        Deactivate
+                                      </a>
+                                    <% } else { %>
+                                      <a href="/admin/sub-admins/<%= sa._id %>/activate"
+                                        class="btn btn-small waves-effect waves-light"
+                                        style="background:linear-gradient(45deg,#4CAF50,#66BB6A); color:white; font-size:11px; padding:0 14px; height:28px; line-height:28px; border-radius:14px; box-shadow:0 2px 5px rgba(0,0,0,0.1); min-width:70px; text-align:center;">
+                                        Activate
+                                      </a>
+                                    <% } %>
+                                  </div>
+                                </td>
+                              </tr>
+                              <% } %>
+                            <% } else { %>
+                              <tr><td colspan="8" class="center-align grey-text" style="padding:40px 0;">No sub admins found</td></tr>
+                            <% } %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="content-overlay"></div>
+      </div>
     </div>
   </div>
-</div>
 
-<%- include('../partials/footer') %>
+  <%- include('../_layouts/commonJs') %>
+  <script src="/app-assets/vendors/data-tables/js/jquery.dataTables.min.js"></script>
+  <script src="/app-assets/js/scripts/data-tables.js"></script>
+</body>
+</html>
