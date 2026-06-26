@@ -1,143 +1,162 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<head>
+  <%- include('../_layouts/head') %>
+  <title><%= blog ? 'Edit Blog' : 'Create Blog' %> | <%= title %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
+    .section-title { font-size: 1rem; font-weight: 600; color: #1a237e; border-left: 4px solid #3949ab; padding-left: 10px; margin: 20px 0 10px; }
+    .required-star { color: #e53935; }
+    .form-note { font-size: 12px; color: #757575; margin-top: 4px; }
+    .input-field label.active { color: #3949ab !important; }
+  </style>
+</head>
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h4 class="mb-1 fw-bold">
-      <i class="bi bi-file-richtext me-2 text-primary"></i>
-      <%= blog ? 'Edit Blog Post' : 'Create Blog Post' %>
-    </h4>
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-        <li class="breadcrumb-item"><a href="/admin/blogs">Blogs</a></li>
-        <li class="breadcrumb-item active"><%= blog ? 'Edit' : 'Create' %></li>
-      </ol>
-    </nav>
-  </div>
-  <a href="/admin/blogs" class="btn btn-outline-secondary">
-    <i class="bi bi-arrow-left me-1"></i> Back
-  </a>
-</div>
+  <%- include('../partials/header') %>
 
-<form action="/admin/blogs/<%= blog ? blog._id + '/edit' : 'create' %>" method="POST" id="blogForm" onsubmit="return validateForm()">
-  <div class="row g-4">
-
-    <!-- LEFT -->
-    <div class="col-12 col-lg-8">
-
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-pencil-square me-2 text-primary"></i>Content</h6>
-        </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
-            <input type="text" name="title" id="title" class="form-control" value="<%= blog ? blog.title : '' %>" required placeholder="Enter blog title" />
-            <div id="titleError" class="text-danger small mt-1"></div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Excerpt <span class="text-danger">*</span></label>
-            <textarea name="excerpt" id="excerpt" class="form-control" rows="2" required placeholder="Short summary shown in listing"><%= blog ? blog.excerpt : '' %></textarea>
-            <div id="excerptError" class="text-danger small mt-1"></div>
-          </div>
-          <div class="mb-0">
-            <label class="form-label fw-semibold">Full Content <span class="text-danger">*</span></label>
-            <textarea name="content" id="content" class="form-control" rows="12" required placeholder="Full blog content (supports HTML)"><%= blog ? blog.content : '' %></textarea>
-            <div id="contentError" class="text-danger small mt-1"></div>
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span><%= blog ? 'Edit Blog Post' : 'Create Blog Post' %></span></h5>
+            </div>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="/admin/blogs">Back to Blogs</a>
+              </ol>
+            </div>
           </div>
         </div>
       </div>
 
+      <div class="col s12">
+        <div class="container">
+          <div class="section">
+            <div class="card-panel">
+              <div class="card-content">
+                <form id="blogForm" method="POST"
+                  action="/admin/blogs/<%= blog ? blog._id + '/edit' : 'create' %>"
+                  onsubmit="return validateForm()">
+                  <div class="row">
+
+                    <!-- CONTENT -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-pencil-square"></i> Content</p>
+                    </div>
+                    <div class="input-field col s12">
+                      <input id="title" name="title" type="text" value="<%= blog ? blog.title : '' %>" required>
+                      <label for="title" class="<%= blog ? 'active' : '' %>">Title <span class="required-star">*</span></label>
+                      <span id="titleError" class="helper-text red-text"></span>
+                    </div>
+                    <div class="input-field col s12">
+                      <textarea id="excerpt" name="excerpt" class="materialize-textarea" required><%= blog ? blog.excerpt : '' %></textarea>
+                      <label for="excerpt" class="<%= blog ? 'active' : '' %>">Excerpt <span class="required-star">*</span></label>
+                      <span id="excerptError" class="helper-text red-text"></span>
+                    </div>
+                    <div class="input-field col s12">
+                      <textarea id="content" name="content" class="materialize-textarea" required><%= blog ? blog.content : '' %></textarea>
+                      <label for="content" class="<%= blog ? 'active' : '' %>">Full Content <span class="required-star">*</span></label>
+                      <span id="contentError" class="helper-text red-text"></span>
+                    </div>
+
+                    <!-- SETTINGS -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-sliders"></i> Settings</p>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <select name="category">
+                        <% ['IDEAS','GUIDE','FINANCE','TECH','MARKETING','GENERAL'].forEach(cat => { %>
+                          <option value="<%= cat %>" <%= blog && blog.category === cat ? 'selected' : '' %>><%= cat %></option>
+                        <% }) %>
+                      </select>
+                      <label>Category</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input name="author" type="text" value="<%= blog ? blog.author : 'TheBizIdeas Team' %>">
+                      <label class="active">Author</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input name="image" type="text" value="<%= blog ? blog.image : '/images/startup-sketch.png' %>">
+                      <label class="active">Cover Image URL</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input name="publishedAt" type="date" value="<%= blog ? new Date(blog.publishedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0] %>">
+                      <label class="active">Published Date</label>
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-toggle-on"></i> Status</p>
+                    </div>
+                    <div class="col s12 m6">
+                      <div class="switch" style="margin:10px 0;">
+                        <label>Inactive
+                          <input type="checkbox" name="isActive" value="true" <%= !blog || blog.isActive ? 'checked' : '' %>>
+                          <span class="lever"></span>
+                          Active
+                        </label>
+                      </div>
+                      <p class="form-note">Visible on site when active</p>
+                    </div>
+                    <div class="col s12 m6">
+                      <div class="switch" style="margin:10px 0;">
+                        <label>Normal
+                          <input type="checkbox" name="isFeatured" value="true" <%= blog && blog.isFeatured ? 'checked' : '' %>>
+                          <span class="lever"></span>
+                          Featured ⭐
+                        </label>
+                      </div>
+                      <p class="form-note">Show at top when featured</p>
+                    </div>
+
+                    <!-- BUTTONS -->
+                    <div class="col s12 right-align" style="margin-top:20px;">
+                      <button type="submit" id="submitBtn"
+                        class="btn gradient-45deg-purple-deep-orange waves-effect waves-light">
+                        <i class="material-icons left"><%= blog ? 'save' : 'add_circle' %></i>
+                        <%= blog ? 'Update Blog' : 'Create Blog' %>
+                      </button>
+                      <a href="/admin/blogs" class="btn grey waves-effect waves-light" style="margin-left:8px;">
+                        <i class="material-icons left">cancel</i>Cancel
+                      </a>
+                    </div>
+
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="content-overlay"></div>
+      </div>
     </div>
-
-    <!-- RIGHT -->
-    <div class="col-12 col-lg-4">
-
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-sliders me-2 text-warning"></i>Settings</h6>
-        </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Category</label>
-            <select name="category" class="form-select">
-              <% ['IDEAS','GUIDE','FINANCE','TECH','MARKETING','GENERAL'].forEach(cat => { %>
-                <option value="<%= cat %>" <%= blog && blog.category === cat ? 'selected' : '' %>><%= cat %></option>
-              <% }) %>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Author</label>
-            <input type="text" name="author" class="form-control" value="<%= blog ? blog.author : 'TheBizIdeas Team' %>" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Cover Image URL</label>
-            <input type="text" name="image" class="form-control" value="<%= blog ? blog.image : '/images/startup-sketch.png' %>" placeholder="/images/startup-sketch.png" />
-          </div>
-          <div class="mb-0">
-            <label class="form-label fw-semibold">Published Date</label>
-            <input type="date" name="publishedAt" class="form-control" value="<%= blog ? new Date(blog.publishedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0] %>" />
-          </div>
-        </div>
-      </div>
-
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-toggle-on me-2 text-secondary"></i>Status</h6>
-        </div>
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-              <div class="fw-semibold">Active</div>
-              <small class="text-muted">Visible on site</small>
-            </div>
-            <div class="form-check form-switch mb-0">
-              <input class="form-check-input" type="checkbox" name="isActive" value="true" style="width:2.5em;height:1.4em" <%= !blog || blog.isActive ? 'checked' : '' %> />
-            </div>
-          </div>
-          <hr class="my-2">
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <div class="fw-semibold">Featured ⭐</div>
-              <small class="text-muted">Show at top</small>
-            </div>
-            <div class="form-check form-switch mb-0">
-              <input class="form-check-input" type="checkbox" name="isFeatured" value="true" style="width:2.5em;height:1.4em" <%= blog && blog.isFeatured ? 'checked' : '' %> />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
-          <i class="bi bi-<%= blog ? 'save' : 'plus-circle' %> me-2"></i>
-          <%= blog ? 'Update Blog' : 'Create Blog' %>
-        </button>
-        <a href="/admin/blogs" class="btn btn-outline-secondary">
-          <i class="bi bi-x-circle me-2"></i>Cancel
-        </a>
-      </div>
-
-    </div>
   </div>
-</form>
 
-<script>
-function validateForm() {
-  let valid = true;
-  ['title','excerpt','content'].forEach(id => {
-    const el = document.getElementById(id);
-    const err = document.getElementById(id + 'Error');
-    if (!el.value.trim()) { err.innerText = id.charAt(0).toUpperCase() + id.slice(1) + ' is required.'; valid = false; }
-    else err.innerText = '';
-  });
-  if (valid) {
-    const btn = document.getElementById('submitBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
-  }
-  return valid;
-}
-</script>
-
-<%- include('../partials/footer') %>
+  <%- include('../_layouts/commonJs') %>
+  <script>
+    $(document).ready(function () {
+      $('select').formSelect();
+      M.updateTextFields();
+      document.querySelectorAll('.materialize-textarea').forEach(el => M.textareaAutoResize(el));
+    });
+    function validateForm() {
+      let valid = true;
+      ['title','excerpt','content'].forEach(id => {
+        const el = document.getElementById(id);
+        const err = document.getElementById(id + 'Error');
+        if (!el.value.trim()) { err.innerText = id.charAt(0).toUpperCase() + id.slice(1) + ' is required.'; valid = false; }
+        else err.innerText = '';
+      });
+      if (valid) { const btn = document.getElementById('submitBtn'); btn.disabled = true; btn.innerHTML = '<i class="material-icons left">hourglass_empty</i> Saving...'; }
+      return valid;
+    }
+  </script>
+</body>
+</html>

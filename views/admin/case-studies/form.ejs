@@ -1,332 +1,225 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<head>
+  <%- include('../_layouts/head') %>
+  <title><%= study ? 'Edit Case Study' : 'Create Case Study' %> | <%= title %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
+    .section-title { font-size: 1rem; font-weight: 600; color: #1a237e; border-left: 4px solid #3949ab; padding-left: 10px; margin: 20px 0 10px; }
+    .required-star { color: #e53935; }
+    .form-note { font-size: 12px; color: #757575; margin-top: 4px; }
+    .input-field label.active { color: #3949ab !important; }
+  </style>
+</head>
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h4 class="mb-1 fw-bold">
-      <i class="bi bi-briefcase me-2 text-primary"></i>
-      <%= study ? 'Edit Case Study' : 'Create Case Study' %>
-    </h4>
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-        <li class="breadcrumb-item"><a href="/admin/case-studies">Case Studies</a></li>
-        <li class="breadcrumb-item active"><%= study ? 'Edit' : 'Create' %></li>
-      </ol>
-    </nav>
-  </div>
-  <a href="/admin/case-studies" class="btn btn-outline-secondary">
-    <i class="bi bi-arrow-left me-1"></i> Back
-  </a>
-</div>
+  <%- include('../partials/header') %>
 
-<form action="/admin/case-studies/<%= study ? study._id + '/edit' : 'create' %>" method="POST" id="csForm" onsubmit="return validateForm()">
-  <div class="row g-4">
-
-    <!-- LEFT -->
-    <div class="col-12 col-lg-8">
-
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-info-circle me-2 text-primary"></i>Basic Information</h6>
-        </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
-            <input type="text" name="title" id="title" class="form-control" value="<%= study ? study.title : '' %>" placeholder="e.g. Growing a GEO tool to mid-five-figure MRR" required />
-            <div id="titleError" class="text-danger small mt-1"></div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Excerpt <span class="text-danger">*</span></label>
-            <textarea name="excerpt" id="excerpt" class="form-control" rows="2" placeholder="Short summary shown in listing" required><%= study ? study.excerpt : '' %></textarea>
-            <div id="excerptError" class="text-danger small mt-1"></div>
-          </div>
-          <div class="mb-0">
-            <label class="form-label fw-semibold">Full Story Content</label>
-       <div class="card shadow-sm border-0 mb-4">
-  <div class="card-header bg-white py-3">
-    <h6 class="mb-0 fw-semibold">
-      <i class="bi bi-file-earmark-text me-2 text-primary"></i>
-      Case Study Details
-    </h6>
-  </div>
-
-  <div class="card-body">
-
-    <!-- Company Overview -->
-    <div class="mb-4">
-      <label class="form-label fw-semibold">
-        Company Overview
-      </label>
-      <textarea
-        name="companyOverview"
-        class="form-control"
-        rows="4"
-        placeholder="Example: Acme SaaS is a marketing automation platform helping agencies manage campaigns..."
-      ><%= study ? study.companyOverview : '' %></textarea>
-    </div>
-
-    <!-- Founder Story -->
-    <div class="mb-4">
-      <label class="form-label fw-semibold">
-        Founder Story
-      </label>
-      <textarea
-        name="founderStory"
-        class="form-control"
-        rows="4"
-        placeholder="Founder background, journey and inspiration..."
-      ><%= study ? study.founderStory : '' %></textarea>
-    </div>
-
-    <!-- Problem -->
-    <div class="mb-4">
-      <label class="form-label fw-semibold">
-        Problem
-      </label>
-      <textarea
-        name="problem"
-        class="form-control"
-        rows="4"
-        placeholder="What problem were customers facing?"
-      ><%= study ? study.problem : '' %></textarea>
-    </div>
-
-    <!-- Solution -->
-    <div class="mb-4">
-      <label class="form-label fw-semibold">
-        Solution
-      </label>
-      <textarea
-        name="solution"
-        class="form-control"
-        rows="4"
-        placeholder="Describe the product/service solution..."
-      ><%= study ? study.solution : '' %></textarea>
-    </div>
-
-    <!-- Business Model -->
-    <div class="mb-4">
-      <label class="form-label fw-semibold">
-        Business Model
-      </label>
-      <textarea
-        name="businessModel"
-        class="form-control"
-        rows="4"
-        placeholder="Subscription, SaaS, One-time purchase, Commission etc..."
-      ><%= study ? study.businessModel : '' %></textarea>
-    </div>
-
-    <!-- Revenue -->
-    <div class="mb-4">
-      <label class="form-label fw-semibold">
-        Revenue Details
-      </label>
-      <textarea
-        name="revenue"
-        class="form-control"
-        rows="4"
-        placeholder="Revenue milestones, MRR, ARR etc..."
-      ><%= study ? study.revenue : '' %></textarea>
-    </div>
-
-    <!-- Funding -->
-    <div class="mb-4">
-      <label class="form-label fw-semibold">
-        Funding
-      </label>
-      <textarea
-        name="funding"
-        class="form-control"
-        rows="4"
-        placeholder="Bootstrapped, Seed Round, Angel Investors etc..."
-      ><%= study ? study.funding : '' %></textarea>
-    </div>
-
-    <!-- Growth -->
-    <div class="mb-4">
-      <label class="form-label fw-semibold">
-        Growth Journey
-      </label>
-      <textarea
-        name="growth"
-        class="form-control"
-        rows="4"
-        placeholder="Growth milestones and achievements..."
-      ><%= study ? study.growth : '' %></textarea>
-    </div>
-
-    <!-- Marketing -->
-    <div class="mb-4">
-      <label class="form-label fw-semibold">
-        Marketing Strategy
-      </label>
-      <textarea
-        name="marketingStrategy"
-        class="form-control"
-        rows="4"
-        placeholder="SEO, Ads, Social Media, Partnerships etc..."
-      ><%= study ? study.marketingStrategy : '' %></textarea>
-    </div>
-
-    <!-- First Customers -->
-    <div class="mb-4">
-      <label class="form-label fw-semibold">
-        First Customers
-      </label>
-      <textarea
-        name="firstCustomers"
-        class="form-control"
-        rows="4"
-        placeholder="Explain how first users/customers were acquired..."
-      ><%= study ? study.firstCustomers : '' %></textarea>
-    </div>
-
-    <!-- Lessons -->
-    <div class="mb-4">
-      <label class="form-label fw-semibold">
-        Lessons Learned
-      </label>
-      <textarea
-        name="lessons"
-        class="form-control"
-        rows="5"
-        placeholder="Lesson 1&#10;Lesson 2&#10;Lesson 3"
-      ><%= study && study.lessons ? study.lessons.join('\n') : '' %></textarea>
-    </div>
-
-    <!-- How To Start -->
-    <div class="mb-0">
-      <label class="form-label fw-semibold">
-        How To Start Similar Business
-      </label>
-      <textarea
-        name="howToStart"
-        class="form-control"
-        rows="5"
-        placeholder="Step by step guide to start a similar business..."
-      ><%= study ? study.howToStart : '' %></textarea>
-    </div>
-
-  </div>
-</div>
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span><%= study ? 'Edit Case Study' : 'Create Case Study' %></span></h5>
+            </div>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="/admin/case-studies">Back to Case Studies</a>
+              </ol>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-person-badge me-2 text-success"></i>Founder & Company</h6>
-        </div>
-        <div class="card-body">
-          <div class="row g-3">
-            <div class="col-12 col-md-6">
-              <label class="form-label fw-semibold">Founder Name <span class="text-danger">*</span></label>
-              <input type="text" name="founderName" class="form-control" value="<%= study ? study.founderName : '' %>" required />
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label fw-semibold">Company Name <span class="text-danger">*</span></label>
-              <input type="text" name="companyName" class="form-control" value="<%= study ? study.companyName : '' %>" required />
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label fw-semibold">Monthly Revenue (USD) <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input type="number" name="monthlyRevenue" class="form-control" value="<%= study ? study.monthlyRevenue : '' %>" required min="0" />
+      <div class="col s12">
+        <div class="container">
+          <div class="section">
+            <div class="card-panel">
+              <div class="card-content">
+                <form id="csForm" method="POST"
+                  action="/admin/case-studies/<%= study ? study._id + '/edit' : 'create' %>"
+                  onsubmit="return validateForm()">
+                  <div class="row">
+
+                    <!-- BASIC INFO -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-info-circle"></i> Basic Information</p>
+                    </div>
+                    <div class="input-field col s12">
+                      <input id="title" name="title" type="text" value="<%= study ? study.title : '' %>" required>
+                      <label for="title" class="<%= study ? 'active' : '' %>">Title <span class="required-star">*</span></label>
+                      <span id="titleError" class="helper-text red-text"></span>
+                    </div>
+                    <div class="input-field col s12">
+                      <textarea id="excerpt" name="excerpt" class="materialize-textarea" required><%= study ? study.excerpt : '' %></textarea>
+                      <label for="excerpt" class="<%= study ? 'active' : '' %>">Excerpt <span class="required-star">*</span></label>
+                      <span id="excerptError" class="helper-text red-text"></span>
+                    </div>
+
+                    <!-- CASE STUDY DETAILS -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-file-earmark-text"></i> Case Study Details</p>
+                    </div>
+                    <div class="input-field col s12">
+                      <textarea name="companyOverview" class="materialize-textarea" placeholder="Acme SaaS is a marketing automation platform..."><%= study ? study.companyOverview : '' %></textarea>
+                      <label class="<%= study ? 'active' : '' %>">Company Overview</label>
+                    </div>
+                    <div class="input-field col s12">
+                      <textarea name="founderStory" class="materialize-textarea" placeholder="Founder background, journey and inspiration..."><%= study ? study.founderStory : '' %></textarea>
+                      <label class="<%= study ? 'active' : '' %>">Founder Story</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <textarea name="problem" class="materialize-textarea" placeholder="What problem were customers facing?"><%= study ? study.problem : '' %></textarea>
+                      <label class="<%= study ? 'active' : '' %>">Problem</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <textarea name="solution" class="materialize-textarea" placeholder="Describe the product/service solution..."><%= study ? study.solution : '' %></textarea>
+                      <label class="<%= study ? 'active' : '' %>">Solution</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <textarea name="businessModel" class="materialize-textarea" placeholder="Subscription, SaaS, One-time purchase..."><%= study ? study.businessModel : '' %></textarea>
+                      <label class="<%= study ? 'active' : '' %>">Business Model</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <textarea name="revenue" class="materialize-textarea" placeholder="Revenue milestones, MRR, ARR etc..."><%= study ? study.revenue : '' %></textarea>
+                      <label class="<%= study ? 'active' : '' %>">Revenue Details</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <textarea name="funding" class="materialize-textarea" placeholder="Bootstrapped, Seed Round, Angel Investors..."><%= study ? study.funding : '' %></textarea>
+                      <label class="<%= study ? 'active' : '' %>">Funding</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <textarea name="growth" class="materialize-textarea" placeholder="Growth milestones and achievements..."><%= study ? study.growth : '' %></textarea>
+                      <label class="<%= study ? 'active' : '' %>">Growth Journey</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <textarea name="marketingStrategy" class="materialize-textarea" placeholder="SEO, Ads, Social Media, Partnerships..."><%= study ? study.marketingStrategy : '' %></textarea>
+                      <label class="<%= study ? 'active' : '' %>">Marketing Strategy</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <textarea name="firstCustomers" class="materialize-textarea" placeholder="Explain how first users/customers were acquired..."><%= study ? study.firstCustomers : '' %></textarea>
+                      <label class="<%= study ? 'active' : '' %>">First Customers</label>
+                    </div>
+                    <div class="input-field col s12">
+                      <textarea name="lessons" class="materialize-textarea" placeholder="Lesson 1&#10;Lesson 2&#10;Lesson 3"><%= study && study.lessons ? study.lessons.join('\n') : '' %></textarea>
+                      <label class="<%= study ? 'active' : '' %>">Lessons Learned <span style="font-weight:400;color:#9e9e9e;font-size:12px;">(one per line)</span></label>
+                    </div>
+                    <div class="input-field col s12">
+                      <textarea name="howToStart" class="materialize-textarea" placeholder="Step by step guide to start a similar business..."><%= study ? study.howToStart : '' %></textarea>
+                      <label class="<%= study ? 'active' : '' %>">How To Start Similar Business</label>
+                    </div>
+
+                    <!-- FOUNDER & COMPANY -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-person-badge"></i> Founder &amp; Company</p>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input name="founderName" type="text" value="<%= study ? study.founderName : '' %>" required>
+                      <label class="<%= study ? 'active' : '' %>">Founder Name <span class="required-star">*</span></label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input name="companyName" type="text" value="<%= study ? study.companyName : '' %>" required>
+                      <label class="<%= study ? 'active' : '' %>">Company Name <span class="required-star">*</span></label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input name="monthlyRevenue" type="number" min="0" value="<%= study ? study.monthlyRevenue : '' %>" required>
+                      <label class="<%= study ? 'active' : '' %>">Monthly Revenue (USD) <span class="required-star">*</span></label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input name="companySize" type="number" min="1" value="<%= study ? study.companySize : 2 %>">
+                      <label class="active">Company Size (employees)</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input name="image" type="text" value="<%= study ? study.image : '/images/startup-sketch.png' %>">
+                      <label class="active">Cover Image URL</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input name="founderImage" type="text" value="<%= study ? study.founderImage : '/images/person1.jpg' %>">
+                      <label class="active">Founder Image URL</label>
+                    </div>
+
+                    <!-- CLASSIFICATION -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-tags"></i> Classification</p>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <select name="industry">
+                        <% ['Marketing','Advertising','Analytics','Real Estate','Automations','SaaS','E-Commerce','Other'].forEach(ind => { %>
+                          <option value="<%= ind %>" <%= study && study.industry === ind ? 'selected' : '' %>><%= ind %></option>
+                        <% }) %>
+                      </select>
+                      <label>Industry</label>
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-toggle-on"></i> Status</p>
+                    </div>
+                    <div class="col s12 m6">
+                      <div class="switch" style="margin:10px 0;">
+                        <label>Inactive
+                          <input type="checkbox" name="isActive" value="true" <%= !study || study.isActive ? 'checked' : '' %>>
+                          <span class="lever"></span>
+                          Active
+                        </label>
+                      </div>
+                      <p class="form-note">Visible on site when active</p>
+                    </div>
+                    <div class="col s12 m6">
+                      <div class="switch" style="margin:10px 0;">
+                        <label>Normal
+                          <input type="checkbox" name="isFeatured" value="true" <%= study && study.isFeatured ? 'checked' : '' %>>
+                          <span class="lever"></span>
+                          Featured ⭐
+                        </label>
+                      </div>
+                      <p class="form-note">Show at top when featured</p>
+                    </div>
+
+                    <!-- BUTTONS -->
+                    <div class="col s12 right-align" style="margin-top:20px;">
+                      <button type="submit" id="submitBtn"
+                        class="btn gradient-45deg-purple-deep-orange waves-effect waves-light">
+                        <i class="material-icons left"><%= study ? 'save' : 'add_circle' %></i>
+                        <%= study ? 'Update Case Study' : 'Create Case Study' %>
+                      </button>
+                      <a href="/admin/case-studies" class="btn grey waves-effect waves-light" style="margin-left:8px;">
+                        <i class="material-icons left">cancel</i>Cancel
+                      </a>
+                    </div>
+
+                  </div>
+                </form>
               </div>
             </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label fw-semibold">Company Size (employees)</label>
-              <input type="number" name="companySize" class="form-control" value="<%= study ? study.companySize : 2 %>" min="1" />
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label fw-semibold">Cover Image URL</label>
-              <input type="text" name="image" class="form-control" value="<%= study ? study.image : '/images/startup-sketch.png' %>" placeholder="/images/startup-sketch.png" />
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label fw-semibold">Founder Image URL</label>
-              <input type="text" name="founderImage" class="form-control" value="<%= study ? study.founderImage : '/images/person1.jpg' %>" placeholder="/images/person1.jpg" />
-            </div>
           </div>
         </div>
+        <div class="content-overlay"></div>
       </div>
-
-    </div>
-
-    <!-- RIGHT -->
-    <div class="col-12 col-lg-4">
-
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-tags me-2 text-warning"></i>Classification</h6>
-        </div>
-        <div class="card-body">
-          <label class="form-label fw-semibold">Industry</label>
-          <select name="industry" class="form-select">
-            <% ['Marketing','Advertising','Analytics','Real Estate','Automations','SaaS','E-Commerce','Other'].forEach(ind => { %>
-              <option value="<%= ind %>" <%= study && study.industry === ind ? 'selected' : '' %>><%= ind %></option>
-            <% }) %>
-          </select>
-        </div>
-      </div>
-
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-toggle-on me-2 text-secondary"></i>Status</h6>
-        </div>
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-              <div class="fw-semibold">Active</div>
-              <small class="text-muted">Visible on site</small>
-            </div>
-            <div class="form-check form-switch mb-0">
-              <input class="form-check-input" type="checkbox" name="isActive" value="true" style="width:2.5em;height:1.4em" <%= !study || study.isActive ? 'checked' : '' %> />
-            </div>
-          </div>
-          <hr class="my-2">
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <div class="fw-semibold">Featured ⭐</div>
-              <small class="text-muted">Show at top</small>
-            </div>
-            <div class="form-check form-switch mb-0">
-              <input class="form-check-input" type="checkbox" name="isFeatured" value="true" style="width:2.5em;height:1.4em" <%= study && study.isFeatured ? 'checked' : '' %> />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
-          <i class="bi bi-<%= study ? 'save' : 'plus-circle' %> me-2"></i>
-          <%= study ? 'Update Case Study' : 'Create Case Study' %>
-        </button>
-        <a href="/admin/case-studies" class="btn btn-outline-secondary">
-          <i class="bi bi-x-circle me-2"></i>Cancel
-        </a>
-      </div>
-
     </div>
   </div>
-</form>
 
-<script>
-function validateForm() {
-  let valid = true;
-  const title = document.getElementById('title').value.trim();
-  const excerpt = document.getElementById('excerpt').value.trim();
-  if (!title) { document.getElementById('titleError').innerText = 'Title is required.'; valid = false; }
-  else document.getElementById('titleError').innerText = '';
-  if (!excerpt) { document.getElementById('excerptError').innerText = 'Excerpt is required.'; valid = false; }
-  else document.getElementById('excerptError').innerText = '';
-  if (valid) {
-    const btn = document.getElementById('submitBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
-  }
-  return valid;
-}
-</script>
-
-<%- include('../partials/footer') %>
+  <%- include('../_layouts/commonJs') %>
+  <script>
+    $(document).ready(function () {
+      $('select').formSelect();
+      M.updateTextFields();
+      document.querySelectorAll('.materialize-textarea').forEach(el => M.textareaAutoResize(el));
+    });
+    function validateForm() {
+      let valid = true;
+      const title = document.getElementById('title').value.trim();
+      const excerpt = document.getElementById('excerpt').value.trim();
+      if (!title) { document.getElementById('titleError').innerText = 'Title is required.'; valid = false; } else document.getElementById('titleError').innerText = '';
+      if (!excerpt) { document.getElementById('excerptError').innerText = 'Excerpt is required.'; valid = false; } else document.getElementById('excerptError').innerText = '';
+      if (valid) { const btn = document.getElementById('submitBtn'); btn.disabled = true; btn.innerHTML = '<i class="material-icons left">hourglass_empty</i> Saving...'; }
+      return valid;
+    }
+  </script>
+</body>
+</html>

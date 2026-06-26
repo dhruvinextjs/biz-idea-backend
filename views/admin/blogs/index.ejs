@@ -1,95 +1,127 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<head>
+  <%- include('../_layouts/head') %>
+  <title>Blogs | <%= title %></title>
+  
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/extensions/responsive/css/responsive.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/css/select.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/css/pages/data-tables.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h4 class="mb-1 fw-bold"><i class="bi bi-file-richtext me-2 text-primary"></i>Blog Posts</h4>
-    <p class="text-muted mb-0 small">Manage all blog posts</p>
-  </div>
-  <a href="/admin/blogs/create" class="btn btn-primary">
-    <i class="bi bi-plus-lg me-1"></i> Add Blog
-  </a>
-</div>
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
+    .badge-active   { background:rgba(76,175,80,0.12);  color:#4CAF50; border:1px solid rgba(76,175,80,0.3);  padding:3px 10px; border-radius:12px; font-size:11px; }
+    .badge-inactive { background:rgba(158,158,158,0.12);color:#9e9e9e; border:1px solid rgba(158,158,158,0.3);padding:3px 10px; border-radius:12px; font-size:11px; }
+    .badge-featured { background:rgba(255,193,7,0.12);  color:#FFC107; border:1px solid rgba(255,193,7,0.3);  padding:3px 10px; border-radius:12px; font-size:11px; }
+    .badge-cat      { background:rgba(33,150,243,0.12); color:#2196F3; border:1px solid rgba(33,150,243,0.3); padding:3px 10px; border-radius:12px; font-size:11px; }
+  </style>
+</head>
 
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
 
-<div class="card shadow-sm border-0">
-  <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-    <span class="fw-semibold">All Blogs</span>
-    <span class="text-muted small">Page <%= currentPage %> of <%= totalPages %></span>
-  </div>
-  <div class="card-body p-0">
-    <div class="table-responsive">
-      <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
-          <tr>
-            <th class="ps-3">#</th>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Author</th>
-            <th>Featured</th>
-            <th>Status</th>
-            <th>Date</th>
-            <th class="text-end pe-3">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if (blogs.length === 0) { %>
-            <tr>
-              <td colspan="8" class="text-center text-muted py-5">
-                <i class="bi bi-inbox fs-2 d-block mb-2 opacity-50"></i>
-                No blogs found. <a href="/admin/blogs/create">Add one!</a>
-              </td>
-            </tr>
-          <% } %>
-          <% blogs.forEach((b, i) => { %>
-          <tr>
-            <td class="ps-3 text-muted small"><%= ((currentPage-1)*10) + i + 1 %></td>
-            <td><div class="fw-semibold"><%= b.title.substring(0,45) %><%= b.title.length > 45 ? '...' : '' %></div></td>
-            <td><span class="badge bg-primary-subtle text-primary border border-primary-subtle"><%= b.category %></span></td>
-            <td><small><%= b.author %></small></td>
-            <td class="text-center">
-              <% if (b.isFeatured) { %><span class="badge bg-warning text-dark">⭐ Yes</span><% } else { %><span class="text-muted">—</span><% } %>
-            </td>
-            <td>
-              <% if (b.isActive) { %>
-                <span class="badge bg-success-subtle text-success border border-success-subtle">Active</span>
-              <% } else { %>
-                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Hidden</span>
-              <% } %>
-            </td>
-            <td><small><%= new Date(b.publishedAt).toLocaleDateString() %></small></td>
-            <td class="text-end pe-3">
-              <a href="/admin/blogs/<%= b._id %>/edit" class="btn btn-sm btn-outline-primary me-1" title="Edit">
-                <i class="bi bi-pencil"></i>
-              </a>
-              <form action="/admin/blogs/<%= b._id %>/delete" method="POST" style="display:inline">
-                <button class="btn btn-sm btn-outline-danger btn-delete" title="Delete">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </form>
-            </td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
+  <%- include('../partials/header') %>
+
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span>Blog Posts</span></h5>
+            </div>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="/admin/blogs/create">Add Blog</a>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col s12">
+        <div class="container">
+          <div class="section section-data-tables">
+            <div class="row">
+              <div class="col s12">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="row">
+                      <div class="col s12 overflow">
+                        
+                        <!-- Changed table ID to match working example -->
+                        <table id="page-length-option" class="display" style="width:100%">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Title</th>
+                              <th>Category</th>
+                              <th>Author</th>
+                              <th>Featured</th>
+                              <th>Status</th>
+                              <th>Date</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% blogs.forEach((b, i) => { %>
+                            <tr>
+                              <td><%= ((currentPage-1)*10) + i + 1 %></td>
+                              <td><strong><%= b.title.substring(0,45) %><%= b.title.length > 45 ? '…' : '' %></strong></td>
+                              <td><span class="badge-cat"><%= b.category %></span></td>
+                              <td><%= b.author %></td>
+                              <td>
+                                <% if (b.isFeatured) { %>
+                                  <span class="badge-featured">Featured</span>
+                                <% } else { %>
+                                  <span class="badge-inactive">No</span>
+                                <% } %>
+                              </td>
+                              <td>
+                                <span class="<%= b.isActive ? 'badge-active' : 'badge-inactive' %>">
+                                  <%= b.isActive ? 'Active' : 'Hidden' %>
+                                </span>
+                              </td>
+                              <td><%= new Date(b.publishedAt).toLocaleDateString('en-GB') %></td>
+                              <td style="white-space:nowrap;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                  <a href="/admin/blogs/<%= b._id %>/edit" class="waves-effect waves-light" title="Edit">
+                                    <i class="material-icons" style="font-size:18px; color:#2196F3;">edit</i>
+                                  </a>
+                                  <form action="/admin/blogs/<%= b._id %>/delete" method="POST" style="display:inline; margin:0;">
+                                    <button type="submit" class="waves-effect waves-light"
+                                      style="background:none; border:none; padding:0; margin:0; cursor:pointer;"
+                                      title="Delete" onclick="return confirm('Delete this blog?');">
+                                      <i class="material-icons" style="font-size:18px; color:#2196F3;">delete</i>
+                                    </button>
+                                  </form>
+                                </div>
+                              </td>
+                            </tr>
+                            <% }) %>
+                          </tbody>
+                        </table>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="content-overlay"></div>
+      </div>
     </div>
   </div>
-  <% if (totalPages > 1) { %>
-  <div class="card-footer bg-white py-3">
-    <nav><ul class="pagination pagination-sm justify-content-center mb-0">
-      <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-        <a class="page-link" href="?page=<%= currentPage - 1 %>"><i class="bi bi-chevron-left"></i></a>
-      </li>
-      <% for(let i = 1; i <= totalPages; i++) { %>
-        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-        </li>
-      <% } %>
-      <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
-        <a class="page-link" href="?page=<%= currentPage + 1 %>"><i class="bi bi-chevron-right"></i></a>
-      </li>
-    </ul></nav>
-  </div>
-  <% } %>
-</div>
 
-<%- include('../partials/footer') %>
+  <%- include('../_layouts/commonJs') %>
+  <script src="/app-assets/vendors/data-tables/js/jquery.dataTables.min.js"></script>
+  <script src="/app-assets/js/scripts/data-tables.js"></script>
+
+</body>
+</html>

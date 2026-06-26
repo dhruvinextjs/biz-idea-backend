@@ -1,158 +1,180 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<head>
+  <%- include('../_layouts/head') %>
+  <title>About Page | <%= title %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
+    .section-title { font-size: 1rem; font-weight: 600; color: #1a237e; border-left: 4px solid #3949ab; padding-left: 10px; margin: 20px 0 10px; }
+    .form-note { font-size: 12px; color: #757575; margin-top: 4px; }
+    .input-field label.active { color: #3949ab !important; }
+  </style>
+</head>
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h4 class="mb-1 fw-bold"><i class="bi bi-file-person me-2 text-primary"></i>About Page</h4>
-    <p class="text-muted mb-0 small">Manage your about page content</p>
-  </div>
-</div>
+  <%- include('../partials/header') %>
 
-<form action="/admin/about" method="POST" enctype="multipart/form-data">
-  <div class="row g-4">
-
-    <!-- LEFT COLUMN -->
-    <div class="col-12 col-lg-8">
-
-      <!-- Hero Section -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-layout-text-window me-2 text-primary"></i>Hero Section</h6>
-        </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Heading Line 1</label>
-            <input type="text" name="headingLine1" class="form-control" value="<%= about ? about.headingLine1 : '' %>" placeholder="e.g. We Help" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Heading Line 2</label>
-            <input type="text" name="headingLine2" class="form-control" value="<%= about ? about.headingLine2 : '' %>" placeholder="e.g. Entrepreneurs" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Heading Line 3</label>
-            <input type="text" name="headingLine3" class="form-control" value="<%= about ? about.headingLine3 : '' %>" placeholder="e.g. Build Great Businesses" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Description 1</label>
-            <textarea name="description1" class="form-control" rows="3" placeholder="First paragraph"><%= about ? about.description1 : '' %></textarea>
-          </div>
-          <div class="mb-0">
-            <label class="form-label fw-semibold">Description 2</label>
-            <textarea name="description2" class="form-control" rows="3" placeholder="Second paragraph"><%= about ? about.description2 : '' %></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- Story Section -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-book me-2 text-success"></i>Our Story</h6>
-        </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Story Title</label>
-            <input type="text" name="storyTitle" class="form-control" value="<%= about ? about.storyTitle : '' %>" placeholder="e.g. How It All Started" />
-          </div>
-          <div class="mb-0">
-            <label class="form-label fw-semibold">Story Content</label>
-            <textarea id="editor" name="storyContent" class="form-control" rows="8" placeholder="Full story content"><%= about ? about.storyContent : '' %></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mission & Vision -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-bullseye me-2 text-danger"></i>Mission & Vision</h6>
-        </div>
-        <div class="card-body">
-          <div class="row g-3">
-            <div class="col-12">
-              <label class="form-label fw-semibold">Mission Title</label>
-              <input type="text" name="missionTitle" class="form-control" value="<%= about ? about.missionTitle : '' %>" placeholder="Our Mission" />
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span>About Page</span></h5>
             </div>
-            <div class="col-12">
-              <label class="form-label fw-semibold">Mission Description</label>
-              <textarea name="missionDescription" class="form-control" rows="3"><%= about ? about.missionDescription : '' %></textarea>
-            </div>
-            <div class="col-12">
-              <label class="form-label fw-semibold">Vision Title</label>
-              <input type="text" name="visionTitle" class="form-control" value="<%= about ? about.visionTitle : '' %>" placeholder="Our Vision" />
-            </div>
-            <div class="col-12">
-              <label class="form-label fw-semibold">Vision Description</label>
-              <textarea name="visionDescription" class="form-control" rows="3"><%= about ? about.visionDescription : '' %></textarea>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="/admin/dashboard">Dashboard</a>
+              </ol>
             </div>
           </div>
         </div>
       </div>
 
-    </div>
+      <div class="col s12">
+        <div class="container">
+          <div class="section">
+            <div class="card-panel">
+              <div class="card-content">
+                <form action="/admin/about" method="POST" enctype="multipart/form-data">
+                  <div class="row">
 
-    <!-- RIGHT COLUMN -->
-    <div class="col-12 col-lg-4">
+                    <!-- HERO SECTION -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-layout-text-window"></i> Hero Section</p>
+                    </div>
+                    <div class="input-field col s12 m4">
+                      <input name="headingLine1" type="text" value="<%= about ? about.headingLine1 : '' %>" placeholder="e.g. We Help">
+                      <label class="<%= about ? 'active' : '' %>">Heading Line 1</label>
+                    </div>
+                    <div class="input-field col s12 m4">
+                      <input name="headingLine2" type="text" value="<%= about ? about.headingLine2 : '' %>" placeholder="e.g. Entrepreneurs">
+                      <label class="<%= about ? 'active' : '' %>">Heading Line 2</label>
+                    </div>
+                    <div class="input-field col s12 m4">
+                      <input name="headingLine3" type="text" value="<%= about ? about.headingLine3 : '' %>" placeholder="e.g. Build Great Businesses">
+                      <label class="<%= about ? 'active' : '' %>">Heading Line 3</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <textarea name="description1" class="materialize-textarea" placeholder="First paragraph"><%= about ? about.description1 : '' %></textarea>
+                      <label class="<%= about ? 'active' : '' %>">Description 1</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <textarea name="description2" class="materialize-textarea" placeholder="Second paragraph"><%= about ? about.description2 : '' %></textarea>
+                      <label class="<%= about ? 'active' : '' %>">Description 2</label>
+                    </div>
 
-      <!-- Founder -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-person-circle me-2 text-warning"></i>Founder</h6>
-        </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Founder Image</label>
-            <% if (about && about.founderImage) { %>
-              <div class="text-center mb-2">
-                <img src="<%= about.founderImage %>" class="img-thumbnail rounded-circle" style="width:90px;height:90px;object-fit:cover" />
+                    <!-- OUR STORY -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-book"></i> Our Story</p>
+                    </div>
+                    <div class="input-field col s12 m4">
+                      <input name="storyTitle" type="text" value="<%= about ? about.storyTitle : '' %>" placeholder="e.g. How It All Started">
+                      <label class="<%= about ? 'active' : '' %>">Story Title</label>
+                    </div>
+                    <div class="input-field col s12">
+                      <textarea id="editor" name="storyContent" class="materialize-textarea" placeholder="Full story content"><%= about ? about.storyContent : '' %></textarea>
+                      <label class="<%= about ? 'active' : '' %>">Story Content</label>
+                    </div>
+
+                    <!-- MISSION & VISION -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-bullseye"></i> Mission &amp; Vision</p>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input name="missionTitle" type="text" value="<%= about ? about.missionTitle : '' %>" placeholder="Our Mission">
+                      <label class="<%= about ? 'active' : '' %>">Mission Title</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input name="visionTitle" type="text" value="<%= about ? about.visionTitle : '' %>" placeholder="Our Vision">
+                      <label class="<%= about ? 'active' : '' %>">Vision Title</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <textarea name="missionDescription" class="materialize-textarea"><%= about ? about.missionDescription : '' %></textarea>
+                      <label class="<%= about ? 'active' : '' %>">Mission Description</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <textarea name="visionDescription" class="materialize-textarea"><%= about ? about.visionDescription : '' %></textarea>
+                      <label class="<%= about ? 'active' : '' %>">Vision Description</label>
+                    </div>
+
+                    <!-- FOUNDER -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-person-circle"></i> Founder</p>
+                    </div>
+                    <div class="col s12 m6">
+                      <% if (about && about.founderImage) { %>
+                        <div style="margin-bottom:10px;">
+                          <img src="<%= about.founderImage %>" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #e0e0e0;">
+                          <p class="form-note">Current founder image</p>
+                        </div>
+                      <% } %>
+                      <div class="file-field input-field">
+                        <div class="btn gradient-45deg-purple-deep-orange">
+                          <span>Upload Image</span>
+                          <input type="file" name="founderImage" accept="image/*">
+                        </div>
+                        <div class="file-path-wrapper">
+                          <input class="file-path validate" type="text" placeholder="Leave empty to keep current">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input name="founderName" type="text" value="<%= about ? about.founderName : '' %>" placeholder="Founder's full name">
+                      <label class="<%= about ? 'active' : '' %>">Founder Name</label>
+                    </div>
+
+                    <!-- STATISTICS -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-bar-chart"></i> Statistics</p>
+                    </div>
+                    <div class="input-field col s12 m3">
+                      <input name="businessIdeas" type="text" value="<%= about ? about.businessIdeas : '' %>" placeholder="e.g. 500+">
+                      <label class="<%= about ? 'active' : '' %>">Business Ideas</label>
+                    </div>
+                    <div class="input-field col s12 m3">
+                      <input name="startupIdeas" type="text" value="<%= about ? about.startupIdeas : '' %>" placeholder="e.g. 200+">
+                      <label class="<%= about ? 'active' : '' %>">Startup Ideas</label>
+                    </div>
+                    <div class="input-field col s12 m3">
+                      <input name="communityMembers" type="text" value="<%= about ? about.communityMembers : '' %>" placeholder="e.g. 10K+">
+                      <label class="<%= about ? 'active' : '' %>">Community Members</label>
+                    </div>
+                    <div class="input-field col s12 m3">
+                      <input name="projectsLaunched" type="text" value="<%= about ? about.projectsLaunched : '' %>" placeholder="e.g. 50+">
+                      <label class="<%= about ? 'active' : '' %>">Projects Launched</label>
+                    </div>
+
+                    <!-- BUTTON -->
+                    <div class="col s12 right-align" style="margin-top:20px;">
+                      <button type="submit" class="btn gradient-45deg-purple-deep-orange waves-effect waves-light">
+                        <i class="material-icons left">save</i>Save About Page
+                      </button>
+                    </div>
+
+                  </div>
+                </form>
               </div>
-            <% } %>
-            <input type="file" name="founderImage" class="form-control" accept="image/*" />
-            <div class="text-muted small mt-1">Leave empty to keep current</div>
-          </div>
-          <div class="mb-0">
-            <label class="form-label fw-semibold">Founder Name</label>
-            <input type="text" name="founderName" class="form-control" value="<%= about ? about.founderName : '' %>" placeholder="Founder's full name" />
+            </div>
           </div>
         </div>
+        <div class="content-overlay"></div>
       </div>
-
-      <!-- Statistics -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-bar-chart me-2 text-info"></i>Statistics</h6>
-        </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Business Ideas</label>
-            <input type="text" name="businessIdeas" class="form-control" value="<%= about ? about.businessIdeas : '' %>" placeholder="e.g. 500+" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Startup Ideas</label>
-            <input type="text" name="startupIdeas" class="form-control" value="<%= about ? about.startupIdeas : '' %>" placeholder="e.g. 200+" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Community Members</label>
-            <input type="text" name="communityMembers" class="form-control" value="<%= about ? about.communityMembers : '' %>" placeholder="e.g. 10K+" />
-          </div>
-          <div class="mb-0">
-            <label class="form-label fw-semibold">Projects Launched</label>
-            <input type="text" name="projectsLaunched" class="form-control" value="<%= about ? about.projectsLaunched : '' %>" placeholder="e.g. 50+" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Save Button -->
-      <div class="d-grid">
-        <button type="submit" class="btn btn-primary btn-lg">
-          <i class="bi bi-save me-2"></i>Save About Page
-        </button>
-      </div>
-
     </div>
   </div>
-</form>
 
-<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
-<script>
-  CKEDITOR.replace('editor');
-</script>
-
-<%- include('../partials/footer') %>
+  <%- include('../_layouts/commonJs') %>
+  <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+  <script>
+    $(document).ready(function () {
+      M.updateTextFields();
+      document.querySelectorAll('.materialize-textarea').forEach(el => M.textareaAutoResize(el));
+    });
+    CKEDITOR.replace('editor');
+  </script>
+</body>
+</html>
