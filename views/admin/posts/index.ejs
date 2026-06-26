@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
-
 <head>
   <%- include('../_layouts/head') %>
   <title>Community Posts | <%= title %></title>
@@ -14,6 +13,29 @@
   <style>
     body { padding-top: 78px !important; }
     #main { margin-top: 0 !important; }
+
+    .badge-active   { background:rgba(76,175,80,0.12); color:#4CAF50; border:1px solid rgba(76,175,80,0.3); padding:3px 10px; border-radius:12px; font-size:11px; }
+    .badge-inactive { background:rgba(158,158,158,0.12); color:#9e9e9e; border:1px solid rgba(158,158,158,0.3); padding:3px 10px; border-radius:12px; font-size:11px; }
+    .badge-pending  { background:rgba(255,193,7,0.12); color:#FFC107; border:1px solid rgba(255,193,7,0.3); padding:3px 10px; border-radius:12px; font-size:11px; }
+    .badge-approved { background:rgba(76,175,80,0.12); color:#4CAF50; border:1px solid rgba(76,175,80,0.3); padding:3px 10px; border-radius:12px; font-size:11px; }
+    .badge-rejected { background:rgba(244,67,54,0.12); color:#F44336; border:1px solid rgba(244,67,54,0.3); padding:3px 10px; border-radius:12px; font-size:11px; }
+
+    .admin-badge {
+      background:rgba(33,150,243,0.12); 
+      color:#2196F3; 
+      border:1px solid rgba(33,150,243,0.3); 
+      padding:2px 8px; 
+      border-radius:10px; 
+      font-size:10px;
+    }
+
+    .action-btns {
+      display: flex;
+      align-items: center;
+      border: none;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
   </style>
 </head>
 
@@ -49,6 +71,7 @@
                   <div class="card-content">
                     <div class="row">
                       <div class="col s12 overflow">
+
                         <table id="page-length-option" class="display" style="width:100%">
                           <thead>
                             <tr>
@@ -60,7 +83,7 @@
                               <th>Pinned</th>
                               <th>Status</th>
                               <th>Date</th>
-                              <th>Action</th>
+                              <th class="text-end">Actions</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -71,108 +94,83 @@
                                   No posts found.
                                 </td>
                               </tr>
-                            <% } %>
-                            <% posts.forEach((p, i) => { %>
-                            <tr>
-                              <td><%= ((currentPage-1)*10) + i + 1 %></td>
+                            <% } else { %>
+                              <% posts.forEach((p, i) => { %>
+                              <tr>
+                                <td><%= ((currentPage-1)*10) + i + 1 %></td>
 
-                              <td>
-                                <strong>
-                                  <% if (p.isPinned) { %><span style="color:#FFC107;">📌</span> <% } %>
-                                  <%= p.title.substring(0,45) %><%= p.title.length > 45 ? '…' : '' %>
-                                </strong>
-                                <% if (!p.author) { %>
-                                  <div><span style="background:rgba(33,150,243,0.12); color:#2196F3; border:1px solid rgba(33,150,243,0.3); padding:2px 8px; border-radius:10px; font-size:10px;">Admin post</span></div>
-                                <% } %>
-                              </td>
+                                <td>
+                                  <strong style="display:flex; align-items:center; gap:6px;">
+                                    <% if (p.isPinned) { %><span style="color:#FFC107;">📌</span><% } %>
+                                    <%= p.title.substring(0,45) %><%= p.title.length > 45 ? '…' : '' %>
+                                  </strong>
+                                  <!-- <% if (!p.author) { %>
+                                    <span class="admin-badge">Admin Post</span>
+                                  <% } %> -->
+                                </td>
 
-                              <td><small style="color:#9e9e9e;">@<%= p.authorName %></small></td>
+                                <td><small style="color:#9e9e9e;">@<%= p.authorName || '—' %></small></td>
 
-                              <td><%= p.upvotes %></td>
+                                <td class="center-align"><strong><%= p.upvotes %></strong></td>
+                                <td class="center-align"><strong><%= p.commentCount %></strong></td>
 
-                              <td><%= p.commentCount %></td>
-
-                              <td>
-                                <% if (p.isPinned) { %>
-                                  <span style="background:rgba(255,193,7,0.12); color:#FFC107; border:1px solid rgba(255,193,7,0.3); padding:3px 10px; border-radius:12px; font-size:11px;">Yes</span>
-                                <% } else { %>
-                                  —
-                                <% } %>
-                              </td>
-
-                              <td>
-                                <% if (p.status === 'pending') { %>
-                                  <span style="background:rgba(255,193,7,0.12); color:#FFC107; border:1px solid rgba(255,193,7,0.3); padding:3px 10px; border-radius:12px; font-size:11px;">Pending</span>
-                                <% } else if (p.status === 'approved') { %>
-                                  <span style="background:rgba(76,175,80,0.12); color:#4CAF50; border:1px solid rgba(76,175,80,0.3); padding:3px 10px; border-radius:12px; font-size:11px;">Approved</span>
-                                <% } else if (p.status === 'rejected') { %>
-                                  <span style="background:rgba(244,67,54,0.12); color:#F44336; border:1px solid rgba(244,67,54,0.3); padding:3px 10px; border-radius:12px; font-size:11px;">Rejected</span>
-                                <% } %>
-                              </td>
-
-                              <td><%= new Date(p.createdAt).toLocaleDateString('en-GB') %></td>
-
-                              <td style="white-space:nowrap;">
-                                <div style="display:flex; align-items:center; gap:8px;">
-
-                                  <a href="javascript:void(0)" class="waves-effect waves-light btn-view-post"
-                                    data-id="<%= p._id %>" title="View">
-                                    <i class="material-icons" style="font-size:18px; color:#2196F3;">remove_red_eye</i>
-                                  </a>
-
-                                  <% if (p.status === 'pending') { %>
-                                    <form action="/admin/posts/<%= p._id %>/approve" method="POST" style="display:inline; margin:0;">
-                                      <button type="submit" class="waves-effect waves-light"
-                                        style="background:none; border:none; padding:0; margin:0; cursor:pointer;" title="Approve">
-                                        <i class="material-icons" style="font-size:18px; color:#4CAF50;">check_circle</i>
-                                      </button>
-                                    </form>
-                                    <form action="/admin/posts/<%= p._id %>/reject" method="POST" style="display:inline; margin:0;">
-                                      <button type="submit" class="waves-effect waves-light"
-                                        style="background:none; border:none; padding:0; margin:0; cursor:pointer;" title="Reject">
-                                        <i class="material-icons" style="font-size:18px; color:#F44336;">cancel</i>
-                                      </button>
-                                    </form>
-                                  <% } %>
-
-                                  <form action="/admin/posts/<%= p._id %>/toggle" method="POST" style="display:inline; margin:0;">
-                                    <button type="submit" class="waves-effect waves-light"
-                                      style="background:none; border:none; padding:0; margin:0; cursor:pointer;"
-                                      title="<%= p.isActive ? 'Hide' : 'Show' %>">
-                                      <i class="material-icons" style="font-size:18px; color:#FF9800;">
-                                        <%= p.isActive ? 'toggle_on' : 'toggle_off' %>
-                                      </i>
-                                    </button>
-                                  </form>
-
-                                  <form action="/admin/posts/<%= p._id %>/delete" method="POST" style="display:inline; margin:0;">
-                                    <button type="submit" class="waves-effect waves-light"
-                                      style="background:none; border:none; padding:0; margin:0; cursor:pointer;"
-                                      title="Delete" onclick="return confirm('Delete this post?');">
-                                      <i class="material-icons" style="font-size:18px; color:#2196F3;">delete</i>
-                                    </button>
-                                  </form>
-
-                                  <% if (p.isActive) { %>
-                                    <a href="/admin/posts/block/<%= p._id %>"
-                                      class="btn btn-small waves-effect waves-light"
-                                      style="background:linear-gradient(45deg,#F44336,#EF5350); color:white; font-size:11px; padding:0 14px; height:28px; line-height:28px; border-radius:14px; box-shadow:0 2px 5px rgba(0,0,0,0.1); min-width:64px; text-align:center;">
-                                      Block
-                                    </a>
+                                <td class="center-align">
+                                  <% if (p.isPinned) { %>
+                                    <span style="background:rgba(255,193,7,0.12); color:#FFC107; border:1px solid rgba(255,193,7,0.3); padding:3px 10px; border-radius:12px; font-size:11px;">Yes</span>
                                   <% } else { %>
-                                    <a href="/admin/posts/unblock/<%= p._id %>"
-                                      class="btn btn-small waves-effect waves-light"
-                                      style="background:linear-gradient(45deg,#4CAF50,#66BB6A); color:white; font-size:11px; padding:0 14px; height:28px; line-height:28px; border-radius:14px; box-shadow:0 2px 5px rgba(0,0,0,0.1); min-width:64px; text-align:center;">
-                                      Unblock
-                                    </a>
+                                    —
                                   <% } %>
+                                </td>
 
-                                </div>
-                              </td>
-                            </tr>
-                            <% }) %>
+                                <td>
+                                  <% if (p.status === 'pending') { %>
+                                    <span class="badge-pending">Pending</span>
+                                  <% } else if (p.status === 'approved') { %>
+                                    <span class="badge-approved">Approved</span>
+                                  <% } else if (p.status === 'rejected') { %>
+                                    <span class="badge-rejected">Rejected</span>
+                                  <% } %>
+                                </td>
+
+                                <td><%= new Date(p.createdAt).toLocaleDateString('en-GB') %></td>
+
+                                <td class="text-end">
+                                  <div class="action-btns">
+
+                                    <a href="javascript:void(0)" class="waves-effect waves-light btn-view-post"
+                                      data-id="<%= p._id %>" title="View">
+                                      <i class="material-icons" style="font-size:18px; color:#2196F3;">remove_red_eye</i>
+                                    </a>
+
+                                    <% if (p.status === 'pending') { %>
+                                      <form action="/admin/posts/<%= p._id %>/approve" method="POST" style="display:inline; margin:0;">
+                                        <button type="submit" class="waves-effect waves-light" title="Approve">
+                                          <i class="material-icons" style="font-size:18px; color:#4CAF50;">check_circle</i>
+                                        </button>
+                                      </form>
+                                      <form action="/admin/posts/<%= p._id %>/reject" method="POST" style="display:inline; margin:0;">
+                                        <button type="submit" class="waves-effect waves-light" title="Reject">
+                                          <i class="material-icons" style="font-size:18px; color:#F44336;">cancel</i>
+                                        </button>
+                                      </form>
+                                    <% } %>
+
+
+                                    <form action="/admin/posts/<%= p._id %>/delete" method="POST" style="display:inline; margin:0;">
+                                      <button type="submit" class="waves-effect waves-light border-none bg-none"
+                                        onclick="return confirm('Delete this post?');" title="Delete">
+                                        <i class="material-icons" style="font-size:18px; color:#2196F3;">delete</i>
+                                      </button>
+                                    </form>
+
+                                  </div>
+                                </td>
+                              </tr>
+                              <% }) %>
+                            <% } %>
                           </tbody>
                         </table>
+
                       </div>
                     </div>
                   </div>
@@ -197,15 +195,14 @@
         try {
           const res = await fetch(`/admin/posts/${postId}/detail`);
           const json = await res.json();
-          if (!json.success) throw new Error();
-          const p = json.data;
-          M.toast({ html: p.title, classes: 'blue' });
+          if (json.success) {
+            M.toast({ html: `<b>${json.data.title}</b>`, classes: 'blue' });
+          }
         } catch (err) {
-          M.toast({ html: 'Failed to load post', classes: 'red' });
+          M.toast({ html: 'Failed to load post details', classes: 'red' });
         }
       });
     });
   </script>
-
 </body>
 </html>
