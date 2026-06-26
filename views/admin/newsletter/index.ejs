@@ -10,8 +10,16 @@
 
 <div class="card">
   <div class="card-body p-0">
-    <table class="table table-hover mb-0">
-      <thead><tr><th>#</th><th>Email</th><th>Status</th><th>Subscribed On</th><th>Actions</th></tr></thead>
+    <table id="page-length-option" class="table table-hover display mb-0" style="width:100%">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Subscribed On</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
       <tbody>
         <% if (subs.length === 0) { %>
           <tr><td colspan="5" class="text-center text-muted py-4">No newsletter subscribers yet.</td></tr>
@@ -36,6 +44,12 @@
 
 <!-- Hidden email list for copy -->
 <textarea id="emailList" style="position:absolute;left:-9999px" readonly><%= subs.filter(s=>s.isActive).map(s=>s.email).join(', ') %></textarea>
+
+<!-- DataTables -->
+<link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/extensions/responsive/css/responsive.dataTables.min.css">
+<script src="/app-assets/vendors/data-tables/js/jquery.dataTables.min.js"></script>
+<script src="/app-assets/js/scripts/data-tables.js"></script>
 
 <script>
 function copyEmails() {
