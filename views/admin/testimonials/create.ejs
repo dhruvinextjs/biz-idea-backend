@@ -1,70 +1,166 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<head>
+  <%- include('../_layouts/head') %>
+  <title>Add New Testimonial | <%= title %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
+    .section-title { font-size: 1rem; font-weight: 600; color: #1a237e; border-left: 4px solid #3949ab; padding-left: 10px; margin: 20px 0 10px; }
+    .required-star { color: #e53935; }
+    .form-note { font-size: 12px; color: #757575; margin-top: 4px; }
+    .input-field label.active { color: #3949ab !important; }
+  </style>
+</head>
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h4 class="mb-1 fw-bold"><i class="bi bi-star me-2 text-warning"></i>Add Testimonial</h4>
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-        <li class="breadcrumb-item"><a href="/admin/testimonials">Testimonials</a></li>
-        <li class="breadcrumb-item active">Add New</li>
-      </ol>
-    </nav>
-  </div>
-  <a href="/admin/testimonials" class="btn btn-outline-secondary">
-    <i class="bi bi-arrow-left me-1"></i> Back
-  </a>
-</div>
+  <%- include('../partials/header') %>
 
-<div class="row justify-content-center">
-  <div class="col-12 col-lg-8">
-    <div class="card shadow-sm border-0">
-      <div class="card-header bg-white py-3">
-        <h6 class="mb-0 fw-semibold"><i class="bi bi-person-plus me-2 text-warning"></i>Testimonial Details</h6>
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span>Add New Testimonial</span></h5>
+            </div>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="/admin/testimonials">Back to Testimonials</a>
+              </ol>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="card-body">
-        <form action="/admin/testimonials/create" method="POST" enctype="multipart/form-data">
 
-          <div class="row g-3">
-            <div class="col-12 col-md-6">
-              <label class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
-              <input type="text" name="name" class="form-control" required placeholder="Customer name" />
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label fw-semibold">Role / Company</label>
-              <input type="text" name="role" class="form-control" placeholder="e.g. CEO at Acme Inc." />
-            </div>
-            <div class="col-12">
-              <label class="form-label fw-semibold">Content <span class="text-danger">*</span></label>
-              <textarea name="content" class="form-control" rows="4" required placeholder="What did they say?"></textarea>
-            </div>
-            <div class="col-12">
-              <label class="form-label fw-semibold">Profile Image</label>
-              <input type="file" name="image" class="form-control" accept="image/*" />
-              <div class="text-muted small mt-1">Optional — PNG, JPG</div>
-            </div>
-            <div class="col-6">
-              <label class="form-label fw-semibold">Rating</label>
-              <input type="number" name="rating" class="form-control" value="5" min="1" max="5" />
-            </div>
-            <div class="col-6">
-              <label class="form-label fw-semibold">Order</label>
-              <input type="number" name="order" class="form-control" value="0" min="0" />
+      <div class="col s12">
+        <div class="container">
+          <div class="section">
+            <div class="card-panel">
+              <div class="card-content">
+                <form id="testimonialForm" method="POST" action="/admin/testimonials/create" 
+                      enctype="multipart/form-data" onsubmit="return validateForm()">
+
+                  <div class="row">
+
+                    <!-- BASIC INFORMATION -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-person"></i> Customer Information</p>
+                    </div>
+
+                    <div class="input-field col s12 m6">
+                      <input id="name" name="name" type="text" required>
+                      <label for="name">Customer Name <span class="required-star">*</span></label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input id="role" name="role" type="text">
+                      <label for="role">Role / Company</label>
+                    </div>
+
+                    <!-- TESTIMONIAL CONTENT -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-chat-quote"></i> Testimonial Content</p>
+                    </div>
+
+                    <div class="input-field col s12">
+                      <textarea id="content" name="content" class="materialize-textarea" required></textarea>
+                      <label for="content">What did they say? <span class="required-star">*</span></label>
+                    </div>
+
+                    <!-- IMAGE -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-image"></i> Profile Image</p>
+                    </div>
+                    <div class="input-field col s12">
+                      <input type="file" name="image" accept="image/*">
+                      <!-- <label>Profile Image (Optional)</label> -->
+                      <p class="form-note">Recommended size: 200x200 px</p>
+                    </div>
+
+                    <!-- RATING & ORDER -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-star"></i> Rating & Display</p>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input type="number" name="rating" value="5" min="1" max="5" required>
+                      <label class="active">Rating (1-5)</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input type="number" name="order" value="0" min="0">
+                      <label class="active">Display Order</label>
+                      <p class="form-note">Lower number = shown first</p>
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-toggle-on"></i> Status</p>
+                    </div>
+                    <div class="col s12 m6">
+                      <div class="switch" style="margin:20px 0;">
+                        <label>
+                          Hidden
+                          <input type="checkbox" name="isActive" value="true" checked>
+                          <span class="lever"></span>
+                          Active
+                        </label>
+                      </div>
+                      <p class="form-note">Visible on website when active</p>
+                    </div>
+
+                    <!-- SUBMIT BUTTONS -->
+                    <div class="col s12 right-align" style="margin-top:30px;">
+                      <button type="submit" id="submitBtn" class="btn gradient-45deg-purple-deep-orange waves-effect waves-light">
+                        <i class="material-icons left">add_circle</i>
+                        Save Testimonial
+                      </button>
+                      <a href="/admin/testimonials" class="btn grey waves-effect waves-light" style="margin-left:10px;">
+                        <i class="material-icons left">cancel</i> Cancel
+                      </a>
+                    </div>
+
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
-
-          <hr class="my-4">
-          <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">
-              <i class="bi bi-plus-circle me-1"></i> Save Testimonial
-            </button>
-            <a href="/admin/testimonials" class="btn btn-outline-secondary">Cancel</a>
-          </div>
-
-        </form>
+        </div>
+        <div class="content-overlay"></div>
       </div>
     </div>
   </div>
-</div>
 
-<%- include('../partials/footer') %>
+  <%- include('../_layouts/commonJs') %>
+
+  <script>
+    $(document).ready(function () {
+      M.updateTextFields();
+      document.querySelectorAll('.materialize-textarea').forEach(el => M.textareaAutoResize(el));
+    });
+
+    function validateForm() {
+      let valid = true;
+      const name = document.getElementById('name').value.trim();
+      const content = document.getElementById('content').value.trim();
+
+      if (!name) {
+        M.toast({html: 'Customer name is required!', classes: 'red'});
+        valid = false;
+      }
+      if (!content) {
+        M.toast({html: 'Testimonial content is required!', classes: 'red'});
+        valid = false;
+      }
+
+      if (valid) {
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="material-icons left">hourglass_empty</i> Saving...';
+      }
+      return valid;
+    }
+  </script>
+</body>
+</html>

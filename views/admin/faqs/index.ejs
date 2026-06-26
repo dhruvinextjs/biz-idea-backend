@@ -1,100 +1,259 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<head>
+  <%- include('../_layouts/head') %>
+  <title>FAQs | <%= title %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h4 class="mb-1 fw-bold"><i class="bi bi-question-circle me-2 text-primary"></i>FAQs</h4>
-    <p class="text-muted mb-0 small">Manage frequently asked questions</p>
-  </div>
-  <a href="/admin/faqs/create" class="btn btn-primary">
-    <i class="bi bi-plus-lg me-1"></i> Add FAQ
-  </a>
-</div>
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
 
-<div class="card shadow-sm border-0">
-  <div class="card-header bg-white py-3">
-    <span class="fw-semibold">All FAQs <span class="badge bg-primary-subtle text-primary ms-1"><%= faqs.length %></span></span>
-  </div>
-  <div class="card-body p-0">
-    <% if (faqs.length === 0) { %>
-      <div class="text-center text-muted py-5">
-        <i class="bi bi-question-circle fs-2 d-block mb-2 opacity-50"></i>
-        No FAQs yet. <a href="/admin/faqs/create">Add one!</a>
-      </div>
-    <% } %>
-    <% faqs.forEach((faq, i) => { %>
-    <div class="border-bottom px-4 py-3 <%= i % 2 === 0 ? '' : 'bg-light bg-opacity-50' %>">
-      <div class="d-flex justify-content-between align-items-start gap-3">
-        <div class="flex-grow-1">
-          <div class="d-flex align-items-center gap-2 mb-1">
-            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle" style="font-size:11px">Order: <%= faq.order %></span>
-            <% if (faq.isActive) { %>
-              <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:11px">Active</span>
-            <% } else { %>
-              <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle" style="font-size:11px">Hidden</span>
-            <% } %>
+    .badge-active   { background:rgba(76,175,80,0.12); color:#4CAF50; border:1px solid rgba(76,175,80,0.3); padding:3px 10px; border-radius:12px; font-size:11px; }
+    .badge-inactive { background:rgba(158,158,158,0.12); color:#9e9e9e; border:1px solid rgba(158,158,158,0.3); padding:3px 10px; border-radius:12px; font-size:11px; }
+
+    .faq-item {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      background: white;
+      overflow: hidden;
+    }
+    .faq-header {
+      padding: 18px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+    }
+    .faq-header:hover {
+      background: #f8f9fa;
+    }
+    .faq-question {
+      font-weight: 600;
+      color: #374151;
+      margin: 0;
+      flex: 1;
+      padding-right: 15px;
+    }
+    .faq-body {
+      padding: 0 20px 20px;
+      display: none;
+      border-top: 1px solid #e0e0e0;
+    }
+    .faq-body.show {
+      display: block;
+    }
+    .faq-answer {
+      color: #555;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+    .order-badge {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      background: #eef2ff;
+      color: #4f46e5;
+      font-weight: 600;
+      border-radius: 50%;
+      font-size: 13px;
+      margin-right: 12px;
+    }
+  </style>
+</head>
+
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
+
+  <%- include('../partials/header') %>
+
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span>FAQs</span></h5>
+            </div>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="/admin/faqs/create">Add New FAQ</a>
+              </ol>
+            </div>
           </div>
-          <div class="fw-semibold mb-1"><%= faq.question %></div>
-          <small class="text-muted"><%= faq.answer.substring(0, 100) %><%= faq.answer.length > 100 ? '...' : '' %></small>
-        </div>
-        <div class="d-flex gap-1 flex-shrink-0">
-          <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editFaq<%= faq._id %>" title="Edit">
-            <i class="bi bi-pencil"></i>
-          </button>
-          <form action="/admin/faqs/<%= faq._id %>/delete" method="POST" style="display:inline">
-            <button class="btn btn-sm btn-outline-danger btn-delete" title="Delete">
-              <i class="bi bi-trash"></i>
-            </button>
-          </form>
         </div>
       </div>
-    </div>
 
-    <!-- Edit Modal -->
-    <div class="modal fade" id="editFaq<%= faq._id %>" tabindex="-1">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content border-0 shadow">
-          <div class="modal-header bg-white border-bottom">
-            <h5 class="modal-title fw-semibold"><i class="bi bi-pencil me-2 text-primary"></i>Edit FAQ</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <form action="/admin/faqs/<%= faq._id %>/edit" method="POST">
-            <div class="modal-body">
-              <div class="mb-3">
-                <label class="form-label fw-semibold">Question <span class="text-danger">*</span></label>
-                <input type="text" name="question" class="form-control" value="<%= faq.question %>" required />
-              </div>
-              <div class="mb-3">
-                <label class="form-label fw-semibold">Answer <span class="text-danger">*</span></label>
-                <textarea name="answer" class="form-control" rows="5" required><%= faq.answer %></textarea>
-              </div>
-              <div class="row g-3">
-                <div class="col-6">
-                  <label class="form-label fw-semibold">Order</label>
-                  <input type="number" name="order" class="form-control" value="<%= faq.order %>" />
-                </div>
-                <div class="col-6 d-flex align-items-end pb-1">
-                  <div class="d-flex justify-content-between align-items-center w-100 border rounded px-3 py-2">
-                    <div>
-                      <div class="fw-semibold small">Active</div>
-                      <small class="text-muted">Visible on site</small>
-                    </div>
-                    <div class="form-check form-switch mb-0">
-                      <input class="form-check-input" type="checkbox" name="isActive" value="true" style="width:2.2em;height:1.3em" <%= faq.isActive ? 'checked' : '' %> />
-                    </div>
+      <div class="col s12">
+        <div class="container">
+          <div class="section">
+            <div class="card-panel">
+              <div class="card-content">
+
+                <div class="row">
+                  <div class="col s12">
+                    <h5 class="mb-4">
+                      All FAQs 
+                      <span class="badge" style="background:#3949ab;color:white;padding:4px 12px;border-radius:20px;font-size:13px;"><%= faqs.length %></span>
+                    </h5>
                   </div>
                 </div>
+
+                <% if (faqs.length === 0) { %>
+                  <div class="text-center text-muted py-5">
+                    <i class="bi bi-question-circle fs-2 d-block mb-2 opacity-50"></i>
+                    No FAQs yet. <a href="/admin/faqs/create">Add your first FAQ</a>
+                  </div>
+                <% } else { %>
+                  <div id="faqAccordion">
+                    <% faqs.forEach(faq => { %>
+                    <div class="faq-item">
+                      <div class="faq-header" onclick="toggleFaq(this)">
+                        <div style="display:flex; align-items:center;">
+                          <span class="order-badge"><%= faq.order %></span>
+                          <h6 class="faq-question"><%= faq.question %></h6>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:12px; flex-shrink:0;">
+                          <% if (faq.isActive) { %>
+                            <span class="badge-active">Active</span>
+                          <% } else { %>
+                            <span class="badge-inactive">Hidden</span>
+                          <% } %>
+                          <i class="material-icons toggle-icon" style="color:#757575;">keyboard_arrow_down</i>
+                        </div>
+                      </div>
+
+                      <div class="faq-body">
+                        <div class="faq-answer">
+                          <%= faq.answer %>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-top" style="display:flex; gap:10px; justify-content:flex-end;">
+                          <button class="btn waves-effect waves-light btn-edit-faq"
+                            data-id="<%= faq._id %>"
+                            data-question="<%= faq.question %>"
+                            data-answer="<%= faq.answer %>"
+                            data-order="<%= faq.order %>"
+                            data-active="<%= faq.isActive %>"
+                            style="background:#2196F3;color:white;">
+                            <i class="material-icons left">edit</i> Edit
+                          </button>
+
+                          <form action="/admin/faqs/<%= faq._id %>/delete" method="POST" style="display:inline;">
+                            <button type="submit" class="btn waves-effect waves-light red"
+                              onclick="return confirm('Delete this FAQ?');">
+                              <i class="material-icons left">delete</i> Delete
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    <% }) %>
+                  </div>
+                <% } %>
+
               </div>
             </div>
-            <div class="modal-footer bg-white border-top">
-              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i>Save Changes</button>
-            </div>
-          </form>
+          </div>
         </div>
+        <div class="content-overlay"></div>
       </div>
     </div>
-    <% }) %>
   </div>
-</div>
 
-<%- include('../partials/footer') %>
+  <!-- Edit FAQ Modal -->
+  <div class="modal fade" id="editFaqModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title fw-bold"><i class="bi bi-pencil me-2 text-primary"></i>Edit FAQ</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="editFaqForm" method="POST">
+          <div class="modal-body">
+            <input type="hidden" id="editFaqId" name="id">
+
+            <div class="input-field">
+              <input type="text" id="editQuestion" name="question" required>
+              <label for="editQuestion">Question</label>
+            </div>
+
+            <div class="input-field">
+              <textarea id="editAnswer" name="answer" class="materialize-textarea" required></textarea>
+              <label for="editAnswer">Answer</label>
+            </div>
+
+            <div class="row">
+              <div class="input-field col s6">
+                <input type="number" id="editOrder" name="order" min="0">
+                <label for="editOrder">Display Order</label>
+              </div>
+              <div class="col s6" style="margin-top:25px;">
+                <div class="switch">
+                  <label>
+                    Hidden
+                    <input type="checkbox" id="editIsActive" name="isActive" value="true">
+                    <span class="lever"></span>
+                    Active
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn grey waves-effect waves-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn gradient-45deg-purple-deep-orange waves-effect waves-light">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../_layouts/commonJs') %>
+
+  <script>
+    // Accordion Toggle
+    function toggleFaq(header) {
+      const body = header.nextElementSibling;
+      const icon = header.querySelector('.toggle-icon');
+      
+      body.classList.toggle('show');
+      
+      if (body.classList.contains('show')) {
+        icon.textContent = 'keyboard_arrow_up';
+      } else {
+        icon.textContent = 'keyboard_arrow_down';
+      }
+    }
+
+    // Edit Modal
+    document.querySelectorAll('.btn-edit-faq').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const modal = new bootstrap.Modal(document.getElementById('editFaqModal'));
+        
+        document.getElementById('editFaqId').value = this.dataset.id;
+        document.getElementById('editQuestion').value = this.dataset.question;
+        document.getElementById('editAnswer').value = this.dataset.answer;
+        document.getElementById('editOrder').value = this.dataset.order;
+        document.getElementById('editIsActive').checked = this.dataset.active === 'true';
+
+        document.getElementById('editFaqForm').action = `/admin/faqs/${this.dataset.id}/edit`;
+        
+        M.updateTextFields();
+        modal.show();
+      });
+    });
+
+    // Auto resize textareas in modal
+    document.getElementById('editFaqModal').addEventListener('shown.bs.modal', function () {
+      const textarea = document.getElementById('editAnswer');
+      if (textarea) M.textareaAutoResize(textarea);
+    });
+  </script>
+</body>
+</html>

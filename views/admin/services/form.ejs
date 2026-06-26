@@ -1,213 +1,210 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<head>
+  <%- include('../_layouts/head') %>
+  <title><%= service ? 'Edit Service' : 'Create Service' %> | <%= title %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
+    .section-title { font-size: 1rem; font-weight: 600; color: #1a237e; border-left: 4px solid #3949ab; padding-left: 10px; margin: 20px 0 10px; }
+    .required-star { color: #e53935; }
+    .form-note { font-size: 12px; color: #757575; margin-top: 4px; }
+    .input-field label.active { color: #3949ab !important; }
+  </style>
+</head>
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h4 class="mb-1 fw-bold">
-      <i class="bi bi-briefcase me-2 text-primary"></i>
-      <%= service ? 'Edit Service' : 'Add Service' %>
-    </h4>
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-        <li class="breadcrumb-item"><a href="/admin/services">Services</a></li>
-        <li class="breadcrumb-item active"><%= service ? 'Edit' : 'Add' %></li>
-      </ol>
-    </nav>
-  </div>
-  <a href="/admin/services" class="btn btn-outline-secondary">
-    <i class="bi bi-arrow-left me-1"></i> Back
-  </a>
-</div>
+  <%- include('../partials/header') %>
 
-<form
-  action="/admin/services/<%= service ? service._id + '/edit' : 'create' %>"
-  method="POST"
-  enctype="multipart/form-data"
-  id="serviceForm"
-  onsubmit="return validateForm()">
-
-  <div class="row g-4">
-
-    <!-- LEFT -->
-    <div class="col-12 col-lg-8">
-
-      <!-- Basic Info -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-info-circle me-2 text-primary"></i>Basic Information</h6>
-        </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
-            <input type="text" name="title" id="title" class="form-control"
-              value="<%= service ? service.title : '' %>" required placeholder="Service title" />
-            <div id="titleError" class="text-danger small mt-1"></div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Short Description <span class="text-danger">*</span></label>
-            <textarea name="description" id="desc" class="form-control" rows="2" required
-              placeholder="Brief description shown in listing"><%= service ? service.description : '' %></textarea>
-            <div id="descError" class="text-danger small mt-1"></div>
-          </div>
-          <div class="mb-0">
-            <label class="form-label fw-semibold">Full Description</label>
-            <textarea name="fullDescription" class="form-control" rows="4"
-              placeholder="Detailed description for service page"><%= service ? service.fullDescription : '' %></textarea>
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span><%= service ? 'Edit Service' : 'Create Service' %></span></h5>
+            </div>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="/admin/services">Back to Services</a>
+              </ol>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Features -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-list-check me-2 text-success"></i>What You Get (Features)</h6>
-        </div>
-        <div class="card-body">
-          <% for(let i = 0; i < 6; i++) { %>
-          <div class="border rounded p-3 mb-3 bg-light bg-opacity-50">
-            <div class="fw-semibold small text-muted mb-2">Feature <%= i + 1 %></div>
-            <div class="row g-2">
-              <div class="col-12 col-md-5">
-                <input type="text" name="featureTitle[]" class="form-control form-control-sm"
-                  placeholder="Feature title" value="<%= service?.features?.[i]?.title || '' %>" />
+      <div class="col s12">
+        <div class="container">
+          <div class="section">
+            <div class="card-panel">
+              <div class="card-content">
+                <form id="serviceForm" method="POST"
+                  action="/admin/services/<%= service ? service._id + '/edit' : 'create' %>"
+                  enctype="multipart/form-data"
+                  onsubmit="return validateForm()">
+
+                  <div class="row">
+
+                    <!-- BASIC INFORMATION -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-info-circle"></i> Basic Information</p>
+                    </div>
+                    <div class="input-field col s12">
+                      <input id="title" name="title" type="text" value="<%= service ? service.title : '' %>" required>
+                      <label for="title" class="<%= service ? 'active' : '' %>">Title <span class="required-star">*</span></label>
+                      <span id="titleError" class="helper-text red-text"></span>
+                    </div>
+                    <div class="input-field col s12">
+                      <textarea id="description" name="description" class="materialize-textarea" required><%= service ? service.description : '' %></textarea>
+                      <label for="description" class="<%= service ? 'active' : '' %>">Short Description <span class="required-star">*</span></label>
+                      <span id="descError" class="helper-text red-text"></span>
+                    </div>
+                    <div class="input-field col s12">
+                      <textarea name="fullDescription" class="materialize-textarea"><%= service ? service.fullDescription : '' %></textarea>
+                      <label class="<%= service ? 'active' : '' %>">Full Description</label>
+                    </div>
+
+                    <!-- FEATURES -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-list-check"></i> What You Get (Features)</p>
+                    </div>
+                    <% for(let i = 0; i < 6; i++) { %>
+                    <div class="col s12 m6">
+                      <div class="card-panel grey lighten-5" style="margin-bottom:20px; padding:15px;">
+                        <p class="small grey-text text-darken-2 mb-2">Feature <%= i + 1 %></p>
+                        <div class="input-field">
+                          <input type="text" name="featureTitle[]" value="<%= service?.features?.[i]?.title || '' %>" placeholder="Feature Title">
+                          <label class="active">Title</label>
+                        </div>
+                        <div class="input-field">
+                          <textarea name="featureDescription[]" class="materialize-textarea" placeholder="Feature Description"><%= service?.features?.[i]?.description || '' %></textarea>
+                          <label class="active">Description</label>
+                        </div>
+                      </div>
+                    </div>
+                    <% } %>
+
+                    <!-- IMAGES -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-image"></i> Images</p>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <% if (service && service.image) { %>
+                        <img src="<%= service.image %>" style="max-height:120px; border-radius:8px; margin-bottom:10px;" class="responsive-img">
+                        <p class="form-note">Current Listing Image</p>
+                      <% } %>
+                      <input type="file" name="image" accept="image/*">
+                      <label class="mt-2">Listing Image</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <% if (service && service.detailImage) { %>
+                        <img src="<%= service.detailImage %>" style="max-height:120px; border-radius:8px; margin-bottom:10px;" class="responsive-img">
+                        <p class="form-note">Current Detail Page Image</p>
+                      <% } %>
+                      <input type="file" name="detailImage" accept="image/*">
+                      <label class="mt-2">Detail Page Image</label>
+                    </div>
+
+                    <!-- PRICING & ORDER -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-cash"></i> Pricing & Display</p>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input type="text" name="price" value="<%= service ? service.price : 'Contact Us' %>">
+                      <label class="active">Price</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input type="number" name="order" value="<%= service ? service.order : 0 %>" min="0">
+                      <label class="active">Display Order (Lower = First)</label>
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-toggle-on"></i> Status</p>
+                    </div>
+                    <div class="col s12 m6">
+                      <div class="switch" style="margin:15px 0;">
+                        <label>
+                          Hidden
+                          <input type="checkbox" name="isActive" value="true" <%= !service || service.isActive ? 'checked' : '' %>>
+                          <span class="lever"></span>
+                          Active
+                        </label>
+                      </div>
+                      <p class="form-note">Visible on website when active</p>
+                    </div>
+                    <div class="col s12 m6">
+                      <div class="switch" style="margin:15px 0;">
+                        <label>
+                          Not Pinned
+                          <input type="checkbox" name="isPinned" value="true" <%= service && service.isPinned ? 'checked' : '' %>>
+                          <span class="lever"></span>
+                          Pinned (Featured)
+                        </label>
+                      </div>
+                      <p class="form-note">Show on homepage featured section</p>
+                    </div>
+
+                    <!-- SUBMIT BUTTONS -->
+                    <div class="col s12 right-align" style="margin-top:30px;">
+                      <button type="submit" id="submitBtn" class="btn gradient-45deg-purple-deep-orange waves-effect waves-light">
+                        <i class="material-icons left"><%= service ? 'save' : 'add_circle' %></i>
+                        <%= service ? 'Update Service' : 'Create Service' %>
+                      </button>
+                      <a href="/admin/services" class="btn grey waves-effect waves-light" style="margin-left:10px;">
+                        <i class="material-icons left">cancel</i> Cancel
+                      </a>
+                    </div>
+
+                  </div>
+                </form>
               </div>
-              <div class="col-12 col-md-7">
-                <textarea name="featureDescription[]" class="form-control form-control-sm" rows="2"
-                  placeholder="Feature description"><%= service?.features?.[i]?.description || '' %></textarea>
-              </div>
             </div>
           </div>
-          <% } %>
         </div>
+        <div class="content-overlay"></div>
       </div>
-
-    </div>
-
-    <!-- RIGHT -->
-    <div class="col-12 col-lg-4">
-
-      <!-- Images -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-image me-2 text-info"></i>Images</h6>
-        </div>
-        <div class="card-body">
-          <div class="mb-4">
-            <label class="form-label fw-semibold">Listing Image</label>
-            <% if (service && service.image) { %>
-              <div class="mb-2 text-center">
-                <img src="<%= service.image %>" class="img-thumbnail"
-                  style="max-height:100px;object-fit:cover;border-radius:8px" />
-                <p class="text-muted small mt-1 mb-0">Current</p>
-              </div>
-            <% } %>
-            <input type="file" name="image" class="form-control" accept="image/*" />
-            <div class="text-muted small mt-1">Shown in service listing</div>
-          </div>
-          <div>
-            <label class="form-label fw-semibold">Detail Page Image</label>
-            <% if (service && service.detailImage) { %>
-              <div class="mb-2 text-center">
-                <img src="<%= service.detailImage %>" class="img-thumbnail"
-                  style="max-height:100px;object-fit:cover;border-radius:8px" />
-                <p class="text-muted small mt-1 mb-0">Current</p>
-              </div>
-            <% } %>
-            <input type="file" name="detailImage" class="form-control" accept="image/*" />
-            <div class="text-muted small mt-1">Shown on service detail page</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pricing & Order -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-cash me-2 text-success"></i>Pricing & Order</h6>
-        </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Price</label>
-            <input type="text" name="price" class="form-control"
-              value="<%= service ? service.price : 'Contact Us' %>" placeholder="$499 / Contact Us" />
-          </div>
-          <div>
-            <label class="form-label fw-semibold">Display Order</label>
-            <input type="number" name="order" class="form-control"
-              value="<%= service ? service.order : 0 %>" min="0" />
-            <div class="text-muted small mt-1">Lower = shown first</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Status -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3">
-          <h6 class="mb-0 fw-semibold"><i class="bi bi-toggle-on me-2 text-secondary"></i>Status</h6>
-        </div>
-        <div class="card-body">
-
-          <!-- Active toggle -->
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-              <div class="fw-semibold">Active</div>
-              <small class="text-muted">Visible on site</small>
-            </div>
-            <div class="form-check form-switch mb-0">
-              <input class="form-check-input" type="checkbox" name="isActive" value="true"
-                style="width:2.5em;height:1.4em"
-                <%= !service || service.isActive ? 'checked' : '' %> />
-            </div>
-          </div>
-
-          <hr class="my-2">
-
-          <!-- ✅ Pin toggle -->
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <div class="fw-semibold">📌 Pin on Homepage</div>
-              <small class="text-muted">Show in featured/pinned section</small>
-            </div>
-            <div class="form-check form-switch mb-0">
-              <input class="form-check-input" type="checkbox" name="isPinned"
-                style="width:2.5em;height:1.4em"
-                <%= service && service.isPinned ? 'checked' : '' %> />
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
-          <i class="bi bi-<%= service ? 'save' : 'plus-circle' %> me-2"></i>
-          <%= service ? 'Update Service' : 'Create Service' %>
-        </button>
-        <a href="/admin/services" class="btn btn-outline-secondary">
-          <i class="bi bi-x-circle me-2"></i>Cancel
-        </a>
-      </div>
-
     </div>
   </div>
-</form>
 
-<script>
-function validateForm() {
-  let valid = true;
-  const title = document.getElementById('title').value.trim();
-  const desc  = document.getElementById('desc').value.trim();
-  if (!title) { document.getElementById('titleError').innerText = 'Title is required.'; valid = false; }
-  else document.getElementById('titleError').innerText = '';
-  if (!desc) { document.getElementById('descError').innerText = 'Description is required.'; valid = false; }
-  else document.getElementById('descError').innerText = '';
-  if (valid) {
-    const btn = document.getElementById('submitBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
-  }
-  return valid;
-}
-</script>
+  <%- include('../_layouts/commonJs') %>
 
-<%- include('../partials/footer') %>
+  <script>
+    $(document).ready(function () {
+      $('select').formSelect();
+      M.updateTextFields();
+      document.querySelectorAll('.materialize-textarea').forEach(el => M.textareaAutoResize(el));
+    });
+
+    function validateForm() {
+      let valid = true;
+      const title = document.getElementById('title').value.trim();
+      const desc = document.getElementById('description').value.trim();
+
+      if (!title) {
+        document.getElementById('titleError').innerText = 'Title is required.';
+        valid = false;
+      } else {
+        document.getElementById('titleError').innerText = '';
+      }
+
+      if (!desc) {
+        document.getElementById('descError').innerText = 'Short Description is required.';
+        valid = false;
+      } else {
+        document.getElementById('descError').innerText = '';
+      }
+
+      if (valid) {
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="material-icons left">hourglass_empty</i> Saving...';
+      }
+      return valid;
+    }
+  </script>
+</body>
+</html>
