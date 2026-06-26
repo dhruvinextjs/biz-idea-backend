@@ -1,59 +1,138 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<head>
+  <%- include('../_layouts/head') %>
+  <title>Terms & Conditions | <%= title %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
+    .section-title { font-size: 1rem; font-weight: 600; color: #1a237e; border-left: 4px solid #3949ab; padding-left: 10px; margin: 20px 0 10px; }
+    .form-note { font-size: 12px; color: #757575; margin-top: 4px; }
+    .input-field label.active { color: #3949ab !important; }
+  </style>
+</head>
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
 
-<div class="card">
-  <div class="card-header">
-    Terms Conditions
+  <%- include('../partials/header') %>
+
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span>Terms & Conditions</span></h5>
+            </div>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="/admin/settings">Back to Settings</a>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col s12">
+        <div class="container">
+          <div class="section">
+            <div class="card-panel">
+              <div class="card-content">
+                <form id="termsForm" method="POST" action="/admin/terms-condition/create" 
+                      onsubmit="return validateForm()">
+
+                  <div class="row">
+
+                    <!-- TERMS DETAILS -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-file-text"></i> Terms & Conditions Content</p>
+                    </div>
+
+                    <div class="input-field col s12">
+                      <input id="title" name="title" type="text" 
+                             value="<%= typeof terms !== 'undefined' ? terms.title : '' %>">
+                      <label for="title">Page Title</label>
+                    </div>
+
+                    <div class="input-field col s12">
+                      <textarea id="editor" name="content" class="materialize-textarea" rows="18"><%- typeof terms !== 'undefined' && terms.content ? terms.content : '' %></textarea>
+                      <label for="editor">Content</label>
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-toggle-on"></i> Status</p>
+                    </div>
+                    <div class="col s12 m6">
+                      <div class="switch" style="margin:20px 0;">
+                        <label>
+                          Inactive
+                          <input type="checkbox" name="isActive" value="true" 
+                                 <%= typeof terms !== 'undefined' && terms.isActive ? 'checked' : '' %>>
+                          <span class="lever"></span>
+                          Active
+                        </label>
+                      </div>
+                      <p class="form-note">Show Terms & Conditions page on website when active</p>
+                    </div>
+
+                    <!-- SUBMIT BUTTONS -->
+                    <div class="col s12 right-align" style="margin-top:40px;">
+                      <button type="submit" id="submitBtn" class="btn gradient-45deg-purple-deep-orange waves-effect waves-light">
+                        <i class="material-icons left">save</i>
+                        Save Terms & Conditions
+                      </button>
+                      <a href="/admin/settings" class="btn grey waves-effect waves-light" style="margin-left:10px;">
+                        <i class="material-icons left">cancel</i> Cancel
+                      </a>
+                    </div>
+
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="content-overlay"></div>
+      </div>
+    </div>
   </div>
 
-  <div class="card-body">
-   <form action="/admin/terms-condition/create" method="POST">
+  <%- include('../_layouts/commonJs') %>
 
-      <div class="mb-3">
-        <label class="form-label">Title</label>
-        <input
-          type="text"
-          name="title"
-          class="form-control"
-          value="<%= typeof terms !== 'undefined' ? terms.title : '' %>"
-        >
-      </div>
+  <!-- CKEditor -->
+  <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 
-      <div class="mb-3">
-        <label class="form-label">Content</label>
+  <script>
+    $(document).ready(function () {
+      M.updateTextFields();
 
-        <textarea
-          id="editor"
-          name="content"
-          class="form-control"
-          rows="15"
-        ><%= typeof terms !== 'undefined' ? terms.content : '' %></textarea>
-      </div>
+      // CKEditor Initialize with existing content
+CKEDITOR.replace("editor", {
+    height: 520,
+    removeButtons: "About",
+    enterMode: CKEDITOR.ENTER_BR,
+    shiftEnterMode: CKEDITOR.ENTER_P
+});
+    });
 
-      <div class="form-check mb-3">
-        <input
-          type="checkbox"
-          class="form-check-input"
-          name="isActive"
-          value="true"
-          <%= typeof terms !== 'undefined' && terms.isActive ? 'checked' : '' %>
-        >
-        <label class="form-check-label">
-          Active
-        </label>
-      </div>
+    
 
-      <button class="btn btn-primary">
-        Save Terms Conditions
-      </button>
+function validateForm() {
 
-    </form>
-  </div>
-</div>
+    for (let instance in CKEDITOR.instances) {
+        CKEDITOR.instances[instance].updateElement();
+    }
 
-<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    btn.innerHTML =
+        '<i class="material-icons left">hourglass_empty</i> Saving...';
 
-<script>
-  CKEDITOR.replace('editor');
-</script>
-
-<%- include('../partials/footer') %>
+    return true;
+}
+  </script>
+</body>
+</html>
