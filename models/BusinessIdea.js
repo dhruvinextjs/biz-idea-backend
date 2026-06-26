@@ -50,6 +50,7 @@ const businessIdeaSchema = new mongoose.Schema({
   platform: {
     type: String,
     enum: [
+      null, "",
       "iOS & Android",
       "Mac/PC Desktop",
       "Web App",
@@ -60,6 +61,7 @@ const businessIdeaSchema = new mongoose.Schema({
   costToBuild: {
     type: String,
     enum: [
+      null, "",
       "$0 - $2K",
       "$2K - $5K",
       "$5K - $20K",
@@ -70,6 +72,7 @@ const businessIdeaSchema = new mongoose.Schema({
   monetization: {
     type: String,
     enum: [
+      null, "",
       "Free",
       "Paid",
       "In-App Purchase",

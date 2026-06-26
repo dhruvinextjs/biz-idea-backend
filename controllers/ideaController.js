@@ -115,69 +115,70 @@ exports.getFeaturedIdeas = asyncHandler(async (req, res) => {
 exports.toggleIdeaLike = async (req, res) => {
   try {
     const idea = await BusinessIdea.findById(req.params.id);
-
     if (!idea) {
-      return res.status(404).json({
-        success: false,
-        message: "Idea not found",
-      });
+      return res.status(404).json({ success: false, message: "Idea not found" });
     }
 
-    const userId = req.user._id;
+    if (!req.user?._id) {
+      return res.status(401).json({ success: false, message: "Authentication required" });
+    }
 
-    const alreadyLiked = idea.likes.includes(userId);
+    const userId = req.user._id.toString();
+
+    const alreadyLiked = idea.likes.some(id => id.toString() === userId);
 
     if (alreadyLiked) {
-      idea.likes = idea.likes.filter(
-        (id) => id.toString() !== userId.toString()
-      );
+      idea.likes = idea.likes.filter(id => id.toString() !== userId);
     } else {
-      idea.likes.push(userId);
+      idea.dislikes = idea.dislikes.filter(id => id.toString() !== userId);
+      idea.likes.push(req.user._id);
     }
 
     await idea.save();
 
-    res.status(200).json({
+    res.json({
       success: true,
       liked: !alreadyLiked,
       totalLikes: idea.likes.length,
+      totalDislikes: idea.dislikes.length,
     });
   } catch (error) {
+    console.error("Like Error:", error);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Failed to update like",
+      error: error.message
     });
   }
 };
-
 exports.toggleIdeaDislike = async (req, res) => {
   try {
     const idea = await BusinessIdea.findById(req.params.id);
 
     if (!idea) {
-      return res.status(404).json({
-        success: false,
-        message: "Idea not found",
-      });
+      return res.status(404).json({ success: false, message: "Idea not found" });
     }
 
-    const userId = req.user._id;
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ success: false, message: "Authentication required" });
+    }
+
+    const userId = req.user._id.toString();
 
     const alreadyDisliked = idea.dislikes.some(
-      (id) => id.toString() === userId.toString()
+      (id) => id.toString() === userId
     );
 
     if (alreadyDisliked) {
       idea.dislikes = idea.dislikes.filter(
-        (id) => id.toString() !== userId.toString()
+        (id) => id.toString() !== userId
       );
     } else {
-      // remove like first
+      // Remove like first
       idea.likes = idea.likes.filter(
-        (id) => id.toString() !== userId.toString()
+        (id) => id.toString() !== userId
       );
-
-      idea.dislikes.push(userId);
+      idea.dislikes.push(req.user._id);
     }
 
     await idea.save();
@@ -189,9 +190,11 @@ exports.toggleIdeaDislike = async (req, res) => {
       totalDislikes: idea.dislikes.length,
     });
   } catch (error) {
+    console.error("Dislike Toggle Error:", error);
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Failed to update dislike",
+      error: error.message,
     });
   }
 };
