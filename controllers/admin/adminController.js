@@ -215,6 +215,25 @@ exports.deleteIdea = async (req, res) => {
   res.redirect("/admin/ideas?type=" + (req.query.type || "business"));
 };
 
+// View Post
+exports.viewPost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id).lean();
+
+    if (!post) {
+      return res.redirect('/admin/posts');
+    }
+
+    res.render('admin/posts/view', {
+      title: 'Admin Panel',
+      post
+    });
+  } catch (err) {
+    console.error('Error in viewPost:', err);
+    res.redirect('/admin/posts');
+  }
+};
+
 // ========== CASE STUDIES ==========
 exports.getCaseStudies = async (req, res) => {
   const page = parseInt(req.query.page) || 1;

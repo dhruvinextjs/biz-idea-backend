@@ -99,6 +99,7 @@ router.get(
   panelPermission('ideas'),
   admin.viewIdea
 );
+router.get('/posts/:id/view', panelPermission('posts'), admin.viewPost)
 
 // Case Studies — permission: 'case-studies'
 router.get('/case-studies', panelPermission('case-studies'), admin.getCaseStudies);

@@ -1,49 +1,144 @@
-<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <span class="text-muted">Total: <strong><%= subs.length %></strong> subscribers 
-    (<%= subs.filter(s => s.isActive).length %> active)</span>
-  <button class="btn btn-sm btn-outline-success" onclick="copyEmails()">
-    <i class="bi bi-clipboard me-1"></i>Copy All Emails
-  </button>
-</div>
+<head>
+  <%- include('../_layouts/head') %>
+  <title>Newsletter Subscribers | <%= title %></title>
 
-<div class="card">
-  <div class="card-body p-0">
-    <table class="table table-hover mb-0">
-      <thead><tr><th>#</th><th>Email</th><th>Status</th><th>Subscribed On</th><th>Actions</th></tr></thead>
-      <tbody>
-        <% if (subs.length === 0) { %>
-          <tr><td colspan="5" class="text-center text-muted py-4">No newsletter subscribers yet.</td></tr>
-        <% } %>
-        <% subs.forEach((s, i) => { %>
-        <tr>
-          <td class="text-muted"><%= i + 1 %></td>
-          <td><%= s.email %></td>
-          <td><span class="badge <%= s.isActive ? 'badge-active' : 'badge-inactive' %>"><%= s.isActive ? 'Active' : 'Unsubscribed' %></span></td>
-          <td><%= new Date(s.createdAt).toLocaleDateString() %></td>
-          <td>
-            <form action="/admin/newsletter/<%= s._id %>/delete" method="POST" style="display:inline">
-              <button class="btn btn-sm btn-outline-danger py-0 btn-delete"><i class="bi bi-trash"></i></button>
-            </form>
-          </td>
-        </tr>
-        <% }) %>
-      </tbody>
-    </table>
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/extensions/responsive/css/responsive.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/vendors/data-tables/css/select.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="/app-assets/css/pages/data-tables.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
+
+    .badge-active   { background:rgba(76,175,80,0.12);  color:#4CAF50; border:1px solid rgba(76,175,80,0.3);  padding:3px 10px; border-radius:12px; font-size:11px; }
+    .badge-inactive { background:rgba(158,158,158,0.12);color:#9e9e9e; border:1px solid rgba(158,158,158,0.3);padding:3px 10px; border-radius:12px; font-size:11px; }
+
+    .stat-chip {
+      display:inline-flex; align-items:center; gap:6px; padding:6px 16px; border-radius:20px;
+      font-size:13px; font-weight:500; border:1px solid #e2e8f0; background:#fff; color:#475569; margin-right:10px;
+    }
+    .stat-chip strong { color:#1e293b; }
+    .stat-chip.total  { border-color:rgba(99,102,241,0.3); background:rgba(99,102,241,0.06); }
+    .stat-chip.active { border-color:rgba(76,175,80,0.3);  background:rgba(76,175,80,0.06); }
+  </style>
+</head>
+
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
+
+  <%- include('../partials/header') %>
+
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span>Newsletter Subscribers</span></h5>
+            </div>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="javascript:void(0)" onclick="copyEmails()">
+                  <i class="bi bi-clipboard me-1"></i> Copy All Emails
+                </a>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col s12">
+        <div class="container">
+          <div class="section section-data-tables">
+            <div class="row">
+              <div class="col s12">
+
+                <div style="margin-bottom:18px;">
+                  <span class="stat-chip total">Total <strong><%= subs.length %></strong></span>
+                  <span class="stat-chip active">Active <strong><%= subs.filter(s => s.isActive).length %></strong></span>
+                </div>
+
+                <div class="card">
+                  <div class="card-content">
+                    <div class="row">
+                      <div class="col s12 overflow">
+                        <table id="page-length-option" class="display" style="width:100%">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Email</th>
+                              <th>Status</th>
+                              <th>Subscribed On</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% if (subs.length === 0) { %>
+                              <tr>
+                                <td colspan="5" class="center-align grey-text" style="padding:40px 0;">
+                                  <i class="material-icons" style="font-size:48px; opacity:0.3; display:block; margin-bottom:8px;">inbox</i>
+                                  No newsletter subscribers yet.
+                                </td>
+                              </tr>
+                            <% } %>
+                            <% subs.forEach((s, i) => { %>
+                            <tr>
+                              <td><%= i + 1 %></td>
+                              <td><%= s.email %></td>
+                              <td>
+                                <span class="<%= s.isActive ? 'badge-active' : 'badge-inactive' %>">
+                                  <%= s.isActive ? 'Active' : 'Unsubscribed' %>
+                                </span>
+                              </td>
+                              <td><%= new Date(s.createdAt).toLocaleDateString('en-GB') %></td>
+                              <td style="white-space:nowrap;">
+                                <form action="/admin/newsletter/<%= s._id %>/delete" method="POST" style="display:inline; margin:0;">
+                                  <button type="submit" class="waves-effect waves-light"
+                                    style="background:none; border:none; padding:0; margin:0; cursor:pointer;"
+                                    title="Delete" onclick="return confirm('Delete this subscriber?');">
+                                    <i class="material-icons" style="font-size:18px; color:#2196F3;">delete</i>
+                                  </button>
+                                </form>
+                              </td>
+                            </tr>
+                            <% }) %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="content-overlay"></div>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- Hidden email list for copy -->
-<textarea id="emailList" style="position:absolute;left:-9999px" readonly><%= subs.filter(s=>s.isActive).map(s=>s.email).join(', ') %></textarea>
+  <!-- Hidden email list for copy -->
+  <textarea id="emailList" style="position:absolute;left:-9999px" readonly><%= subs.filter(s=>s.isActive).map(s=>s.email).join(', ') %></textarea>
 
-<script>
-function copyEmails() {
-  const el = document.getElementById('emailList');
-  el.select();
-  document.execCommand('copy');
-  alert('Emails copied to clipboard!');
-}
-</script>
+  <%- include('../_layouts/commonJs') %>
+  <script src="/app-assets/vendors/data-tables/js/jquery.dataTables.min.js"></script>
+  <script src="/app-assets/js/scripts/data-tables.js"></script>
 
-<%- include('../partials/footer') %>
+  <script>
+    function copyEmails() {
+      const el = document.getElementById('emailList');
+      el.select();
+      document.execCommand('copy');
+      M.toast({ html: 'Emails copied to clipboard!', classes: 'green' });
+    }
+  </script>
+
+</body>
+</html>
