@@ -531,9 +531,21 @@ exports.postPrivacyPolicy = async (req, res) => {
 
 // ========== TERMS CONDITIONS ==========
 exports.getTermsConditions = async (req, res) => {
-  let terms = await TermsCondition.findOne();
-  if (!terms) terms = await TermsCondition.create({ title: 'Terms & Conditions', content: '' });
-  res.render('admin/terms-condition/index', { title: 'Terms & Conditions', terms });
+  let terms = await TermsCondition.findOne().sort({ createdAt: -1 });
+  
+  // Agar koi document nahi hai to default bana do
+  if (!terms) {
+    terms = await TermsCondition.create({
+      title: "Terms & Conditions",
+      content: "<h2>Terms & Conditions</h2><p>Your content here...</p>",
+      isActive: true
+    });
+  }
+
+  res.render('admin/terms-condition', { 
+    title: 'Terms & Conditions', 
+    terms 
+  });
 };
 
 exports.postCreateTermsCondition = async (req, res) => {
@@ -635,6 +647,54 @@ exports.getUsers = async (req, res) => {
   });
 };
 
+// Create New User Page
+exports.getUserCreate = (req, res) => {
+  res.render("admin/users/create", { 
+    title: "Create New User" 
+  });
+};
+
+// POST - Create User
+exports.createUser = async (req, res) => {
+  try {
+    const { name, username, email, password, location, birthdate, twitterHandle, bio, description, isActive } = req.body;
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) {
+      req.flash("error", "User with this email or username already exists");
+      return res.redirect("/admin/users/add");
+    }
+
+    const newUser = new User({
+      name,
+      username,
+      email,
+      password,           // Make sure you have password hashing in pre-save hook
+      location,
+      birthdate,
+      twitterHandle,
+      bio,
+      description,
+      isActive: isActive === 'true'
+    });
+
+    if (req.file) {
+      newUser.avatar = req.file.path;
+    }
+
+    await newUser.save();
+
+    req.flash("success", "New user created successfully");
+    res.redirect("/admin/users");
+
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Error creating user");
+    res.redirect("/admin/users/add");
+  }
+};
+
 exports.toggleUserStatus = async (req, res) => {
   const user = await User.findById(req.params.id);
   if (!user) { req.flash("error", "Not found"); return res.redirect("/admin/users"); }
@@ -648,6 +708,64 @@ exports.deleteUser = async (req, res) => {
   await User.findByIdAndDelete(req.params.id);
   req.flash("success", "User deleted.");
   res.redirect("/admin/users");
+};
+
+exports.getUserEdit = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).populate("stage").lean();
+    if (!user) {
+      req.flash("error", "User not found");
+      return res.redirect("/admin/users");
+    }
+    res.render("admin/users/edit", { 
+      title: "Edit User", 
+      user 
+    });
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Something went wrong");
+    res.redirect("/admin/users");
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    const { name, username, email, location, birthdate, twitterHandle, bio, description, codingLevel, isActive } = req.body;
+
+    const updateData = {
+      name,
+      username,
+      email,
+      location,
+      birthdate,
+      twitterHandle,
+      bio,
+      description,
+      codingLevel,
+      isActive: isActive === 'true'
+    };
+
+    // Handle avatar upload (if you have multer setup)
+    if (req.file) {
+      updateData.avatar = req.file.path;        // adjust according to your multer config
+      // updateData.Profilephoto = req.file.path; // if you use this field
+    }
+
+    const user = await User.findByIdAndUpdate(req.params.id, updateData, { new: true });
+
+    if (!user) {
+      req.flash("error", "User not found");
+      return res.redirect("/admin/users");
+    }
+
+    req.flash("success", "User updated successfully");
+    res.redirect("/admin/users");
+
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Error updating user");
+    res.redirect(`/admin/users/edit/${req.params.id}`);
+  }
 };
 
 exports.getUserDetail = async (req, res) => {

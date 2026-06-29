@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<head>
+  <%- include('../_layouts/head') %>
+  <title>Create New User | <%= title %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body { padding-top: 78px !important; }
+    #main { margin-top: 0 !important; }
+    .section-title { font-size: 1rem; font-weight: 600; color: #1a237e; border-left: 4px solid #3949ab; padding-left: 10px; margin: 20px 0 10px; }
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body class="vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu preload-transitions 2-columns"
+  data-open="click" data-menu="vertical-dark-menu" data-col="2-columns">
+
+  <%- include('../partials/header') %>
+
+  <div id="main">
+    <div class="row">
+      <div id="breadcrumbs-wrapper" data-image="/app-assets/images/gallery/breadcrumb-bg.jpg">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 m6 l6">
+              <h5 class="breadcrumbs-title mt-0 mb-0"><span>Create New User</span></h5>
+            </div>
+            <div class="col s12 m6 l6 right-align-md">
+              <ol class="breadcrumbs mb-0">
+                <a class="btn gradient-45deg-purple-deep-orange pull-right btn-breadcrumbs"
+                  style="color:#fff;" href="/admin/users">Back to Users</a>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col s12">
+        <div class="container">
+          <div class="section">
+            <div class="card-panel">
+              <div class="card-content">
+                <form id="userCreateForm" method="POST" action="/admin/users/add" 
+                      enctype="multipart/form-data" onsubmit="return validateForm()">
+
+                  <div class="row">
+
+                    <!-- PROFILE PHOTO -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-person-circle"></i> Profile Photo</p>
+                    </div>
+                    <div class="col s12 center-align mb-4" style="
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    text-align: center;
+    margin-top: 20px;
+">
+                      <img id="previewAvatar" src="/img/avatar.png" 
+                           class="profile-avatar mb-3" alt="avatar">
+                      <input type="file" name="avatar" id="avatarInput" accept="image/*" style="display:none;">
+                      <button type="button" class="btn waves-effect waves-light" onclick="document.getElementById('avatarInput').click()">
+                        <i class="material-icons left">photo_camera</i> Upload Photo
+                      </button>
+                    </div>
+
+                    <!-- BASIC INFORMATION -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-person"></i> Basic Information</p>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input id="name" name="name" type="text" required>
+                      <label for="name">Full Name <span class="red-text">*</span></label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input id="username" name="username" type="text" required>
+                      <label for="username">Username <span class="red-text">*</span></label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input id="email" name="email" type="email" required>
+                      <label for="email">Email Address <span class="red-text">*</span></label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input id="password" name="password" type="password" required>
+                      <label for="password">Password <span class="red-text">*</span></label>
+                    </div>
+
+                    <div class="input-field col s12 m6">
+                      <input id="location" name="location" type="text">
+                      <label for="location">Location</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input id="birthdate" name="birthdate" type="date">
+                      <label for="birthdate">Birth Date</label>
+                    </div>
+
+                    <!-- ADDITIONAL INFO -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-info-circle"></i> Additional Details</p>
+                    </div>
+                    <div class="input-field col s12 m6">
+                      <input id="twitterHandle" name="twitterHandle" type="text">
+                      <label for="twitterHandle">Twitter Handle</label>
+                    </div>
+                    <div class="input-field col s12">
+                      <textarea id="bio" name="bio" class="materialize-textarea"></textarea>
+                      <label for="bio">Bio</label>
+                    </div>
+                    <div class="input-field col s12">
+                      <textarea id="description" name="description" class="materialize-textarea"></textarea>
+                      <label for="description">Description</label>
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="col s12">
+                      <p class="section-title"><i class="bi bi-toggle-on"></i> Account Status</p>
+                    </div>
+                    <div class="col s12 m6">
+                      <div class="switch" style="margin:25px 0;">
+                        <label>
+                          Inactive
+                          <input type="checkbox" name="isActive" value="true" checked>
+                          <span class="lever"></span>
+                          Active
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- SUBMIT -->
+                    <div class="col s12 right-align" style="margin-top:40px;">
+                      <button type="submit" id="submitBtn" class="btn gradient-45deg-purple-deep-orange waves-effect waves-light">
+                        <i class="material-icons left">add_circle</i> Create User
+                      </button>
+                      <a href="/admin/users" class="btn grey waves-effect waves-light" style="margin-left:12px;">
+                        <i class="material-icons left">cancel</i> Cancel
+                      </a>
+                    </div>
+
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="content-overlay"></div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../_layouts/commonJs') %>
+
+  <script>
+    $(document).ready(function () {
+      M.updateTextFields();
+      document.querySelectorAll('.materialize-textarea').forEach(el => M.textareaAutoResize(el));
+    });
+
+    // Avatar Preview
+    document.getElementById('avatarInput').addEventListener('change', function(e) {
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          document.getElementById('previewAvatar').src = ev.target.result;
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    });
+
+    function validateForm() {
+      const password = document.getElementById('password').value.trim();
+      if (password.length < 6) {
+        M.toast({html: 'Password must be at least 6 characters long', classes: 'red'});
+        return false;
+      }
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="material-icons left">hourglass_empty</i> Creating...';
+      return true;
+    }
+  </script>
+</body>
+</html>

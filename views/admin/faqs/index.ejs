@@ -206,7 +206,12 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn grey waves-effect waves-light" data-bs-dismiss="modal">Cancel</button>
+<button
+    type="button"
+    class="btn grey waves-effect waves-light"
+    onclick="M.Modal.getInstance(document.getElementById('editFaqModal')).close();">
+    Cancel
+</button>
             <button type="submit" class="btn gradient-45deg-purple-deep-orange waves-effect waves-light">Save Changes</button>
           </div>
         </form>
@@ -215,6 +220,7 @@
   </div>
 
   <%- include('../_layouts/commonJs') %>
+  
 
   <script>
     // Accordion Toggle
@@ -230,24 +236,43 @@
         icon.textContent = 'keyboard_arrow_down';
       }
     }
+    document.addEventListener("DOMContentLoaded", function () {
+
+    var elems = document.querySelectorAll(".modal");
+
+    M.Modal.init(elems,{
+        dismissible:true
+    });
+
+});
 
     // Edit Modal
-    document.querySelectorAll('.btn-edit-faq').forEach(btn => {
-      btn.addEventListener('click', function () {
-        const modal = new bootstrap.Modal(document.getElementById('editFaqModal'));
-        
-        document.getElementById('editFaqId').value = this.dataset.id;
-        document.getElementById('editQuestion').value = this.dataset.question;
-        document.getElementById('editAnswer').value = this.dataset.answer;
-        document.getElementById('editOrder').value = this.dataset.order;
-        document.getElementById('editIsActive').checked = this.dataset.active === 'true';
+document.querySelectorAll(".btn-edit-faq").forEach(btn => {
 
-        document.getElementById('editFaqForm').action = `/admin/faqs/${this.dataset.id}/edit`;
-        
+    btn.addEventListener("click", function(e){
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        document.getElementById("editFaqId").value=this.dataset.id;
+        document.getElementById("editQuestion").value=this.dataset.question;
+        document.getElementById("editAnswer").value=this.dataset.answer;
+        document.getElementById("editOrder").value=this.dataset.order;
+        document.getElementById("editIsActive").checked=this.dataset.active==="true";
+
+        document.getElementById("editFaqForm").action=
+            "/admin/faqs/"+this.dataset.id+"/edit";
+
         M.updateTextFields();
-        modal.show();
-      });
+        M.textareaAutoResize(document.getElementById("editAnswer"));
+
+        const instance=M.Modal.getInstance(document.getElementById("editFaqModal"));
+        console.log(M.Modal.getInstance(document.getElementById("editFaqModal")));
+        instance.open();
+
     });
+
+});
 
     // Auto resize textareas in modal
     document.getElementById('editFaqModal').addEventListener('shown.bs.modal', function () {

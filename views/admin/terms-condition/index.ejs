@@ -52,12 +52,14 @@
 
                     <div class="input-field col s12">
                       <input id="title" name="title" type="text" 
-                             value="<%= typeof terms !== 'undefined' ? terms.title : '' %>">
+                             value="<%= typeof terms !== 'undefined' ? terms.title || '' : '' %>">
                       <label for="title">Page Title</label>
                     </div>
 
                     <div class="input-field col s12">
-                      <textarea id="editor" name="content" class="materialize-textarea" rows="18"><%- typeof terms !== 'undefined' && terms.content ? terms.content : '' %></textarea>
+                      <textarea id="editor" name="content" class="materialize-textarea" rows="18">
+<%- typeof terms !== 'undefined' && terms.content ? terms.content : '' %>
+                      </textarea>
                       <label for="editor">Content</label>
                     </div>
 
@@ -109,30 +111,25 @@
     $(document).ready(function () {
       M.updateTextFields();
 
-      // CKEditor Initialize with existing content
-CKEDITOR.replace("editor", {
-    height: 520,
-    removeButtons: "About",
-    enterMode: CKEDITOR.ENTER_BR,
-    shiftEnterMode: CKEDITOR.ENTER_P
-});
+      CKEDITOR.replace('editor', {
+        height: 520,
+        removeButtons: 'About',
+        enterMode: CKEDITOR.ENTER_BR,
+        shiftEnterMode: CKEDITOR.ENTER_P
+      });
     });
 
-    
-
-function validateForm() {
-
-    for (let instance in CKEDITOR.instances) {
+    function validateForm() {
+      // Update CKEditor content to textarea before submit
+      for (let instance in CKEDITOR.instances) {
         CKEDITOR.instances[instance].updateElement();
+      }
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="material-icons left">hourglass_empty</i> Saving...';
+      return true;
     }
-
-    const btn = document.getElementById("submitBtn");
-    btn.disabled = true;
-    btn.innerHTML =
-        '<i class="material-icons left">hourglass_empty</i> Saving...';
-
-    return true;
-}
   </script>
 </body>
 </html>

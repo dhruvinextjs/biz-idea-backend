@@ -223,8 +223,12 @@ router.post(
 
 // Users — permission: 'users'
 router.get('/users', panelPermission('users'), admin.getUsers);
+router.get('/users/add', admin.getUserCreate);
+router.post('/users/add', upload.single('avatar'), admin.createUser);
 router.get('/users/:id', panelPermission('users'), admin.getUserDetail);
 router.post('/users/:id/toggle', panelPermission('users'), admin.toggleUserStatus);
+router.get('/users/edit/:id', admin.getUserEdit);
+router.post('/users/edit/:id', upload.single('avatar'), admin.updateUser);   // upload = multer middleware
 router.post('/users/:id/delete', panelPermission('users'), admin.deleteUser);
 
 // Community Posts — permission: 'posts'
