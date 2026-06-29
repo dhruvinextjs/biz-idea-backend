@@ -83,36 +83,48 @@
 
             <!-- Stats -->
             <div class="stats-grid">
-              <div class="stat-card">
-                <div class="stat-icon" style="background:#eff6ff; color:#3b82f6;"><i class="bi bi-people-fill"></i></div>
-                <div class="stat-value"><%= stats.totalUsers %></div>
-                <div class="stat-label">Users</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-icon" style="background:#fffbeb; color:#f59e0b;"><i class="bi bi-lightbulb-fill"></i></div>
-                <div class="stat-value"><%= stats.totalIdeas %></div>
-                <div class="stat-label">Ideas</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-icon" style="background:#f0fdf4; color:#22c55e;"><i class="bi bi-journal-richtext"></i></div>
-                <div class="stat-value"><%= stats.totalCaseStudies %></div>
-                <div class="stat-label">Case Studies</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-icon" style="background:#f0f9ff; color:#0ea5e9;"><i class="bi bi-pen-fill"></i></div>
-                <div class="stat-value"><%= stats.totalBlogs %></div>
-                <div class="stat-label">Blogs</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-icon" style="background:#fef2f2; color:#ef4444;"><i class="bi bi-envelope-fill"></i></div>
-                <div class="stat-value"><%= stats.newContacts %></div>
-                <div class="stat-label">Enquiries</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-icon" style="background:#f5f3ff; color:#8b5cf6;"><i class="bi bi-bell-fill"></i></div>
-                <div class="stat-value"><%= stats.newsletterSubs %></div>
-                <div class="stat-label">Subscribers</div>
-              </div>
+              <a href="/admin/users" class="stat-card">
+    <div class="stat-icon" style="background:#eff6ff;color:#3b82f6;">
+        <i class="bi bi-people-fill"></i>
+    </div>
+    <div class="stat-value"><%= stats.totalUsers %></div>
+    <div class="stat-label">Users</div>
+</a>
+              <a href="/admin/ideas" class="stat-card">
+    <div class="stat-icon" style="background:#fffbeb;color:#f59e0b;">
+        <i class="bi bi-lightbulb-fill"></i>
+    </div>
+    <div class="stat-value"><%= stats.totalIdeas %></div>
+    <div class="stat-label">Ideas</div>
+</a>
+            <a href="/admin/case-studies" class="stat-card">
+    <div class="stat-icon" style="background:#f0fdf4;color:#22c55e;">
+        <i class="bi bi-journal-richtext"></i>
+    </div>
+    <div class="stat-value"><%= stats.totalCaseStudies %></div>
+    <div class="stat-label">Case Studies</div>
+</a>
+          <a href="/admin/blogs" class="stat-card">
+    <div class="stat-icon" style="background:#f0f9ff;color:#0ea5e9;">
+        <i class="bi bi-pen-fill"></i>
+    </div>
+    <div class="stat-value"><%= stats.totalBlogs %></div>
+    <div class="stat-label">Blogs</div>
+</a>
+          <a href="/admin/contacts" class="stat-card">
+    <div class="stat-icon" style="background:#fef2f2;color:#ef4444;">
+        <i class="bi bi-envelope-fill"></i>
+    </div>
+    <div class="stat-value"><%= stats.newContacts %></div>
+    <div class="stat-label">Enquiries</div>
+</a>
+             <a href="/admin/newsletter" class="stat-card">
+    <div class="stat-icon" style="background:#f5f3ff;color:#8b5cf6;">
+        <i class="bi bi-bell-fill"></i>
+    </div>
+    <div class="stat-value"><%= stats.newsletterSubs %></div>
+    <div class="stat-label">Subscribers</div>
+</a>
             </div>
 
             <!-- Recent Users -->
